@@ -21,7 +21,9 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include "EPD_Test.h"
+#include "EPD_2in66.h"
+#include "L76X.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -40,7 +42,6 @@
 /* USER CODE END PM */
 
 /* Private variables ---------------------------------------------------------*/
-
 SPI_HandleTypeDef hspi1;
 
 UART_HandleTypeDef huart4;
@@ -49,6 +50,7 @@ UART_HandleTypeDef huart3;
 PCD_HandleTypeDef hpcd_USB_DRD_FS;
 
 /* USER CODE BEGIN PV */
+GPSdata_t GPS1;
 
 /* USER CODE END PV */
 
@@ -57,15 +59,18 @@ void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
 static void MX_USART3_UART_Init(void);
 static void MX_SPI1_Init(void);
-static void MX_UART4_Init(void);
-static void MX_USB_PCD_Init(void);
+static void MX_UART5_Init(void);
 /* USER CODE BEGIN PFP */
 
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-
+int _write(int file, char *ptr, int len)
+{
+    HAL_UART_Transmit(&huart3, (uint8_t*)ptr, len, HAL_MAX_DELAY);
+    return len;
+}
 /* USER CODE END 0 */
 
 /**
@@ -103,6 +108,37 @@ int main(void)
   MX_USB_PCD_Init();
   /* USER CODE BEGIN 2 */
 
+  printf("Hello World!\r\n");
+  L76X_DEV_Module_Init();
+
+  // if(EPD_DEV_Module_Init()!=0){
+  //   printf("Failed to init e-ink display\r\n");
+  //   Error_Handler();
+  // }
+  
+  // EPD_2IN66_Init_Partial();
+  // EPD_2IN66_Clear();
+  // DEV_Delay_ms(500);
+
+  // //Create a new image cache
+  // UBYTE *BlackImage;
+  // /* you have to edit the startup_stm32fxxx.s file and set a big enough heap size */
+  // UWORD Imagesize = ((EPD_2IN66_WIDTH % 8 == 0)? (EPD_2IN66_WIDTH / 8 ): (EPD_2IN66_WIDTH / 8 + 1)) * EPD_2IN66_HEIGHT;
+  // if((BlackImage = (UBYTE *)malloc(Imagesize)) == NULL) {
+  //     printf("Failed to apply for black memory...\r\n");
+  //     Error_Handler();
+  // }
+  // Paint_NewImage(BlackImage, EPD_2IN66_WIDTH, EPD_2IN66_HEIGHT, 270, WHITE);
+  // Paint_SelectImage(BlackImage);
+  // Paint_Clear(WHITE);
+
+  // PAINT_TIME sPaint_time;	//time struct
+  // sPaint_time.Hour = 21;
+  // sPaint_time.Min = 37;
+  // sPaint_time.Sec = 00;
+
+  //EPD_test();
+  
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -112,6 +148,18 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
+    GPS1 = L76X_Parse_NMEA();
+    Coordinates google_coors = L76X_Google_Coordinates(&GPS1);
+    printf("Lon:%f %c Lat:%f %c Time:%02d:%02d:%02d Status:%d\r\n", google_coors.Lon, GPS1.Lon_area, google_coors.Lat, GPS1.Lat_area, GPS1.Time_H, GPS1.Time_M, GPS1.Time_S, GPS1.Status);
+    //HAL_Delay(1000);
+
+    // sPaint_time.Hour = GPS1.Time_H;
+    // sPaint_time.Min = GPS1.Time_M;
+    // sPaint_time.Sec = GPS1.Time_S;
+    // Paint_ClearWindows(180, 100, 296, 152, WHITE);
+    // Paint_DrawTime(180, 110, &sPaint_time, &Font20, WHITE, BLACK);
+    // EPD_2IN66_Display(BlackImage);
+    // HAL_Delay(50);
   }
   /* USER CODE END 3 */
 }
