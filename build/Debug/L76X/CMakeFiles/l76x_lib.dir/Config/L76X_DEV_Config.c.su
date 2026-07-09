@@ -1,7 +1,0 @@
-B:/Documents/Programowanie/STM32/embedded-vehicle-telemetry/L76X/Config/L76X_DEV_Config.c:37:5:L76X_DEV_Module_Init	8	static
-B:/Documents/Programowanie/STM32/embedded-vehicle-telemetry/L76X/Config/L76X_DEV_Config.c:43:6:DEV_Uart_WriteByte	16	static
-B:/Documents/Programowanie/STM32/embedded-vehicle-telemetry/L76X/Config/L76X_DEV_Config.c:51:7:DEV_Uart_ReceiveByte	16	static
-B:/Documents/Programowanie/STM32/embedded-vehicle-telemetry/L76X/Config/L76X_DEV_Config.c:68:6:DEV_Uart_SendByte	16	static
-B:/Documents/Programowanie/STM32/embedded-vehicle-telemetry/L76X/Config/L76X_DEV_Config.c:73:6:DEV_Uart_SendString	24	static
-B:/Documents/Programowanie/STM32/embedded-vehicle-telemetry/L76X/Config/L76X_DEV_Config.c:81:6:DEV_Uart_ReceiveString	24	static
-B:/Documents/Programowanie/STM32/embedded-vehicle-telemetry/L76X/Config/L76X_DEV_Config.c:105:6:DEV_Set_GPIOMode	40	static
