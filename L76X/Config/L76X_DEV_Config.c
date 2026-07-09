@@ -30,9 +30,9 @@
 #
 ******************************************************************************/
 #include "L76X_DEV_Config.h"
-#include "stm32f4xx_hal_uart.h"
+#include "stm32u3xx_hal_uart.h"
 
-extern UART_HandleTypeDef huart5;
+extern UART_HandleTypeDef huart4;
 
 int L76X_DEV_Module_Init(void)
 {
@@ -42,7 +42,7 @@ int L76X_DEV_Module_Init(void)
 
 void DEV_Uart_WriteByte(UBYTE value)
 {    
-  HAL_UART_Transmit(&huart5, &value, 1, 1000);
+  HAL_UART_Transmit(&huart4, &value, 1, 1000);
 }
 /******************************************************************************
 function: 
@@ -54,7 +54,7 @@ UBYTE DEV_Uart_ReceiveByte()
   UBYTE count = 0;
 
   while(1){
-    if(HAL_UART_Receive(&huart5, &value, 1, 1000) == HAL_OK){
+    if(HAL_UART_Receive(&huart4, &value, 1, 1000) == HAL_OK){
       return value;
     }
     count++;
@@ -67,14 +67,14 @@ UBYTE DEV_Uart_ReceiveByte()
 
 void DEV_Uart_SendByte(char data)
 {
-  HAL_UART_Transmit(&huart5, (uint8_t*)&data, 1, 1000);
+  HAL_UART_Transmit(&huart4, (uint8_t*)&data, 1, 1000);
 }
 
 void DEV_Uart_SendString(char *data)
 {
   UWORD i;
   for(i=0; data[i] != '\0'; i++){
-    HAL_UART_Transmit(&huart5, (uint8_t*)&data[i], 1, 1000);
+    HAL_UART_Transmit(&huart4, (uint8_t*)&data[i], 1, 1000);
   }
 }
 
@@ -85,7 +85,7 @@ void DEV_Uart_ReceiveString(char *data, UWORD Num)
   UBYTE count = 0;
 
   while(1){
-    if(HAL_UART_Receive(&huart5, &value, 1, 1000) == HAL_OK){
+    if(HAL_UART_Receive(&huart4, &value, 1, 1000) == HAL_OK){
         data[i] =  value;
         i++;
         if(i >= Num){

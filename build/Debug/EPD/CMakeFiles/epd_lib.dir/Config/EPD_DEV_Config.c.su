@@ -1,0 +1,9 @@
+B:/Documents/Programowanie/STM32/embedded-vehicle-telemetry/EPD/Config/EPD_DEV_Config.c:36:6:DEV_SPI_WriteByte	16	static
+B:/Documents/Programowanie/STM32/embedded-vehicle-telemetry/EPD/Config/EPD_DEV_Config.c:41:6:DEV_SPI_Write_nByte	16	static
+B:/Documents/Programowanie/STM32/embedded-vehicle-telemetry/EPD/Config/EPD_DEV_Config.c:46:6:DEV_GPIO_Mode	40	static
+B:/Documents/Programowanie/STM32/embedded-vehicle-telemetry/EPD/Config/EPD_DEV_Config.c:63:6:DEV_GPIO_Init	8	static
+B:/Documents/Programowanie/STM32/embedded-vehicle-telemetry/EPD/Config/EPD_DEV_Config.c:72:6:DEV_SPI_Init	8	static
+B:/Documents/Programowanie/STM32/embedded-vehicle-telemetry/EPD/Config/EPD_DEV_Config.c:81:6:DEV_SPI_SendData	24	static
+B:/Documents/Programowanie/STM32/embedded-vehicle-telemetry/EPD/Config/EPD_DEV_Config.c:106:7:DEV_SPI_ReadData	16	static
+B:/Documents/Programowanie/STM32/embedded-vehicle-telemetry/EPD/Config/EPD_DEV_Config.c:131:5:EPD_DEV_Module_Init	8	static
+B:/Documents/Programowanie/STM32/embedded-vehicle-telemetry/EPD/Config/EPD_DEV_Config.c:140:6:EPD_DEV_Module_Exit	8	static

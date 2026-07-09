@@ -1,0 +1,13 @@
+B:/Documents/Programowanie/STM32/embedded-vehicle-telemetry/L76X/Device/L76X.c:28:5:findMessageId	24	static
+B:/Documents/Programowanie/STM32/embedded-vehicle-telemetry/L76X/Device/L76X.c:53:15:transformLat	40	static
+B:/Documents/Programowanie/STM32/embedded-vehicle-telemetry/L76X/Device/L76X.c:66:15:transformLon	40	static
+B:/Documents/Programowanie/STM32/embedded-vehicle-telemetry/L76X/Device/L76X.c:79:20:bd_encrypt	112	static
+B:/Documents/Programowanie/STM32/embedded-vehicle-telemetry/L76X/Device/L76X.c:94:20:transform	136	static
+B:/Documents/Programowanie/STM32/embedded-vehicle-telemetry/L76X/Device/L76X.c:118:6:L76X_Send_Command	24	static
+B:/Documents/Programowanie/STM32/embedded-vehicle-telemetry/L76X/Device/L76X.c:147:6:L76X_Exit_BackupMode	8	static
+B:/Documents/Programowanie/STM32/embedded-vehicle-telemetry/L76X/Device/L76X.c:163:17:parseAsInteger	72	static
+B:/Documents/Programowanie/STM32/embedded-vehicle-telemetry/L76X/Device/L76X.c:178:6:L76X_Extract_RMC	64	static
+B:/Documents/Programowanie/STM32/embedded-vehicle-telemetry/L76X/Device/L76X.c:246:6:L76X_Extract_VTG	16	static
+B:/Documents/Programowanie/STM32/embedded-vehicle-telemetry/L76X/Device/L76X.c:250:11:L76X_Parse_NMEA	64	static
+B:/Documents/Programowanie/STM32/embedded-vehicle-telemetry/L76X/Device/L76X.c:269:13:L76X_Baidu_Coordinates	80	static
+B:/Documents/Programowanie/STM32/embedded-vehicle-telemetry/L76X/Device/L76X.c:283:13:L76X_Google_Coordinates	80	static

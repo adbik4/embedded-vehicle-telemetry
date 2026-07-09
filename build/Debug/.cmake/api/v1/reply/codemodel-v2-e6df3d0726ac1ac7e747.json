@@ -1,0 +1,138 @@
+{
+	"configurations" : 
+	[
+		{
+			"directories" : 
+			[
+				{
+					"build" : ".",
+					"childIndexes" : 
+					[
+						1,
+						2,
+						3
+					],
+					"jsonFile" : "directory-.-Debug-d0094a50bb2071803777.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.22"
+					},
+					"projectIndex" : 0,
+					"source" : ".",
+					"targetIndexes" : 
+					[
+						1
+					]
+				},
+				{
+					"build" : "cmake/stm32cubemx",
+					"jsonFile" : "directory-cmake.stm32cubemx-Debug-a874d3cc84b5982fda2e.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.22"
+					},
+					"parentIndex" : 0,
+					"projectIndex" : 0,
+					"source" : "cmake/stm32cubemx",
+					"targetIndexes" : 
+					[
+						0
+					]
+				},
+				{
+					"build" : "EPD",
+					"jsonFile" : "directory-EPD-Debug-9fd1c602ca14fb1d941b.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.22"
+					},
+					"parentIndex" : 0,
+					"projectIndex" : 0,
+					"source" : "EPD",
+					"targetIndexes" : 
+					[
+						2
+					]
+				},
+				{
+					"build" : "L76X",
+					"jsonFile" : "directory-L76X-Debug-9ed2400ab8f5ea7ccd73.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.22"
+					},
+					"parentIndex" : 0,
+					"projectIndex" : 0,
+					"source" : "L76X",
+					"targetIndexes" : 
+					[
+						3
+					]
+				}
+			],
+			"name" : "Debug",
+			"projects" : 
+			[
+				{
+					"directoryIndexes" : 
+					[
+						0,
+						1,
+						2,
+						3
+					],
+					"name" : "embedded-vehicle-telemetry",
+					"targetIndexes" : 
+					[
+						0,
+						1,
+						2,
+						3
+					]
+				}
+			],
+			"targets" : 
+			[
+				{
+					"directoryIndex" : 1,
+					"id" : "STM32_Drivers::@768a070a0fe75716b479",
+					"jsonFile" : "target-STM32_Drivers-Debug-8f8a4c97580b0d36ad22.json",
+					"name" : "STM32_Drivers",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "embedded-vehicle-telemetry::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-embedded-vehicle-telemetry-Debug-425b530bb6d07091a380.json",
+					"name" : "embedded-vehicle-telemetry",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 2,
+					"id" : "epd_lib::@06fc264e94096826bafb",
+					"jsonFile" : "target-epd_lib-Debug-b4e14366eaede2f01dc3.json",
+					"name" : "epd_lib",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 3,
+					"id" : "l76x_lib::@a2f70d018ed7db3b6d16",
+					"jsonFile" : "target-l76x_lib-Debug-f04e79322aebdc7a8a1e.json",
+					"name" : "l76x_lib",
+					"projectIndex" : 0
+				}
+			]
+		}
+	],
+	"kind" : "codemodel",
+	"paths" : 
+	{
+		"build" : "B:/Documents/Programowanie/STM32/embedded-vehicle-telemetry/build/Debug",
+		"source" : "B:/Documents/Programowanie/STM32/embedded-vehicle-telemetry"
+	},
+	"version" : 
+	{
+		"major" : 2,
+		"minor" : 6
+	}
+}

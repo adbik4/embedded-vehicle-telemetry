@@ -30,7 +30,7 @@
 #
 ******************************************************************************/
 #include "EPD_DEV_Config.h"
-#include "stm32f4xx_hal_spi.h"
+#include "stm32u3xx_hal_spi.h"
 
 extern SPI_HandleTypeDef hspi1;
 void DEV_SPI_WriteByte(UBYTE value)

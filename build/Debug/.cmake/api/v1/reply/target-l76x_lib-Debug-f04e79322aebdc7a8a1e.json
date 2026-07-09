@@ -1,0 +1,153 @@
+{
+	"archive" : {},
+	"artifacts" : 
+	[
+		{
+			"path" : "L76X/libl76x_lib.a"
+		}
+	],
+	"backtrace" : 1,
+	"backtraceGraph" : 
+	{
+		"commands" : 
+		[
+			"add_library",
+			"target_link_libraries",
+			"target_include_directories"
+		],
+		"files" : 
+		[
+			"L76X/CMakeLists.txt"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 3,
+				"parent" : 0
+			},
+			{
+				"command" : 1,
+				"file" : 0,
+				"line" : 8,
+				"parent" : 0
+			},
+			{
+				"command" : 2,
+				"file" : 0,
+				"line" : 10,
+				"parent" : 0
+			}
+		]
+	},
+	"compileGroups" : 
+	[
+		{
+			"compileCommandFragments" : 
+			[
+				{
+					"fragment" : " -mcpu=cortex-m33 -mfpu=fpv5-sp-d16 -mfloat-abi=hard  -Wall -fdata-sections -ffunction-sections -fstack-usage -O0 -g3 -std=gnu11"
+				}
+			],
+			"defines" : 
+			[
+				{
+					"backtrace" : 2,
+					"define" : "DEBUG"
+				},
+				{
+					"backtrace" : 2,
+					"define" : "STM32U3C5xx"
+				},
+				{
+					"backtrace" : 2,
+					"define" : "USE_HAL_DRIVER"
+				}
+			],
+			"includes" : 
+			[
+				{
+					"backtrace" : 3,
+					"path" : "B:/Documents/Programowanie/STM32/embedded-vehicle-telemetry/L76X/Config"
+				},
+				{
+					"backtrace" : 3,
+					"path" : "B:/Documents/Programowanie/STM32/embedded-vehicle-telemetry/L76X/Device"
+				},
+				{
+					"backtrace" : 2,
+					"path" : "B:/Documents/Programowanie/STM32/embedded-vehicle-telemetry/cmake/stm32cubemx/../../Core/Inc"
+				},
+				{
+					"backtrace" : 2,
+					"path" : "B:/Documents/Programowanie/STM32/embedded-vehicle-telemetry/cmake/stm32cubemx/../../Drivers/STM32U3xx_HAL_Driver/Inc"
+				},
+				{
+					"backtrace" : 2,
+					"path" : "B:/Documents/Programowanie/STM32/embedded-vehicle-telemetry/cmake/stm32cubemx/../../Drivers/STM32U3xx_HAL_Driver/Inc/Legacy"
+				},
+				{
+					"backtrace" : 2,
+					"path" : "B:/Documents/Programowanie/STM32/embedded-vehicle-telemetry/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32U3xx/Include"
+				},
+				{
+					"backtrace" : 2,
+					"path" : "B:/Documents/Programowanie/STM32/embedded-vehicle-telemetry/cmake/stm32cubemx/../../Drivers/CMSIS/Include"
+				}
+			],
+			"language" : "C",
+			"languageStandard" : 
+			{
+				"backtraces" : 
+				[
+					1
+				],
+				"standard" : "11"
+			},
+			"sourceIndexes" : 
+			[
+				0,
+				1
+			]
+		}
+	],
+	"id" : "l76x_lib::@a2f70d018ed7db3b6d16",
+	"name" : "l76x_lib",
+	"nameOnDisk" : "libl76x_lib.a",
+	"paths" : 
+	{
+		"build" : "L76X",
+		"source" : "L76X"
+	},
+	"sourceGroups" : 
+	[
+		{
+			"name" : "Source Files",
+			"sourceIndexes" : 
+			[
+				0,
+				1
+			]
+		}
+	],
+	"sources" : 
+	[
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "L76X/Config/L76X_DEV_Config.c",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "L76X/Device/L76X.c",
+			"sourceGroupIndex" : 0
+		}
+	],
+	"type" : "STATIC_LIBRARY"
+}

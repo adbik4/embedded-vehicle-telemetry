@@ -2,8 +2,8 @@
 #define _L76X_DEV_CONFIG_H_
 
 #include "main.h"
-#include "stm32f4xx_hal.h"
-#include "stm32f4xx_hal_gpio.h"
+#include "stm32u3xx_hal.h"
+#include "stm32u3xx_hal_gpio.h"
 #include <stdint.h>
 #include <stdio.h>
 

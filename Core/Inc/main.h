@@ -57,16 +57,6 @@ void Error_Handler(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
-#define STLK_TX_Pin GPIO_PIN_5
-#define STLK_TX_GPIO_Port GPIOA
-#define STLK_RX_Pin GPIO_PIN_10
-#define STLK_RX_GPIO_Port GPIOB
-#define USB_DM_Pin GPIO_PIN_11
-#define USB_DM_GPIO_Port GPIOA
-#define USB_DP_Pin GPIO_PIN_12
-#define USB_DP_GPIO_Port GPIOA
-#define USB_SOF_Pin GPIO_PIN_14
-#define USB_SOF_GPIO_Port GPIOA
 
 /* USER CODE BEGIN Private defines */
 // E-paper GPIO

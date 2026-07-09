@@ -1,0 +1,12 @@
+B:/Documents/Programowanie/STM32/embedded-vehicle-telemetry/build/Debug/CMakeFiles/embedded-vehicle-telemetry.dir
+B:/Documents/Programowanie/STM32/embedded-vehicle-telemetry/build/Debug/CMakeFiles/edit_cache.dir
+B:/Documents/Programowanie/STM32/embedded-vehicle-telemetry/build/Debug/CMakeFiles/rebuild_cache.dir
+B:/Documents/Programowanie/STM32/embedded-vehicle-telemetry/build/Debug/cmake/stm32cubemx/CMakeFiles/STM32_Drivers.dir
+B:/Documents/Programowanie/STM32/embedded-vehicle-telemetry/build/Debug/cmake/stm32cubemx/CMakeFiles/edit_cache.dir
+B:/Documents/Programowanie/STM32/embedded-vehicle-telemetry/build/Debug/cmake/stm32cubemx/CMakeFiles/rebuild_cache.dir
+B:/Documents/Programowanie/STM32/embedded-vehicle-telemetry/build/Debug/EPD/CMakeFiles/epd_lib.dir
+B:/Documents/Programowanie/STM32/embedded-vehicle-telemetry/build/Debug/EPD/CMakeFiles/edit_cache.dir
+B:/Documents/Programowanie/STM32/embedded-vehicle-telemetry/build/Debug/EPD/CMakeFiles/rebuild_cache.dir
+B:/Documents/Programowanie/STM32/embedded-vehicle-telemetry/build/Debug/L76X/CMakeFiles/l76x_lib.dir
+B:/Documents/Programowanie/STM32/embedded-vehicle-telemetry/build/Debug/L76X/CMakeFiles/edit_cache.dir
+B:/Documents/Programowanie/STM32/embedded-vehicle-telemetry/build/Debug/L76X/CMakeFiles/rebuild_cache.dir
