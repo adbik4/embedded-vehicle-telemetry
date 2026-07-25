@@ -51,3 +51,8 @@ target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE
     epd_lib
     l76x_lib
 )
+
+target_link_options(${PROJECT_NAME} PRIVATE
+    "-u"
+    "_printf_float"
+)

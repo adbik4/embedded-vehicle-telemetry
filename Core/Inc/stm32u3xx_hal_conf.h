@@ -46,7 +46,7 @@
 /*#define HAL_GTZC_MODULE_ENABLED */
 /*#define HAL_HASH_MODULE_ENABLED */
 /*#define HAL_HCD_MODULE_ENABLED */
-#define HAL_I2C_MODULE_ENABLED
+/*#define HAL_I2C_MODULE_ENABLED */
 /*#define HAL_I3C_MODULE_ENABLED */
 /*#define HAL_ICACHE_MODULE_ENABLED */
 /*#define HAL_IRDA_MODULE_ENABLED */
@@ -88,7 +88,7 @@
   *        when HSE is used as system clock source.
   */
 #if !defined  (HSE_VALUE)
-  #define HSE_VALUE                                 25000000UL /*!< Value of the External oscillator in Hz */
+  #define HSE_VALUE                                 16000000UL /*!< Value of the External oscillator in Hz */
 #endif /* HSE_VALUE */
 
 #if !defined  (HSE_STARTUP_TIMEOUT)

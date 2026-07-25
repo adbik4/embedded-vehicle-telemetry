@@ -29,6 +29,9 @@ extern "C" {
 /* Includes ------------------------------------------------------------------*/
 #include "stm32u3xx_hal.h"
 
+#include "stm32u3xx_nucleo.h"
+#include <stdio.h>
+
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 
@@ -57,6 +60,30 @@ void Error_Handler(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
+#define USER_BUTTON_Pin GPIO_PIN_13
+#define USER_BUTTON_GPIO_Port GPIOC
+#define RCC_OSC32_IN_Pin GPIO_PIN_14
+#define RCC_OSC32_IN_GPIO_Port GPIOC
+#define RCC_OSC32_OUT_Pin GPIO_PIN_15
+#define RCC_OSC32_OUT_GPIO_Port GPIOC
+#define VSENSE_Pin GPIO_PIN_2
+#define VSENSE_GPIO_Port GPIOC
+#define VBUS_DET_Pin GPIO_PIN_12
+#define VBUS_DET_GPIO_Port GPIOF
+#define USB_DM_Pin GPIO_PIN_11
+#define USB_DM_GPIO_Port GPIOA
+#define USB_DP_Pin GPIO_PIN_12
+#define USB_DP_GPIO_Port GPIOA
+#define DEBUG_JTMS_SWDIO_Pin GPIO_PIN_13
+#define DEBUG_JTMS_SWDIO_GPIO_Port GPIOA
+#define DEBUG_JTCK_SWCLK_Pin GPIO_PIN_14
+#define DEBUG_JTCK_SWCLK_GPIO_Port GPIOA
+#define DEBUG_JTDI_Pin GPIO_PIN_15
+#define DEBUG_JTDI_GPIO_Port GPIOA
+#define FDCAN_STBY_Pin GPIO_PIN_7
+#define FDCAN_STBY_GPIO_Port GPIOD
+#define DEBUG_JTDO_SWO_Pin GPIO_PIN_3
+#define DEBUG_JTDO_SWO_GPIO_Port GPIOB
 
 /* USER CODE BEGIN Private defines */
 // E-paper GPIO

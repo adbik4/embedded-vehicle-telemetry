@@ -1,1 +1,19 @@
-build
+# Build output
+build/
+Debug/
+Release/
+
+# IDE generated files
+.vscode/
+.settings/
+*.user
+*.launch
+
+# CubeIDE
+*.metadata/
+.idea/
+
+# CMake
+CMakeFiles/
+CMakeCache.txt
+cmake-build-*/

@@ -285,6 +285,5 @@ Coordinates L76X_Google_Coordinates(const GPSdata_t* data)
     Coordinates temp;
     temp.Lat = ((int)(data->Lat)) + (data->Lat - ((int)(data->Lat)))*100 / 60;
     temp.Lon =((int)(data->Lon)) + (data->Lon - ((int)(data->Lon)))*100 / 60;
-    //temp = transform(temp);
     return temp;
 }
