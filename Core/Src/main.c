@@ -107,7 +107,7 @@ int main(void)
   //   printf("Failed to init e-ink display\r\n");
   //   Error_Handler();
   // }
-  
+
   // EPD_2IN66_Init_Partial();
   // EPD_2IN66_Clear();
   // DEV_Delay_ms(500);
@@ -130,7 +130,7 @@ int main(void)
   // sPaint_time.Sec = 00;
 
   //EPD_test();
-  
+
   /* USER CODE END 2 */
 
   /* Initialize leds */
@@ -153,23 +153,32 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   printf("Hello World!\r\n");
 
+  /* --------- E-INK TEST --------- */
+  if (EPD_test())
+  {
+    printf("E-INK test failed :(\r\n");
+  }
+
   while (1)
   {
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-    GPS1 = L76X_Parse_NMEA();
-    Coordinates google_coors = L76X_Google_Coordinates(&GPS1);
-    printf("Lon:%f %c Lat:%f %c Time:%02d:%02d:%02d Status:%d\r\n", google_coors.Lon, GPS1.Lon_area, google_coors.Lat, GPS1.Lat_area, GPS1.Time_H, GPS1.Time_M, GPS1.Time_S, GPS1.Status);
-    //HAL_Delay(1000);
+    /* --------- GPS TEST --------- */
+    // GPS1 = L76X_Parse_NMEA();
+    // Coordinates google_coors = L76X_Google_Coordinates(&GPS1);
+    // DMS_Coordinates dms_coors = Google2DMS(google_coors, GPS1.Lat_area, GPS1.Lon_area);
 
-    // sPaint_time.Hour = GPS1.Time_H;
-    // sPaint_time.Min = GPS1.Time_M;
-    // sPaint_time.Sec = GPS1.Time_S;
-    // Paint_ClearWindows(180, 100, 296, 152, WHITE);
-    // Paint_DrawTime(180, 110, &sPaint_time, &Font20, WHITE, BLACK);
-    // EPD_2IN66_Display(BlackImage);
-    // HAL_Delay(50);
+    // printf ("Lat: %d°%d'%f\"%c Lon: %d°%d'%f\"%c Time:%02d:%02d:%02d Status:%s\r\n",
+    //         dms_coors.Lat.Degrees, dms_coors.Lat.Minutes, dms_coors.Lat.Seconds,
+    //         dms_coors.Lat.Area,
+    //         dms_coors.Lon.Degrees, dms_coors.Lon.Minutes, dms_coors.Lon.Seconds,
+    //         dms_coors.Lon.Area,
+    //         GPS1.Time_H, GPS1.Time_M, GPS1.Time_S,
+    //         (GPS1.Status == 1) ? "OK" : "INVALID"
+    // );
+
+    //HAL_Delay(1000);
   }
   /* USER CODE END 3 */
 }
@@ -261,11 +270,11 @@ static void MX_SPI2_Init(void)
   hspi2.Instance = SPI2;
   hspi2.Init.Mode = SPI_MODE_MASTER;
   hspi2.Init.Direction = SPI_DIRECTION_2LINES_TXONLY;
-  hspi2.Init.DataSize = SPI_DATASIZE_4BIT;
+  hspi2.Init.DataSize = SPI_DATASIZE_8BIT;
   hspi2.Init.CLKPolarity = SPI_POLARITY_LOW;
   hspi2.Init.CLKPhase = SPI_PHASE_1EDGE;
   hspi2.Init.NSS = SPI_NSS_SOFT;
-  hspi2.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_2;
+  hspi2.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_32;
   hspi2.Init.FirstBit = SPI_FIRSTBIT_MSB;
   hspi2.Init.TIMode = SPI_TIMODE_DISABLE;
   hspi2.Init.CRCCalculation = SPI_CRCCALCULATION_DISABLE;
@@ -366,6 +375,12 @@ static void MX_GPIO_Init(void)
   __HAL_RCC_GPIOD_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
+  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_2|GPIO_PIN_4|GPIO_PIN_6, GPIO_PIN_RESET);
+
+  /*Configure GPIO pin Output Level */
+  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_0, GPIO_PIN_RESET);
+
+  /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(FDCAN_STBY_GPIO_Port, FDCAN_STBY_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin : USER_BUTTON_Pin */
@@ -387,6 +402,32 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Mode = GPIO_MODE_ANALOG;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(VSENSE_GPIO_Port, &GPIO_InitStruct);
+
+  /*Configure GPIO pins : PA2 PA4 PA6 */
+  GPIO_InitStruct.Pin = GPIO_PIN_2|GPIO_PIN_4|GPIO_PIN_6;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+
+  /*Configure GPIO pin : PA3 */
+  GPIO_InitStruct.Pin = GPIO_PIN_3;
+  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+
+  /*Configure GPIO pin : PB0 */
+  GPIO_InitStruct.Pin = GPIO_PIN_0;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+
+  /*Configure GPIO pin : PB1 */
+  GPIO_InitStruct.Pin = GPIO_PIN_1;
+  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
   /*Configure GPIO pin : VBUS_DET_Pin */
   GPIO_InitStruct.Pin = VBUS_DET_Pin;

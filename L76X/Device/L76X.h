@@ -65,10 +65,10 @@ extern char buff_t[BUFFSIZE];
 #define SET_NMEA_OUTPUT "$PMTK314,0,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0"
 
 typedef struct {
-	double Lon;     //GPS Latitude and longitude
-	double Lat;
-    char Lon_area;
+	double Lat;     //GPS Latitude and longitude
+	double Lon;
     char Lat_area;
+    char Lon_area;
     UBYTE Time_H;   //Time
     UBYTE Time_M;
     UBYTE Time_S;
@@ -78,14 +78,27 @@ typedef struct {
 } GPSdata_t;
 
 typedef struct {
-    double Lon;
     double Lat;
+    double Lon;
 }Coordinates;
+
+typedef struct {
+    uint16_t Degrees;
+    uint16_t Minutes;
+    double Seconds;
+    char Area;
+}DMS_t;
+
+typedef struct {
+    DMS_t Lat;
+    DMS_t Lon;
+}DMS_Coordinates;
 
 int findMessageId(const char* id);
 void L76X_Send_Command(char *data);
 Coordinates L76X_Baidu_Coordinates(const GPSdata_t* data);
 Coordinates L76X_Google_Coordinates(const GPSdata_t* data);
+DMS_Coordinates Google2DMS(Coordinates coors, char lat_area, char lon_area);
 GPSdata_t L76X_Parse_NMEA(void);
 void L76X_Extract_RMC(GPSdata_t* result);
 void L76X_Extract_VTG(GPSdata_t* result);

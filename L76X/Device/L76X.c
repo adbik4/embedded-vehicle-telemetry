@@ -287,3 +287,23 @@ Coordinates L76X_Google_Coordinates(const GPSdata_t* data)
     temp.Lon =((int)(data->Lon)) + (data->Lon - ((int)(data->Lon)))*100 / 60;
     return temp;
 }
+
+/******************************************************************************
+function:
+	Convert Google Maps coordinates into human-readable
+    Degrees Minutes Seconds format
+******************************************************************************/
+DMS_Coordinates Google2DMS(Coordinates coors, char lat_area, char lon_area)
+{
+    DMS_Coordinates result = {};
+    result.Lat.Degrees = (uint16_t)(coors.Lat / 100.0);
+    result.Lat.Minutes = (uint16_t)(coors.Lat - result.Lat.Degrees * 100);
+    result.Lat.Seconds = (coors.Lat - result.Lat.Degrees * 100 - result.Lat.Minutes) * 60;
+    result.Lat.Area = lat_area;
+
+    result.Lon.Degrees = (uint16_t)(coors.Lon / 100.0);
+    result.Lon.Minutes = (uint16_t)(coors.Lon - result.Lon.Degrees * 100);
+    result.Lon.Seconds = (coors.Lon - result.Lon.Degrees * 100 - result.Lon.Minutes) * 60;
+    result.Lon.Area = lon_area;
+    return result;
+}

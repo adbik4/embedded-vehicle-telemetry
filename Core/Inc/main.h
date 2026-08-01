@@ -95,21 +95,19 @@ void Error_Handler(void);
 #define EINK_BUSY_GPIO_Port GPIOA
 #define EINK_SPI_CS_Pin GPIO_PIN_4
 #define EINK_SPI_CS_GPIO_Port GPIOA
-#define EINK_PWR_Pin GPIO_PIN_6
-#define EINK_PWR_GPIO_Port GPIOA
-#define EINK_DIN_Pin GPIO_PIN_7
-#define EINK_DIN_GPIO_Port GPIOA
-#define EINK_SCK_Pin GPIO_PIN_5
-#define EINK_SCK_GPIO_Port GPIOA
+#define EINK_DIN_Pin GPIO_PIN_1
+#define EINK_DIN_GPIO_Port GPIOC
+#define EINK_SCK_Pin GPIO_PIN_10
+#define EINK_SCK_GPIO_Port GPIOB
 
 /// L76X GPIO
-#define L76X_RX_Pin GPIO_PIN_12
-#define L76X_RX_GPIO_Port GPIOB
-#define L76X_TX_Pin GPIO_PIN_13
-#define L76X_TX_GPIO_Port GPIOB
-#define L76X_RST_Pin GPIO_PIN_1
+#define L76X_RX_Pin GPIO_PIN_1
+#define L76X_RX_GPIO_Port GPIOA
+#define L76X_TX_Pin GPIO_PIN_0
+#define L76X_TX_GPIO_Port GPIOA
+#define L76X_RST_Pin GPIO_PIN_0
 #define L76X_RST_GPIO_Port GPIOB
-#define L76X_PPS_Pin GPIO_PIN_2
+#define L76X_PPS_Pin GPIO_PIN_1
 #define L76X_PPS_GPIO_Port GPIOB
 
 /* USER CODE END Private defines */
