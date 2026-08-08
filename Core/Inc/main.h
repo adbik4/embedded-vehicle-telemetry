@@ -30,8 +30,8 @@ extern "C" {
 #include "stm32u3xx_hal.h"
 
 #include "stm32u3xx_nucleo.h"
-#include <stdio.h>
 
+#include "stm32u3xx_nucleo.h"
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 
@@ -54,20 +54,22 @@ extern "C" {
 
 /* Exported functions prototypes ---------------------------------------------*/
 void Error_Handler(void);
+void MX_TIM3_Init(void);
 
 /* USER CODE BEGIN EFP */
 
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
-#define USER_BUTTON_Pin GPIO_PIN_13
-#define USER_BUTTON_GPIO_Port GPIOC
+#define BSP_BUTTON_EXTI_IRQn EXTI13_IRQn
 #define RCC_OSC32_IN_Pin GPIO_PIN_14
 #define RCC_OSC32_IN_GPIO_Port GPIOC
 #define RCC_OSC32_OUT_Pin GPIO_PIN_15
 #define RCC_OSC32_OUT_GPIO_Port GPIOC
 #define VSENSE_Pin GPIO_PIN_2
 #define VSENSE_GPIO_Port GPIOC
+#define ACCEL_GYRO_INT1_Pin GPIO_PIN_3
+#define ACCEL_GYRO_INT1_GPIO_Port GPIOC
 #define VBUS_DET_Pin GPIO_PIN_12
 #define VBUS_DET_GPIO_Port GPIOF
 #define USB_DM_Pin GPIO_PIN_11
@@ -80,6 +82,8 @@ void Error_Handler(void);
 #define DEBUG_JTCK_SWCLK_GPIO_Port GPIOA
 #define DEBUG_JTDI_Pin GPIO_PIN_15
 #define DEBUG_JTDI_GPIO_Port GPIOA
+#define MAG_CS_Pin GPIO_PIN_2
+#define MAG_CS_GPIO_Port GPIOD
 #define FDCAN_STBY_Pin GPIO_PIN_7
 #define FDCAN_STBY_GPIO_Port GPIOD
 #define DEBUG_JTDO_SWO_Pin GPIO_PIN_3
