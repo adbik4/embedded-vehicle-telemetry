@@ -22,6 +22,8 @@
 /* Includes ------------------------------------------------------------------*/
 #include "stm32u3xx_nucleo.h"
 
+extern DMA_HandleTypeDef handle_GPDMA1_Channel0;
+
 #if defined(__ICCARM__)
 #include <LowLevelIOInterface.h>
 #endif /* __ICCARM__ */
@@ -503,9 +505,32 @@ int32_t BSP_COM_Init(COM_TypeDef COM, COM_InitTypeDef *COM_Init)
     }
 #endif /* (USE_HAL_UART_REGISTER_CALLBACKS == 0) */
 
-    if (MX_USART1_Init(&hcom_uart[COM], COM_Init) != HAL_OK)
+    if (COM_Init != NULL && MX_USART1_Init(&hcom_uart[COM], COM_Init) != HAL_OK)
     {
       ret = BSP_ERROR_PERIPH_FAILURE;
+    }
+    else if (COM == COM1)
+    {
+      hcom_uart[COM].hdmarx = &handle_GPDMA1_Channel0;
+      handle_GPDMA1_Channel0.Instance = GPDMA1_Channel0;
+      handle_GPDMA1_Channel0.Init.Request = GPDMA1_REQUEST_USART1_RX;
+      handle_GPDMA1_Channel0.Init.Direction = DMA_PERIPH_TO_MEMORY;
+      handle_GPDMA1_Channel0.Init.SrcInc = DMA_SINC_FIXED;
+      handle_GPDMA1_Channel0.Init.DestInc = DMA_DINC_INCREMENTED;
+      handle_GPDMA1_Channel0.Init.SrcDataWidth = DMA_SRC_DATAWIDTH_BYTE;
+      handle_GPDMA1_Channel0.Init.DestDataWidth = DMA_DEST_DATAWIDTH_BYTE;
+      handle_GPDMA1_Channel0.Init.Priority = DMA_HIGH_PRIORITY;
+      handle_GPDMA1_Channel0.Init.SrcBurstLength = 1U;
+      handle_GPDMA1_Channel0.Init.DestBurstLength = 1U;
+      handle_GPDMA1_Channel0.Init.TransferAllocatedPort = DMA_SRC_ALLOCATED_PORT0 | DMA_DEST_ALLOCATED_PORT0;
+      handle_GPDMA1_Channel0.Init.TransferEventMode = DMA_TCEM_BLOCK_TRANSFER;
+      handle_GPDMA1_Channel0.Init.Mode = DMA_NORMAL;
+      handle_GPDMA1_Channel0.Parent = &hcom_uart[COM];
+
+      if (HAL_DMA_Init(&handle_GPDMA1_Channel0) != HAL_OK)
+      {
+        ret = BSP_ERROR_PERIPH_FAILURE;
+      }
     }
   }
 
@@ -709,6 +734,7 @@ static void BUTTON_USER_EXTI_Callback(void)
 static void COM1_MspInit(UART_HandleTypeDef *huart)
 {
   GPIO_InitTypeDef gpio_init_structure;
+  (void)huart;
 
   /* Prevent unused argument(s) compilation warning */
   UNUSED(huart);
@@ -719,6 +745,28 @@ static void COM1_MspInit(UART_HandleTypeDef *huart)
 
   /* Enable USART clock */
   COM1_CLK_ENABLE();
+  
+  /* Enable DMA clock and configure USART3 RX DMA */
+  __HAL_RCC_GPDMA1_CLK_ENABLE();
+
+  handle_GPDMA1_Channel0.Instance = GPDMA1_Channel0;
+  handle_GPDMA1_Channel0.Init.Request = GPDMA1_REQUEST_USART3_RX;
+  handle_GPDMA1_Channel0.Init.BlkHWRequest = DMA_BREQ_SINGLE_BURST;
+  handle_GPDMA1_Channel0.Init.Direction = DMA_PERIPH_TO_MEMORY;
+  handle_GPDMA1_Channel0.Init.SrcInc = DMA_SINC_FIXED;
+  handle_GPDMA1_Channel0.Init.DestInc = DMA_DINC_INCREMENTED;
+  handle_GPDMA1_Channel0.Init.SrcDataWidth = DMA_SRC_DATAWIDTH_BYTE;
+  handle_GPDMA1_Channel0.Init.DestDataWidth = DMA_DEST_DATAWIDTH_BYTE;
+  handle_GPDMA1_Channel0.Init.Priority = DMA_HIGH_PRIORITY;
+  handle_GPDMA1_Channel0.Init.SrcBurstLength = 1U;
+  handle_GPDMA1_Channel0.Init.DestBurstLength = 1U;
+  handle_GPDMA1_Channel0.Init.TransferAllocatedPort = DMA_SRC_ALLOCATED_PORT0 | DMA_DEST_ALLOCATED_PORT0;
+  handle_GPDMA1_Channel0.Init.TransferEventMode = DMA_TCEM_BLOCK_TRANSFER;
+  handle_GPDMA1_Channel0.Init.Mode = DMA_NORMAL;
+
+  HAL_DMA_Init(&handle_GPDMA1_Channel0);
+
+  __HAL_LINKDMA(huart, hdmarx, handle_GPDMA1_Channel0);
 
   /* Configure USART Tx as alternate function */
   gpio_init_structure.Pin       = COM1_TX_PIN;
@@ -746,6 +794,12 @@ static void COM1_MspDeInit(UART_HandleTypeDef *huart)
 
   /* Prevent unused argument(s) compilation warning */
   UNUSED(huart);
+
+  if (huart->hdmarx != NULL)
+  {
+    (void)HAL_DMA_DeInit(huart->hdmarx);
+    huart->hdmarx = NULL;
+  }
 
   /* COM GPIO pin configuration */
   gpio_init_structure.Pin  = COM1_TX_PIN;

@@ -30,7 +30,9 @@ extern "C" {
 #include "stm32u3xx_hal.h"
 
 #include "stm32u3xx_nucleo.h"
+#include <stdio.h>
 
+#include "app_mems_int_pin_a_interface.h"
 #include "stm32u3xx_nucleo.h"
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
@@ -54,7 +56,8 @@ extern "C" {
 
 /* Exported functions prototypes ---------------------------------------------*/
 void Error_Handler(void);
-void MX_TIM3_Init(void);
+void MX_TIM1_Init(void);
+void MX_TIM4_Init(void);
 
 /* USER CODE BEGIN EFP */
 
@@ -66,10 +69,16 @@ void MX_TIM3_Init(void);
 #define RCC_OSC32_IN_GPIO_Port GPIOC
 #define RCC_OSC32_OUT_Pin GPIO_PIN_15
 #define RCC_OSC32_OUT_GPIO_Port GPIOC
+#define MEMS_INT_A_Pin GPIO_PIN_1
+#define MEMS_INT_A_GPIO_Port GPIOF
 #define VSENSE_Pin GPIO_PIN_2
 #define VSENSE_GPIO_Port GPIOC
 #define ACCEL_GYRO_INT1_Pin GPIO_PIN_3
 #define ACCEL_GYRO_INT1_GPIO_Port GPIOC
+#define DEBUG_USART_RX_Pin GPIO_PIN_5
+#define DEBUG_USART_RX_GPIO_Port GPIOA
+#define DEBUG_USART_TX_Pin GPIO_PIN_7
+#define DEBUG_USART_TX_GPIO_Port GPIOA
 #define VBUS_DET_Pin GPIO_PIN_12
 #define VBUS_DET_GPIO_Port GPIOF
 #define USB_DM_Pin GPIO_PIN_11

@@ -11,8 +11,9 @@ set(MX_Defines_Syms
 # STM32CubeMX generated include paths
 set(MX_Include_Dirs
     ${CMAKE_CURRENT_SOURCE_DIR}/../../Core/Inc
-    ${CMAKE_CURRENT_SOURCE_DIR}/../../MEMS/App
-    ${CMAKE_CURRENT_SOURCE_DIR}/../../MEMS/Target
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../Library/App
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../Library/Target
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../X-CUBE-MEMS1/Target
     ${CMAKE_CURRENT_SOURCE_DIR}/../../Drivers/BSP/STM32U3xx_Nucleo
     ${CMAKE_CURRENT_SOURCE_DIR}/../../Drivers/STM32U3xx_HAL_Driver/Inc
     ${CMAKE_CURRENT_SOURCE_DIR}/../../Drivers/STM32U3xx_HAL_Driver/Inc/Legacy
@@ -22,19 +23,38 @@ set(MX_Include_Dirs
     ${CMAKE_CURRENT_SOURCE_DIR}/../../Middlewares/ST/STM32_MotionFX_Library/Inc
     ${CMAKE_CURRENT_SOURCE_DIR}/../../Drivers/BSP/Components/Common
     ${CMAKE_CURRENT_SOURCE_DIR}/../../Drivers/BSP/Components/lsm6dsv16x
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../Middlewares/ST/STM32_MotionAC_Library/Inc
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../Middlewares/ST/STM32_MotionAW_Library/Inc
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../Middlewares/ST/STM32_MotionEC_Library/Inc
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../Middlewares/ST/STM32_MotionGC_Library/Inc
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../Middlewares/ST/STM32_MotionID_Library/Inc
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../Middlewares/ST/STM32_MotionMC_Library/Inc
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../Middlewares/ST/STM32_MotionPM_Library/Inc
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../Middlewares/ST/STM32_MotionPW_Library/Inc
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../Middlewares/ST/STM32_MotionTL_Library/Inc
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../Middlewares/ST/ARM/DSP/Inc
 )
 
 # STM32CubeMX generated application sources
 set(MX_Application_Src
-    ${CMAKE_CURRENT_SOURCE_DIR}/../../MEMS/App/app_mems.c
-    ${CMAKE_CURRENT_SOURCE_DIR}/../../MEMS/Target/custom_motion_sensors.c
-    ${CMAKE_CURRENT_SOURCE_DIR}/../../MEMS/Target/custom_motion_sensors_ex.c
-    ${CMAKE_CURRENT_SOURCE_DIR}/../../MEMS/Target/com.c
-    ${CMAKE_CURRENT_SOURCE_DIR}/../../MEMS/Target/demo_serial.c
-    ${CMAKE_CURRENT_SOURCE_DIR}/../../MEMS/Target/serial_protocol.c
-    ${CMAKE_CURRENT_SOURCE_DIR}/../../MEMS/Target/custom_mems_control.c
-    ${CMAKE_CURRENT_SOURCE_DIR}/../../MEMS/Target/custom_mems_control_ex.c
-    ${CMAKE_CURRENT_SOURCE_DIR}/../../MEMS/Target/motion_fx_manager.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../Library/Target/com.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../Library/Target/custom_mems_control.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../Library/Target/custom_mems_control_ex.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../Library/Target/app_mems_int_pin_a_interface.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../Library/App/app_algobuild.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../Library/App/ab_buffers.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../Library/App/ab_display.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../Library/App/ab_fft.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../Library/App/ab_sensor_hub.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../Library/App/ab_sequential_logic.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../Library/App/ab_signal.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../Library/App/ab_user_input.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../Library/App/algo_builder.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../Library/App/demo_serial.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../Library/App/sensor_commands.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../Library/App/serial_protocol.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../X-CUBE-MEMS1/Target/custom_motion_sensors.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../X-CUBE-MEMS1/Target/custom_motion_sensors_ex.c
     ${CMAKE_CURRENT_SOURCE_DIR}/../../Core/Src/main.c
     ${CMAKE_CURRENT_SOURCE_DIR}/../../Core/Src/stm32u3xx_nucleo_bus.c
     ${CMAKE_CURRENT_SOURCE_DIR}/../../Core/Src/stm32u3xx_it.c
@@ -90,11 +110,33 @@ set(STM32_Drivers_Src
 set(MX_LINK_DIRS
 
     ${CMAKE_CURRENT_SOURCE_DIR}/../../Middlewares/ST/STM32_MotionFX_Library/Lib
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../Middlewares/ST/STM32_MotionAC_Library/Lib
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../Middlewares/ST/STM32_MotionAW_Library/Lib
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../Middlewares/ST/STM32_MotionEC_Library/Lib
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../Middlewares/ST/STM32_MotionFX_Library/Lib
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../Middlewares/ST/STM32_MotionGC_Library/Lib
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../Middlewares/ST/STM32_MotionID_Library/Lib
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../Middlewares/ST/STM32_MotionMC_Library/Lib
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../Middlewares/ST/STM32_MotionPM_Library/Lib
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../Middlewares/ST/STM32_MotionPW_Library/Lib
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../Middlewares/ST/STM32_MotionTL_Library/Lib
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../Middlewares/ST/ARM/DSP/Lib
 )
 # Project static libraries
 set(MX_LINK_LIBS 
  "-Wl,--start-group" 
-	:MotionFX_CM33F_wc32_ot_hard.a
+	:MotionFX_CM33F_wc32_ot_hard.a 
+	:MotionAC_CM33F_wc32_ot.a 
+	:MotionAW_CM33F_wc32_ot.a 
+	:MotionEC_CM33F_wc32_ot.a 
+	:MotionFX_CM33F_wc32_ot.a 
+	:MotionGC_CM33F_wc32_ot.a 
+	:MotionID_CM33F_wc32_ot.a 
+	:MotionMC_CM33F_wc32_ot.a 
+	:MotionPM_CM33F_wc32_ot.a 
+	:MotionPW_CM33F_wc32_ot.a 
+	:MotionTL_CM33F_wc32_ot.a 
+	:libarm_ARMv8MMLlfsp_math.a
  "-Wl,--end-group"
     STM32_Drivers
     ${TOOLCHAIN_LINK_LIBRARIES}

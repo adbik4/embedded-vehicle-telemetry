@@ -42,11 +42,10 @@ Update-File 'Core/Src/stm32u3xx_it.c' {
     return $content -replace 'HAL_EXTI_IRQHandler\(&H_EXTI_13\);', 'BSP_PB_IRQHandler(BUTTON_USER);'
 }
 
-Update-File 'MEMS/App/app_mems.c' {
+Update-File 'Library/App/app_algobuild.c' {
     param($content)
     $content = $content -replace 'BUTTON_KEY', 'BUTTON_USER'
     $content = $content -replace '\bLED2\b', 'LED_BLUE'
-    $content = $content -replace 'BSP_COM_Init\(COM1\);', '  /* COM port is initialized in main.c and reused here */'
     return $content
 }
 

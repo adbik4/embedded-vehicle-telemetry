@@ -22,10 +22,11 @@
 #define  __RTE_COMPONENTS_H__
 
 /* Defines ------------------------------------------------------------------*/
+/* STMicroelectronics.X-CUBE-ALGOBUILD.1.5.0 */
+#define CUSTOM_ALGOBUILDER_FW_TEMPLATE
 /* STMicroelectronics.X-CUBE-MEMS1.13.0.0 */
 #define BSP_MOTION_SENSORS
 #define LIS2MDL_MAG_SPI
 #define LSM6DSV16X_ACCGYRQVAR_I2C
-#define CUSTOM_DATALOGFUSION_DEMO
 
 #endif /* __RTE_COMPONENTS_H__ */
