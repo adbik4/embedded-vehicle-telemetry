@@ -31,7 +31,7 @@
 /* Private defines -----------------------------------------------------------*/
 /* Private macros ------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
-EXTI_HandleTypeDef hexti1 = {.Line = EXTI_LINE_1};
+EXTI_HandleTypeDef hexti3 = {.Line = EXTI_LINE_3};
 
 /* Global variables ----------------------------------------------------------*/
 extern volatile uint8_t SensorReadRequest;
@@ -43,10 +43,10 @@ static void mems_int_pin_a_hardware_event_isr(void);
 void set_mems_int_pin_a_exti(void)
 {
   /* register event irq handler */
-  HAL_EXTI_GetHandle(&hexti1, EXTI_LINE_1);
-  HAL_EXTI_RegisterCallback(&hexti1, HAL_EXTI_COMMON_CB_ID, mems_int_pin_a_hardware_event_isr);
-  HAL_NVIC_SetPriority(EXTI1_IRQn, 0, 0);
-  HAL_NVIC_EnableIRQ(EXTI1_IRQn);
+  HAL_EXTI_GetHandle(&hexti3, EXTI_LINE_3);
+  HAL_EXTI_RegisterCallback(&hexti3, HAL_EXTI_COMMON_CB_ID, mems_int_pin_a_hardware_event_isr);
+  HAL_NVIC_SetPriority(EXTI3_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(EXTI3_IRQn);
 }
 
 static void mems_int_pin_a_hardware_event_isr(void)

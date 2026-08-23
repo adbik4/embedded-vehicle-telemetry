@@ -22,11 +22,11 @@
 /* Includes ------------------------------------------------------------------*/
 #include "stm32u3xx_nucleo.h"
 
-extern DMA_HandleTypeDef handle_GPDMA1_Channel0;
-
 #if defined(__ICCARM__)
 #include <LowLevelIOInterface.h>
 #endif /* __ICCARM__ */
+
+extern DMA_HandleTypeDef handle_GPDMA1_Channel0;
 
 /** @addtogroup BSP
   * @{
@@ -411,8 +411,8 @@ int32_t BSP_PB_Init(Button_TypeDef Button, ButtonMode_TypeDef ButtonMode)
     (void)HAL_EXTI_GetHandle(&hpb_exti[Button], BUTTON_EXTI_LINE[Button]);
     (void)HAL_EXTI_RegisterCallback(&hpb_exti[Button],  HAL_EXTI_COMMON_CB_ID, ButtonCallback[Button]);
 
-    /* Enable and set Button EXTI Interrupt to the lowest priority */
-    HAL_NVIC_SetPriority((BUTTON_IRQn[Button]), BSP_BUTTON_PRIO[Button], 0x00);
+    /* Enable and set Button EXTI Interrupt to the second lowest priority */
+    HAL_NVIC_SetPriority((BUTTON_IRQn[Button]), BSP_BUTTON_PRIO[Button], 0x01);
     HAL_NVIC_EnableIRQ((BUTTON_IRQn[Button]));
   }
 
@@ -471,6 +471,7 @@ __weak void BSP_PB_Callback(Button_TypeDef Button)
 
   /* This function should be implemented by the user application.
      It is called into this driver when an event on Button is triggered. */
+  BSP_LED_On(LED_RED);
 }
 
 #if (USE_BSP_COM_FEATURE > 0)
@@ -735,7 +736,6 @@ static void COM1_MspInit(UART_HandleTypeDef *huart)
 {
   GPIO_InitTypeDef gpio_init_structure;
   (void)huart;
-
   /* Prevent unused argument(s) compilation warning */
   UNUSED(huart);
 
@@ -745,7 +745,7 @@ static void COM1_MspInit(UART_HandleTypeDef *huart)
 
   /* Enable USART clock */
   COM1_CLK_ENABLE();
-  
+
   /* Enable DMA clock and configure USART3 RX DMA */
   __HAL_RCC_GPDMA1_CLK_ENABLE();
 

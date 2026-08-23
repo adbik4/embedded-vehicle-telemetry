@@ -1,0 +1,179 @@
+{
+  "targets": [
+    {
+          "name": "NUCLEO-U385RG-Q + X-NUCLEO-IKS4A1 (LSM6DSV16X)",
+          "import_path": "STM32U385RG-Nucleo/STM32U3xx-Nucleo-Project",
+          "data_path": "STM32U385RG-Nucleo",
+          "configuration": "IKS4A1",
+          "mcu": "STM32U385RG"
+    },
+    {
+          "name": "NUCLEO-U385RG-Q + X-NUCLEO-IKS4A1 (LSM6DSO16IS)",
+          "import_path": "STM32U385RG-Nucleo/STM32U3xx-Nucleo-Project",
+          "data_path": "STM32U385RG-Nucleo",
+          "configuration": "IKS4A1_LSM6DSO16IS",
+          "mcu": "STM32U385RG"
+    },
+    {
+          "name": "NUCLEO-U385RG-Q + X-NUCLEO-IKS5A1 (ISM6HG256X)",
+          "import_path": "STM32U385RG-Nucleo/STM32U3xx-Nucleo-Project",
+          "data_path": "STM32U385RG-Nucleo",
+          "configuration": "IKS5A1_ISM6HG256X",
+          "mcu": "STM32U385RG"
+    },
+    {
+          "name": "NUCLEO-U385RG-Q + X-NUCLEO-IKS5A1 (ISM330IS)",
+          "import_path": "STM32U385RG-Nucleo/STM32U3xx-Nucleo-Project",
+          "data_path": "STM32U385RG-Nucleo",
+          "configuration": "IKS5A1_ISM330IS",
+          "mcu": "STM32U385RG"
+    },
+    {
+          "name": "NUCLEO-U575ZI-Q + X-NUCLEO-IKS02A1 + ISM330IS",
+          "import_path": "STM32U575ZI-Nucleo/STM32U5xx-Nucleo-Project",
+          "data_path": "STM32U575ZI-Nucleo",
+          "configuration": "IKS02A1_ISM330IS",
+          "mcu": "STM32U575ZI"
+    },
+    {
+          "name": "NUCLEO-U575ZI-Q + X-NUCLEO-IKS4A1 (LSM6DSV16X)",
+          "import_path": "STM32U575ZI-Nucleo/STM32U5xx-Nucleo-Project",
+          "data_path": "STM32U575ZI-Nucleo",
+          "configuration": "IKS4A1",
+          "mcu": "STM32U575ZI"
+    },
+    {
+          "name": "NUCLEO-U575ZI-Q + X-NUCLEO-IKS4A1 (LSM6DSO16IS)",
+          "import_path": "STM32U575ZI-Nucleo/STM32U5xx-Nucleo-Project",
+          "data_path": "STM32U575ZI-Nucleo",
+          "configuration": "IKS4A1_LSM6DSO16IS",
+          "mcu": "STM32U575ZI"
+    },
+    {
+          "name": "NUCLEO-U575ZI-Q + X-NUCLEO-IKS5A1 (ISM6HG256X)",
+          "import_path": "STM32U575ZI-Nucleo/STM32U5xx-Nucleo-Project",
+          "data_path": "STM32U575ZI-Nucleo",
+          "configuration": "IKS5A1_ISM6HG256X",
+          "mcu": "STM32U575ZI"
+    },
+    {
+          "name": "NUCLEO-U575ZI-Q + X-NUCLEO-IKS5A1 (ISM330IS)",
+          "import_path": "STM32U575ZI-Nucleo/STM32U5xx-Nucleo-Project",
+          "data_path": "STM32U575ZI-Nucleo",
+          "configuration": "IKS5A1_ISM330IS",
+          "mcu": "STM32U575ZI"
+    },
+    {
+          "name": "NUCLEO-F401RE + X-NUCLEO-IKS02A1 + ISM330IS",
+          "import_path": "STM32F401RE-Nucleo/STM32F4xx-Nucleo-Project",
+          "data_path": "STM32F401RE-Nucleo",
+          "configuration": "IKS02A1_ISM330IS",
+          "mcu": "STM32F401R"
+    },
+    {
+          "name": "NUCLEO-F401RE + X-NUCLEO-IKS4A1 (LSM6DSV16X)",
+          "import_path": "STM32F401RE-Nucleo/STM32F4xx-Nucleo-Project",
+          "data_path": "STM32F401RE-Nucleo",
+          "configuration": "IKS4A1_LSM6DSV16X",
+          "mcu": "STM32F401R"
+    },
+    {
+          "name": "NUCLEO-F401RE + X-NUCLEO-IKS4A1 (LSM6DSO16IS)",
+          "import_path": "STM32F401RE-Nucleo/STM32F4xx-Nucleo-Project",
+          "data_path": "STM32F401RE-Nucleo",
+          "configuration": "IKS4A1_LSM6DSO16IS",
+          "mcu": "STM32F401R"
+    },
+    {
+          "name": "NUCLEO-F401RE + X-NUCLEO-IKS5A1 (ISM6HG256X)",
+          "import_path": "STM32F401RE-Nucleo/STM32F4xx-Nucleo-Project",
+          "data_path": "STM32F401RE-Nucleo",
+          "configuration": "IKS5A1_ISM6HG256X",
+          "mcu": "STM32F401R"
+    },
+    {
+          "name": "NUCLEO-F401RE + X-NUCLEO-IKS5A1 (ISM330IS)",
+          "import_path": "STM32F401RE-Nucleo/STM32F4xx-Nucleo-Project",
+          "data_path": "STM32F401RE-Nucleo",
+          "configuration": "IKS5A1_ISM330IS",
+          "mcu": "STM32F401R"
+    },
+    {
+          "name": "SensorTile.box",
+          "import_path": "STM32L4R9ZI-SensorTile.box/SensorTile.box-Project",
+          "data_path": "STM32L4R9ZI-SensorTile.box",
+          "configuration": "SensorTile.box-Project",
+          "mcu": "STM32L4R9ZI"
+    },
+    {
+          "name": "SensorTile.box BLE",
+          "import_path": "STM32L4R9ZI-SensorTile.box_BLE/SensorTile.box-Project",
+          "data_path": "STM32L4R9ZI-SensorTile.box_BLE",
+          "configuration": "SensorTile.box-Project",
+          "mcu": "STM32L4R9ZI"
+    },
+    {
+          "name": "SensorTile.box Pro",
+          "import_path": "STM32U585AI-SensorTileBoxPro/SensorTileBoxPro-Project",
+          "data_path": "STM32U585AI-SensorTileBoxPro",
+          "configuration": "SensorTileBoxPro-Project",
+          "mcu": "STM32U585AI"
+    },
+    {
+          "name": "SensorTile.box Pro + LSM6DSO16IS",
+          "import_path": "STM32U585AI-SensorTileBoxPro/SensorTileBoxPro-Project",
+          "data_path": "STM32U585AI-SensorTileBoxPro",
+          "configuration": "SensorTileBoxPro_LSM6DSO16IS-Project",
+          "mcu": "STM32U585AI"
+    },
+    {
+          "name": "SensorTile.box Pro + LSM6DSV320X",
+          "import_path": "STM32U585AI-SensorTileBoxPro/SensorTileBoxPro-Project",
+          "data_path": "STM32U585AI-SensorTileBoxPro",
+          "configuration": "SensorTileBoxPro_LSM6DSV320X-Project",
+          "mcu": "STM32U585AI"
+    },
+    {
+          "name": "SensorTile.box Pro BLE",
+          "import_path": "STM32U585AI-SensorTileBoxPro_BLE/SensorTileBoxPro-Project",
+          "data_path": "STM32U585AI-SensorTileBoxPro_BLE",
+          "configuration": "SensorTileBoxPro-Project",
+          "mcu": "STM32U585AI"
+    },
+    {
+          "name": "STWIN",
+          "import_path": "STM32L4R9ZI-STWIN/STWIN-Project",
+          "data_path": "STM32L4R9ZI-STWIN",
+          "configuration": "STWIN-Project",
+          "mcu": "STM32L4R9ZI"
+    },
+    {
+          "name": "STWIN BLE",
+          "import_path": "STM32L4R9ZI-STWIN_BLE/STWIN-Project",
+          "data_path": "STM32L4R9ZI-STWIN_BLE",
+          "configuration": "STWIN-Project",
+          "mcu": "STM32L4R9ZI"
+    },
+    {
+          "name": "STWIN.box",
+          "import_path": "STM32U585AI-STWIN.box/STWIN.box-Project",
+          "data_path": "STM32U585AI-STWIN.box",
+          "configuration": "STWIN.box-Project",
+          "mcu": "STM32U585AI"
+    },
+    {
+          "name": "STWIN.box + ISM330IS",
+          "import_path": "STM32U585AI-STWIN.box/STWIN.box-Project",
+          "data_path": "STM32U585AI-STWIN.box",
+          "configuration": "STWIN.box_ISM330IS-Project",
+          "mcu": "STM32U585AI"
+    },
+    {
+          "name": "STWIN.box + ISM6HG256X",
+          "import_path": "STM32U585AI-STWIN.box/STWIN.box-Project",
+          "data_path": "STM32U585AI-STWIN.box",
+          "configuration": "STWIN.box_ISM6HG256X-Project",
+          "mcu": "STM32U585AI"
+    }
+  ]
+}

@@ -30,10 +30,10 @@ extern "C" {
 
 /* Exported types ------------------------------------------------------------*/
 /* Exported variables --------------------------------------------------------*/
-extern EXTI_HandleTypeDef hexti1;
+extern EXTI_HandleTypeDef hexti3;
 
 /* Exported constants --------------------------------------------------------*/
-#define H_EXTI_1 hexti1
+#define H_EXTI_3 hexti3
 
 /* External variables --------------------------------------------------------*/
 /* Exported macros -----------------------------------------------------------*/

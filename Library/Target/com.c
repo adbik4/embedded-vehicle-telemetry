@@ -223,7 +223,7 @@ void SerializeToMsg(uint8_t Dest, void *Source, uint32_t Len)
   */
 uint32_t Get_DMA_Flag_Status(DMA_HandleTypeDef *handle_dma)
 {
-  return __HAL_DMA_GET_FLAG(handle_dma, DMA_FLAG_DTE);
+  return (__HAL_DMA_GET_FLAG(handle_dma, DMA_FLAG_DTE));
 }
 
 /**

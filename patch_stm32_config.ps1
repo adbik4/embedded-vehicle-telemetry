@@ -45,7 +45,13 @@ Update-File 'Core/Src/stm32u3xx_it.c' {
 Update-File 'Library/App/app_algobuild.c' {
     param($content)
     $content = $content -replace 'BUTTON_KEY', 'BUTTON_USER'
-    $content = $content -replace '\bLED2\b', 'LED_BLUE'
+    $content = $content -replace '\bLED2\b', 'LED_RED'
+    return $content
+}
+
+Update-File 'Library/Target/com.c' {
+    param($content)
+    $content = $content -replace '__HAL_DMA_GET_TE_FLAG_INDEX(handle_dma)', 'DMA_FLAG_DTE'
     return $content
 }
 

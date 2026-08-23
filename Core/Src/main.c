@@ -122,17 +122,6 @@ int main(void)
   /* Initialize leds */
   BSP_LED_Init(LED_RED);
 
-  // /* Initialize COM1 port (115200, 8 bits (7-bit data + 1 stop bit), no parity */
-  // BspCOMInit.BaudRate   = 115200;
-  // BspCOMInit.WordLength = COM_WORDLENGTH_8B;
-  // BspCOMInit.StopBits   = COM_STOPBITS_1;
-  // BspCOMInit.Parity     = COM_PARITY_NONE;
-  // BspCOMInit.HwFlowCtl  = COM_HWCONTROL_NONE;
-  // if (BSP_COM_Init(COM1, &BspCOMInit) != BSP_ERROR_NONE)
-  // {
-  //   Error_Handler();
-  // }
-
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   //printf("Hello World!\r\n");
@@ -592,12 +581,6 @@ static void MX_GPIO_Init(void)
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOD, MAG_CS_Pin|FDCAN_STBY_Pin, GPIO_PIN_RESET);
 
-  /*Configure GPIO pin : MEMS_INT_A_Pin */
-  GPIO_InitStruct.Pin = MEMS_INT_A_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
-  HAL_GPIO_Init(MEMS_INT_A_GPIO_Port, &GPIO_InitStruct);
-
   /*Configure GPIO pins : PF7 PF8 */
   GPIO_InitStruct.Pin = GPIO_PIN_7|GPIO_PIN_8;
   GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
@@ -612,11 +595,11 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(VSENSE_GPIO_Port, &GPIO_InitStruct);
 
-  /*Configure GPIO pin : ACCEL_GYRO_INT1_Pin */
-  GPIO_InitStruct.Pin = ACCEL_GYRO_INT1_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+  /*Configure GPIO pin : ACCEL_GYRO_INT_Pin */
+  GPIO_InitStruct.Pin = ACCEL_GYRO_INT_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
-  HAL_GPIO_Init(ACCEL_GYRO_INT1_GPIO_Port, &GPIO_InitStruct);
+  HAL_GPIO_Init(ACCEL_GYRO_INT_GPIO_Port, &GPIO_InitStruct);
 
   /*Configure GPIO pins : PA2 PA4 PA6 */
   GPIO_InitStruct.Pin = GPIO_PIN_2|GPIO_PIN_4|GPIO_PIN_6;
@@ -650,6 +633,14 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(VBUS_DET_GPIO_Port, &GPIO_InitStruct);
 
+  /*Configure GPIO pins : PA9 PA10 */
+  GPIO_InitStruct.Pin = GPIO_PIN_9|GPIO_PIN_10;
+  GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  GPIO_InitStruct.Alternate = GPIO_AF7_USART1;
+  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+
   /*Configure GPIO pins : USB_DM_Pin USB_DP_Pin */
   GPIO_InitStruct.Pin = USB_DM_Pin|USB_DP_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
@@ -665,6 +656,9 @@ static void MX_GPIO_Init(void)
   HAL_GPIO_Init(GPIOD, &GPIO_InitStruct);
 
   /* EXTI interrupt init*/
+  HAL_NVIC_SetPriority(ACCEL_GYRO_INT_EXTI_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(ACCEL_GYRO_INT_EXTI_IRQn);
+
   HAL_NVIC_SetPriority(EXTI13_IRQn, 0, 0);
   HAL_NVIC_EnableIRQ(EXTI13_IRQn);
 

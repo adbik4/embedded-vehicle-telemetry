@@ -1,0 +1,788 @@
+{
+    "capabilities": [
+      {
+        "Target": "NUCLEO-U385RG-Q + X-NUCLEO-IKS4A1 (LSM6DSV16X)",
+        "Accelerometer": "1",
+        "AccelerometerHighG": "0",
+        "Gyroscope": "1",
+        "Magnetometer": "1",
+        "PressureSensor": "1",
+        "TemperatureSensor": "1",
+        "HumiditySensor": "1",
+        "SD": "0",
+        "FSM_MLC": "1",
+        "ISPU": "0",
+        "AccelerometerPartNumber": "LSM6DSV16X",
+        "GyroscopePartNumber": "LSM6DSV16X",
+        "MagnetometerPartNumber": "LIS2MDL",
+        "PressureSensorPartNumber": "LPS22DF",
+        "TemperatureSensorPartNumber": "SHT40AD1B",
+        "HumiditySensorPartNumber": "SHT40AD1B",
+        "stlink": "1",
+        "flash": "1",
+        "dfu": "0"
+      },
+      {
+        "Target": "NUCLEO-U385RG-Q + X-NUCLEO-IKS4A1 (LSM6DSO16IS)",
+        "Accelerometer": "1",
+        "AccelerometerHighG": "0",
+        "Gyroscope": "1",
+        "Magnetometer": "1",
+        "PressureSensor": "1",
+        "TemperatureSensor": "1",
+        "HumiditySensor": "1",
+        "SD": "0",
+        "FSM_MLC": "0",
+        "ISPU": "1",
+        "AccelerometerPartNumber": "LSM6DS016IS",
+        "GyroscopePartNumber": "LSM6DS016IS",
+        "MagnetometerPartNumber": "LIS2MDL",
+        "PressureSensorPartNumber": "LPS22DF",
+        "TemperatureSensorPartNumber": "SHT40AD1B",
+        "HumiditySensorPartNumber": "SHT40AD1B",
+        "stlink": "1",
+        "flash": "1",
+        "dfu": "0"
+      },
+      {
+        "Target": "NUCLEO-U385RG-Q + X-NUCLEO-IKS5A1 (ISM6HG256X)",
+        "Accelerometer": "1",
+        "AccelerometerHighG": "1",
+        "Gyroscope": "1",
+        "Magnetometer": "1",
+        "PressureSensor": "1",
+        "TemperatureSensor": "0",
+        "HumiditySensor": "0",
+        "SD": "0",
+        "FSM_MLC": "1",
+        "ISPU": "0",
+        "change_block_properties": [
+          {
+            "name": "Accelerometer High-g Config",
+            "properties": {
+               "accelerometer_highg_fs": {
+                        "oneOf": [
+                            {
+                                "const": 32,
+                                "title": " 32 g"
+                            },
+                            {
+                                "const": 64,
+                                "title": " 64 g"
+                            },
+                            {
+                                "const": 128,
+                                "title": "128 g"
+                            },
+                            {
+                                "const": 256,
+                                "title": "256 g"
+                            }
+                        ]
+               }
+            }
+          }
+        ],
+        "AccelerometerPartNumber": "ISM6HG256X",
+        "GyroscopePartNumber": "ISM6HG256X",
+        "MagnetometerPartNumber": "IIS2MDC",
+        "PressureSensorPartNumber": "ILPS22QS",
+        "TemperatureSensorPartNumber": "",
+        "HumiditySensorPartNumber": "",
+        "stlink": "1",
+        "flash": "1",
+        "dfu": "0"
+      },
+      {
+        "Target": "NUCLEO-U385RG-Q + X-NUCLEO-IKS5A1 (ISM330IS)",
+        "Accelerometer": "1",
+        "AccelerometerHighG": "0",
+        "Gyroscope": "1",
+        "Magnetometer": "1",
+        "PressureSensor": "1",
+        "TemperatureSensor": "0",
+        "HumiditySensor": "0",
+        "SD": "0",
+        "FSM_MLC": "0",
+        "ISPU": "1",
+        "AccelerometerPartNumber": "ISM330IS",
+        "GyroscopePartNumber": "ISM330IS",
+        "MagnetometerPartNumber": "IIS2MDC",
+        "PressureSensorPartNumber": "ILPS22QS",
+        "TemperatureSensorPartNumber": "",
+        "HumiditySensorPartNumber": "",
+        "stlink": "1",
+        "flash": "1",
+        "dfu": "0"
+      },
+      {
+        "Target": "NUCLEO-U575ZI-Q + X-NUCLEO-IKS02A1 + ISM330IS",
+        "Accelerometer": "1",
+        "AccelerometerHighG": "0",
+        "Gyroscope": "1",
+        "Magnetometer": "1",
+        "PressureSensor": "0",
+        "TemperatureSensor": "0",
+        "HumiditySensor": "0",
+        "SD": "0",
+        "FSM_MLC": "0",
+        "ISPU": "1",
+        "AccelerometerPartNumber": "ISM330IS",
+        "GyroscopePartNumber": "ISM330IS",
+        "MagnetometerPartNumber": "IIS2MDC",
+        "PressureSensorPartNumber": "",
+        "TemperatureSensorPartNumber": "",
+        "HumiditySensorPartNumber": "",
+        "stlink": "1",
+        "flash": "1",
+        "dfu": "0"
+      },
+      {
+        "Target": "NUCLEO-U575ZI-Q + X-NUCLEO-IKS4A1 (LSM6DSV16X)",
+        "Accelerometer": "1",
+        "AccelerometerHighG": "0",
+        "Gyroscope": "1",
+        "Magnetometer": "1",
+        "PressureSensor": "1",
+        "TemperatureSensor": "1",
+        "HumiditySensor": "1",
+        "SD": "0",
+        "FSM_MLC": "1",
+        "ISPU": "0",
+        "AccelerometerPartNumber": "LSM6DSV16X",
+        "GyroscopePartNumber": "LSM6DSV16X",
+        "MagnetometerPartNumber": "LIS2MDL",
+        "PressureSensorPartNumber": "LPS22DF",
+        "TemperatureSensorPartNumber": "SHT40AD1B",
+        "HumiditySensorPartNumber": "SHT40AD1B",
+        "stlink": "1",
+        "flash": "1",
+        "dfu": "0"
+      },
+      {
+        "Target": "NUCLEO-U575ZI-Q + X-NUCLEO-IKS4A1 (LSM6DSO16IS)",
+        "Accelerometer": "1",
+        "AccelerometerHighG": "0",
+        "Gyroscope": "1",
+        "Magnetometer": "1",
+        "PressureSensor": "1",
+        "TemperatureSensor": "1",
+        "HumiditySensor": "1",
+        "SD": "0",
+        "FSM_MLC": "0",
+        "ISPU": "1",
+        "AccelerometerPartNumber": "LSM6DS016IS",
+        "GyroscopePartNumber": "LSM6DS016IS",
+        "MagnetometerPartNumber": "LIS2MDL",
+        "PressureSensorPartNumber": "LPS22DF",
+        "TemperatureSensorPartNumber": "SHT40AD1B",
+        "HumiditySensorPartNumber": "SHT40AD1B",
+        "stlink": "1",
+        "flash": "1",
+        "dfu": "0"
+      },
+      {
+        "Target": "NUCLEO-U575ZI-Q + X-NUCLEO-IKS5A1 (ISM6HG256X)",
+        "Accelerometer": "1",
+        "AccelerometerHighG": "1",
+        "Gyroscope": "1",
+        "Magnetometer": "1",
+        "PressureSensor": "1",
+        "TemperatureSensor": "0",
+        "HumiditySensor": "0",
+        "SD": "0",
+        "FSM_MLC": "1",
+        "ISPU": "0",
+		"change_block_properties": [
+          {
+            "name": "Accelerometer High-g Config",
+            "properties": {
+               "accelerometer_highg_fs": {
+                        "oneOf": [
+                            {
+                                "const": 32,
+                                "title": " 32 g"
+                            },
+                            {
+                                "const": 64,
+                                "title": " 64 g"
+                            },
+                            {
+                                "const": 128,
+                                "title": "128 g"
+                            },
+                            {
+                                "const": 256,
+                                "title": "256 g"
+                            }
+                        ]
+               }
+            }
+          }
+        ],
+        "AccelerometerPartNumber": "ISM6HG256X",
+        "GyroscopePartNumber": "ISM6HG256X",
+        "MagnetometerPartNumber": "IIS2MDC",
+        "PressureSensorPartNumber": "ILPS22QS",
+        "TemperatureSensorPartNumber": "",
+        "HumiditySensorPartNumber": "",
+        "stlink": "1",
+        "flash": "1",
+        "dfu": "0"
+      },
+      {
+        "Target": "NUCLEO-U575ZI-Q + X-NUCLEO-IKS5A1 (ISM330IS)",
+        "Accelerometer": "1",
+        "AccelerometerHighG": "0",
+        "Gyroscope": "1",
+        "Magnetometer": "1",
+        "PressureSensor": "1",
+        "TemperatureSensor": "0",
+        "HumiditySensor": "0",
+        "SD": "0",
+        "FSM_MLC": "0",
+        "ISPU": "1",
+        "AccelerometerPartNumber": "ISM330IS",
+        "GyroscopePartNumber": "ISM330IS",
+        "MagnetometerPartNumber": "IIS2MDC",
+        "PressureSensorPartNumber": "ILPS22QS",
+        "TemperatureSensorPartNumber": "",
+        "HumiditySensorPartNumber": "",
+        "stlink": "1",
+        "flash": "1",
+        "dfu": "0"
+      },
+      {
+        "Target": "NUCLEO-F401RE + X-NUCLEO-IKS02A1 + ISM330IS",
+        "Accelerometer": "1",
+        "AccelerometerHighG": "0",
+        "Gyroscope": "1",
+        "Magnetometer": "1",
+        "PressureSensor": "0",
+        "TemperatureSensor": "0",
+        "HumiditySensor": "0",
+        "SD": "0",
+        "FSM_MLC": "0",
+        "ISPU": "1",
+        "AccelerometerPartNumber": "ISM330IS",
+        "GyroscopePartNumber": "ISM330IS",
+        "MagnetometerPartNumber": "IIS2MDC",
+        "PressureSensorPartNumber": "",
+        "TemperatureSensorPartNumber": "",
+        "HumiditySensorPartNumber": "",
+        "stlink": "1",
+        "flash": "1",
+        "dfu": "0"
+      },
+      {
+        "Target": "NUCLEO-F401RE + X-NUCLEO-IKS4A1 (LSM6DSV16X)",
+        "Accelerometer": "1",
+        "AccelerometerHighG": "0",
+        "Gyroscope": "1",
+        "Magnetometer": "1",
+        "PressureSensor": "1",
+        "TemperatureSensor": "1",
+        "HumiditySensor": "1",
+        "SD": "0",
+        "FSM_MLC": "1",
+        "ISPU": "0",
+        "AccelerometerPartNumber": "LSM6DSV16X",
+        "GyroscopePartNumber": "LSM6DSV16X",
+        "MagnetometerPartNumber": "LIS2MDL",
+        "PressureSensorPartNumber": "LPS22DF",
+        "TemperatureSensorPartNumber": "SHT40AD1B",
+        "HumiditySensorPartNumber": "SHT40AD1B",
+        "stlink": "1",
+        "flash": "1",
+        "dfu": "0"
+      },
+      {
+        "Target": "NUCLEO-F401RE + X-NUCLEO-IKS4A1 (LSM6DSO16IS)",
+        "Accelerometer": "1",
+        "AccelerometerHighG": "0",
+        "Gyroscope": "1",
+        "Magnetometer": "1",
+        "PressureSensor": "1",
+        "TemperatureSensor": "1",
+        "HumiditySensor": "1",
+        "SD": "0",
+        "FSM_MLC": "0",
+        "ISPU": "1",
+        "AccelerometerPartNumber": "LSM6DS016IS",
+        "GyroscopePartNumber": "LSM6DS016IS",
+        "MagnetometerPartNumber": "LIS2MDL",
+        "PressureSensorPartNumber": "LPS22DF",
+        "TemperatureSensorPartNumber": "SHT40AD1B",
+        "HumiditySensorPartNumber": "SHT40AD1B",
+        "stlink": "1",
+        "flash": "1",
+        "dfu": "0"
+      },
+      {
+        "Target": "NUCLEO-F401RE + X-NUCLEO-IKS5A1 (ISM6HG256X)",
+        "Accelerometer": "1",
+        "AccelerometerHighG": "1",
+        "Gyroscope": "1",
+        "Magnetometer": "1",
+        "PressureSensor": "1",
+        "TemperatureSensor": "0",
+        "HumiditySensor": "0",
+        "SD": "0",
+        "FSM_MLC": "1",
+        "ISPU": "0",
+		"change_block_properties": [
+          {
+            "name": "Accelerometer High-g Config",
+            "properties": {
+               "accelerometer_highg_fs": {
+                        "oneOf": [
+                            {
+                                "const": 32,
+                                "title": " 32 g"
+                            },
+                            {
+                                "const": 64,
+                                "title": " 64 g"
+                            },
+                            {
+                                "const": 128,
+                                "title": "128 g"
+                            },
+                            {
+                                "const": 256,
+                                "title": "256 g"
+                            }
+                        ]
+               }
+            }
+          }
+        ],
+        "AccelerometerPartNumber": "ISM6HG256X",
+        "GyroscopePartNumber": "ISM6HG256X",
+        "MagnetometerPartNumber": "IIS2MDC",
+        "PressureSensorPartNumber": "ILPS22QS",
+        "TemperatureSensorPartNumber": "",
+        "HumiditySensorPartNumber": "",
+        "stlink": "1",
+        "flash": "1",
+        "dfu": "0"
+      },
+      {
+        "Target": "NUCLEO-F401RE + X-NUCLEO-IKS5A1 (ISM330IS)",
+        "Accelerometer": "1",
+        "AccelerometerHighG": "0",
+        "Gyroscope": "1",
+        "Magnetometer": "1",
+        "PressureSensor": "1",
+        "TemperatureSensor": "0",
+        "HumiditySensor": "0",
+        "SD": "0",
+        "FSM_MLC": "0",
+        "ISPU": "1",
+        "AccelerometerPartNumber": "ISM330IS",
+        "GyroscopePartNumber": "ISM330IS",
+        "MagnetometerPartNumber": "IIS2MDC",
+        "PressureSensorPartNumber": "ILPS22QS",
+        "TemperatureSensorPartNumber": "",
+        "HumiditySensorPartNumber": "",
+        "stlink": "1",
+        "flash": "1",
+        "dfu": "0"
+      },
+      {
+        "Target": "SensorTile.box",
+        "Accelerometer": "1",
+        "AccelerometerHighG": "0",
+        "Gyroscope": "1",
+        "Magnetometer": "1",
+        "PressureSensor": "1",
+        "TemperatureSensor": "1",
+        "HumiditySensor": "1",
+        "SD": "1",
+        "FSM_MLC": "1",
+        "ISPU": "0",
+        "change_block_properties": [
+          {
+            "name": "Sensor Hub",
+            "properties": {
+              "data_rate": {
+                "maximum": "6666"
+              }
+            }
+          }
+        ],
+        "AccelerometerPartNumber": "LSM6DSOX",
+        "GyroscopePartNumber": "LSM6DSOX",
+        "MagnetometerPartNumber": "LIS2MDL",
+        "PressureSensorPartNumber": "LPS22HH",
+        "TemperatureSensorPartNumber": "HTS221",
+        "HumiditySensorPartNumber": "HTS221",
+        "stlink": "1",
+        "flash": "0",
+        "dfu": "1"
+      },
+      {
+        "Target": "SensorTile.box BLE",
+        "Accelerometer": "1",
+        "AccelerometerHighG": "0",
+        "Gyroscope": "1",
+        "Magnetometer": "1",
+        "PressureSensor": "1",
+        "TemperatureSensor": "1",
+        "HumiditySensor": "1",
+        "SD": "1",
+        "FSM_MLC": "1",
+        "ISPU": "0",
+        "AccelerometerPartNumber": "LSM6DSOX",
+        "GyroscopePartNumber": "LSM6DSOX",
+        "MagnetometerPartNumber": "LIS2MDL",
+        "PressureSensorPartNumber": "LPS22HH",
+        "TemperatureSensorPartNumber": "HTS221",
+        "HumiditySensorPartNumber": "HTS221",
+        "stlink": "1",
+        "flash": "0",
+        "dfu": "1"
+      },
+      {
+        "Target": "SensorTile.box Pro",
+        "Accelerometer": "1",
+        "AccelerometerHighG": "0",
+        "Gyroscope": "1",
+        "Magnetometer": "1",
+        "PressureSensor": "1",
+        "TemperatureSensor": "1",
+        "HumiditySensor": "0",
+        "SD": "1",
+        "FSM_MLC": "1",
+        "ISPU": "0",
+        "change_block_properties": [
+          {
+            "name": "Sensor Hub",
+            "properties": {
+              "data_rate": {
+                "maximum": "6666"
+              }
+            }
+          }
+        ],
+        "AccelerometerPartNumber": "LSM6DSV16X",
+        "GyroscopePartNumber": "LSM6DSV16X",
+        "MagnetometerPartNumber": "LIS2MDL",
+        "PressureSensorPartNumber": "LPS22DF",
+        "TemperatureSensorPartNumber": "STTS22H",
+        "HumiditySensorPartNumber": "",
+        "stlink": "1",
+        "flash": "0",
+        "dfu": "1"
+      },
+      {
+        "Target": "SensorTile.box Pro + LSM6DSO16IS",
+        "Accelerometer": "1",
+        "AccelerometerHighG": "0",
+        "Gyroscope": "1",
+        "Magnetometer": "1",
+        "PressureSensor": "1",
+        "TemperatureSensor": "1",
+        "HumiditySensor": "0",
+        "SD": "1",
+        "FSM_MLC": "0",
+        "ISPU": "1",
+        "change_block_properties": [
+          {
+            "name": "Sensor Hub",
+            "properties": {
+              "data_rate": {
+                "maximum": "6666"
+              }
+            }
+          }
+        ],
+        "AccelerometerPartNumber": "LSM6DSO16IS",
+        "GyroscopePartNumber": "LSM6DSO16IS",
+        "MagnetometerPartNumber": "LIS2MDL",
+        "PressureSensorPartNumber": "LPS22DF",
+        "TemperatureSensorPartNumber": "STTS22H",
+        "HumiditySensorPartNumber": "",
+        "stlink": "1",
+        "flash": "0",
+        "dfu": "1"
+      },      
+      {
+        "Target": "SensorTile.box Pro + LSM6DSV320X",
+        "Accelerometer": "1",
+        "AccelerometerHighG": "1",
+        "Gyroscope": "1",
+        "Magnetometer": "1",
+        "PressureSensor": "1",
+        "TemperatureSensor": "1",
+        "HumiditySensor": "0",
+        "SD": "1",
+        "FSM_MLC": "1",
+        "ISPU": "0",
+        "change_block_properties": [
+          {
+            "name": "Sensor Hub",
+            "properties": {
+              "data_rate": {
+                "maximum": "6666"
+              }
+            }
+          },
+          {
+            "name": "Accelerometer High-g Config",
+            "properties": {
+              "accelerometer_highg_fs": {
+                "oneOf": [
+                    {
+                        "const": 32,
+                        "title": "32 g"
+                    },
+                    {
+                        "const": 64,
+                        "title": "64 g"
+                    },
+                    {
+                        "const": 128,
+                        "title": "128 g"
+                    },
+                    {
+                        "const": 256,
+                        "title": "256 g"
+                    },
+                    {
+                        "const": 320,
+                        "title": "320 g"
+                    }
+                ]
+              }
+            }
+          }
+        ],
+        "AccelerometerPartNumber": "LSM6DSV320X",
+        "GyroscopePartNumber": "LSM6DSV320X",
+        "MagnetometerPartNumber": "LIS2MDL",
+        "PressureSensorPartNumber": "LPS22DF",
+        "TemperatureSensorPartNumber": "STTS22H",
+        "HumiditySensorPartNumber": "",
+        "stlink": "1",
+        "flash": "0",
+        "dfu": "1"
+      },
+      {
+        "Target": "SensorTile.box Pro BLE",
+        "Accelerometer": "1",
+        "AccelerometerHighG": "0",
+        "Gyroscope": "1",
+        "Magnetometer": "1",
+        "PressureSensor": "1",
+        "TemperatureSensor": "1",
+        "HumiditySensor": "0",
+        "SD": "1",
+        "FSM_MLC": "1",
+        "ISPU": "0",
+        "change_block_properties": [
+          {
+            "name": "Sensor Hub",
+            "properties": {
+              "data_rate": {
+                "maximum": "6666"
+              }
+            }
+          }
+        ],
+        "AccelerometerPartNumber": "LSM6DSV16X",
+        "GyroscopePartNumber": "LSM6DSV16X",
+        "MagnetometerPartNumber": "LIS2MDL",
+        "PressureSensorPartNumber": "LPS22DF",
+        "TemperatureSensorPartNumber": "STTS22H",
+        "HumiditySensorPartNumber": "",
+        "stlink": "1",
+        "flash": "0",
+        "dfu": "1"
+      },
+      {
+        "Target": "STWIN",
+        "Accelerometer": "1",
+        "AccelerometerHighG": "0",
+        "Gyroscope": "1",
+        "Magnetometer": "1",
+        "PressureSensor": "1",
+        "TemperatureSensor": "1",
+        "HumiditySensor": "1",
+        "SD": "1",
+        "FSM_MLC": "1",
+        "change_block_properties": [
+          {
+            "name": "Sensor Hub",
+            "properties": {
+              "data_rate": {
+                "maximum": "6666"
+              }
+            }
+          }
+        ],
+        "AccelerometerPartNumber": "ISM330DHCX",
+        "GyroscopePartNumber": "ISM330DHCX",
+        "MagnetometerPartNumber": "IIS2MDC",
+        "PressureSensorPartNumber": "LPS22HH",
+        "TemperatureSensorPartNumber": "HTS221",
+        "HumiditySensorPartNumber": "HTS221",
+        "stlink": "1",
+        "flash": "0",
+        "dfu": "1"
+      },
+      {
+        "Target": "STWIN BLE",
+        "Accelerometer": "1",
+        "AccelerometerHighG": "0",
+        "Gyroscope": "1",
+        "Magnetometer": "1",
+        "PressureSensor": "1",
+        "TemperatureSensor": "1",
+        "HumiditySensor": "1",
+        "SD": "1",
+        "FSM_MLC": "1",
+        "ISPU": "0",
+        "change_block_properties": [
+          {
+            "name": "Sensor Hub",
+            "properties": {
+              "data_rate": {
+                "maximum": "6666"
+              }
+            }
+          }
+        ],
+        "AccelerometerPartNumber": "ISM330DHCX",
+        "GyroscopePartNumber": "ISM330DHCX",
+        "MagnetometerPartNumber": "IIS2MDC",
+        "PressureSensorPartNumber": "LPS22HH",
+        "TemperatureSensorPartNumber": "HTS221",
+        "HumiditySensorPartNumber": "HTS221",
+        "stlink": "1",
+        "flash": "0",
+        "dfu": "1"
+      },
+      {
+        "Target": "STWIN.box",
+        "Accelerometer": "1",
+        "AccelerometerHighG": "0",
+        "Gyroscope": "1",
+        "Magnetometer": "1",
+        "PressureSensor": "1",
+        "TemperatureSensor": "1",
+        "HumiditySensor": "1",
+        "SD": "1",
+        "FSM_MLC": "1",
+        "ISPU": "0",
+        "change_block_properties": [
+          {
+            "name": "Sensor Hub",
+            "properties": {
+              "data_rate": {
+                "maximum": "6666"
+              }
+            }
+          }
+        ],
+        "AccelerometerPartNumber": "ISM330DHCX",
+        "GyroscopePartNumber": "ISM330DHCX",
+        "MagnetometerPartNumber": "IIS2MDC",
+        "PressureSensorPartNumber": "ILPS22QS",
+        "TemperatureSensorPartNumber": "STTS22H",
+        "HumiditySensorPartNumber": "",
+        "stlink": "1",
+        "flash": "0",
+        "dfu": "1"
+      },
+      {
+        "Target": "STWIN.box + ISM330IS",
+        "Accelerometer": "1",
+        "AccelerometerHighG": "0",
+        "Gyroscope": "1",
+        "Magnetometer": "1",
+        "PressureSensor": "1",
+        "TemperatureSensor": "1",
+        "HumiditySensor": "1",
+        "SD": "1",
+        "FSM_MLC": "0",
+        "ISPU": "1",
+        "change_block_properties": [
+          {
+            "name": "Sensor Hub",
+            "properties": {
+              "data_rate": {
+                "maximum": "6666"
+              }
+            }
+          }
+        ],
+        "AccelerometerPartNumber": "ISM330IS",
+        "GyroscopePartNumber": "ISM330IS",
+        "MagnetometerPartNumber": "IIS2MDC",
+        "PressureSensorPartNumber": "ILPS22QS",
+        "TemperatureSensorPartNumber": "STTS22H",
+        "HumiditySensorPartNumber": "",
+        "stlink": "1",
+        "flash": "0",
+        "dfu": "1"
+      },
+      {
+        "Target": "STWIN.box + ISM6HG256X",
+        "Accelerometer": "1",
+        "AccelerometerHighG": "1",
+        "Gyroscope": "1",
+        "Magnetometer": "1",
+        "PressureSensor": "1",
+        "TemperatureSensor": "1",
+        "HumiditySensor": "1",
+        "SD": "1",
+        "FSM_MLC": "1",
+        "ISPU": "0",
+        "change_block_properties": [
+          {
+            "name": "Sensor Hub",
+            "properties": {
+              "data_rate": {
+                "maximum": "6666"
+              }
+            }
+          },
+          {
+            "name": "Accelerometer High-g Config",
+            "properties": {
+              "accelerometer_highg_fs": {
+                "oneOf": [
+                    {
+                        "const": 32,
+                        "title": "32 g"
+                    },
+                    {
+                        "const": 64,
+                        "title": "64 g"
+                    },
+                    {
+                        "const": 128,
+                        "title": "128 g"
+                    },
+                    {
+                        "const": 256,
+                        "title": "256 g"
+                    }
+                ]
+              }
+            }
+	  }
+        ],
+        "AccelerometerPartNumber": "ISM6HG256X",
+        "GyroscopePartNumber": "ISM6HG256X",
+        "MagnetometerPartNumber": "IIS2MDC",
+        "PressureSensorPartNumber": "ILPS22QS",
+        "TemperatureSensorPartNumber": "STTS22H",
+        "HumiditySensorPartNumber": "",
+        "stlink": "1",
+        "flash": "0",
+        "dfu": "1"
+      }
+    ]
+}
