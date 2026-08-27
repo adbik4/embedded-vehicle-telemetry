@@ -471,7 +471,6 @@ __weak void BSP_PB_Callback(Button_TypeDef Button)
 
   /* This function should be implemented by the user application.
      It is called into this driver when an event on Button is triggered. */
-  BSP_LED_On(LED_RED);
 }
 
 #if (USE_BSP_COM_FEATURE > 0)

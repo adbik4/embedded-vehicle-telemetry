@@ -171,7 +171,7 @@ void AlgoBuilder_Init(void)
   SensorReadRequest = 1;
 
   /* Ensure that User Button pressing will be evaluated from this point */
-  DataLoggerActive = 1;
+  DataLoggerActive = 0;
   DataLoggerStatusChanged = 0;
 }
 
