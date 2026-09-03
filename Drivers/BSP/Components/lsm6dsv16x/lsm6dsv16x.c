@@ -225,12 +225,18 @@ int32_t LSM6DSV16X_Init(LSM6DSV16X_Object_t *pObj)
   {
     return LSM6DSV16X_ERROR;
   }
-
   /* Enable accelerometer data-ready interrupt on INT1 pin */
   if (LSM6DSV16X_ACC_Enable_DRDY_On_INT1(pObj) != LSM6DSV16X_OK)
   {
     return LSM6DSV16X_ERROR;
   }
+
+  /* Enable gyroscope data-ready interrupt on INT2 pin */
+  if (LSM6DSV16X_GYRO_Enable_DRDY_On_INT2(pObj) != LSM6DSV16X_OK)
+  {
+    return LSM6DSV16X_ERROR;
+  }
+
 
   pObj->is_initialized = 1;
 

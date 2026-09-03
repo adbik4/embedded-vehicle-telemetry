@@ -1,0 +1,364 @@
+{
+    "children": [
+        {
+            "children": [
+            ],
+            "cssClasses": [
+            ],
+            "id": "e4efe329-65c9-4092-b9ab-863ef48101a5",
+            "routingPoints": [
+            ],
+            "sourceId": "badb869d-416a-47af-a5b1-00acab5fbce4_outPort_out",
+            "targetId": "eb7e60db-4604-47e8-ab49-a2f5d56b593f_inPort_SensorHubHandle",
+            "type": "edge"
+        },
+        {
+            "children": [
+            ],
+            "cssClasses": [
+            ],
+            "id": "428dd1c4-8bf1-44de-ae97-03bba0887e39",
+            "routingPoints": [
+            ],
+            "sourceId": "eb7e60db-4604-47e8-ab49-a2f5d56b593f_outPort_data",
+            "targetId": "103c6ea9-8249-47f2-b107-ee86cd45e40d_inPort_in",
+            "type": "edge"
+        },
+        {
+            "args": null,
+            "children": null,
+            "command": [
+                {
+                    "args": [
+                        {
+                            "item": "&amp",
+                            "type": "text"
+                        },
+                        {
+                            "item": "out",
+                            "type": "output"
+                        }
+                    ],
+                    "function": "Sensor_Hub_Handler"
+                }
+            ],
+            "cssClasses": null,
+            "dependency": "",
+            "description": "Sensor Hub provides links to sensor and algorithms in order to retrieve data from them.",
+            "display_name": "Sensor Hub",
+            "function": [
+            ],
+            "id": "badb869d-416a-47af-a5b1-00acab5fbce4",
+            "init_code": [
+                {
+                    "args": [
+                        {
+                            "item": "data_rate_control",
+                            "type": "property"
+                        },
+                        {
+                            "item": "data_rate",
+                            "type": "property"
+                        },
+                        {
+                            "item": "accelerometer_fs",
+                            "type": "property"
+                        },
+                        {
+                            "item": "gyroscope_fs",
+                            "type": "property"
+                        }
+                    ],
+                    "function": "Sensor_Hub_Init"
+                }
+            ],
+            "inputs": [
+            ],
+            "instances": 1,
+            "layout": null,
+            "layoutOptions": null,
+            "library_name": "Sensor Hub",
+            "memory": [
+            ],
+            "name": "Sensor Hub",
+            "node_number": 1,
+            "node_type": "functional",
+            "outputs": [
+                {
+                    "description": "Sensor Hub handler",
+                    "name": "out",
+                    "size": 1,
+                    "type": "void"
+                }
+            ],
+            "position": {
+                "x": 10,
+                "y": 1
+            },
+            "properties_schema": {
+                "properties": {
+                    "accelerometer_fs": {
+                        "description": "Defines the accelerometer full scale.",
+                        "name": "Accelerometer Full Scale",
+                        "oneOf": [
+                            {
+                                "const": 0,
+                                "title": "2 g"
+                            },
+                            {
+                                "const": 1,
+                                "title": "4 g"
+                            },
+                            {
+                                "const": 2,
+                                "title": "8 g"
+                            },
+                            {
+                                "const": 3,
+                                "title": "16 g"
+                            }
+                        ],
+                        "type": "integer"
+                    },
+                    "data_rate": {
+                        "description": "Defines the sensor's and algorithm's data rate in Hz. If accelerometer or gyroscope is selected as data rate source, the closest higher available output data rate (ODR) is selected.",
+                        "maximum": 400,
+                        "minimum": 1,
+                        "name": "Data Rate",
+                        "type": "integer"
+                    },
+                    "data_rate_control": {
+                        "description": "Defines the data rate source.",
+                        "name": "Data Rate Control",
+                        "oneOf": [
+                            {
+                                "const": 0,
+                                "title": "Timer"
+                            },
+                            {
+                                "const": 1,
+                                "title": "Accelerometer"
+                            },
+                            {
+                                "const": 2,
+                                "title": "Gyroscope"
+                            },
+                            {
+                                "const": 255,
+                                "title": "Offline Data"
+                            }
+                        ],
+                        "type": "integer"
+                    },
+                    "gyroscope_fs": {
+                        "description": "Defines the gyroscope full scale.",
+                        "name": "Gyroscope Full Scale",
+                        "oneOf": [
+                            {
+                                "const": 0,
+                                "title": "245 dps"
+                            },
+                            {
+                                "const": 1,
+                                "title": "500 dps"
+                            },
+                            {
+                                "const": 2,
+                                "title": "1000 dps"
+                            },
+                            {
+                                "const": 3,
+                                "title": "2000 dps"
+                            }
+                        ],
+                        "type": "integer"
+                    }
+                }
+            },
+            "properties_values": {
+                "accelerometer_fs": 1,
+                "data_rate": 100,
+                "data_rate_control": 0,
+                "gyroscope_fs": 1
+            },
+            "size": {
+                "height": 36,
+                "width": 100
+            },
+            "type": "node:component",
+            "version": "1.0"
+        },
+        {
+            "args": null,
+            "children": null,
+            "command": [
+                {
+                    "args": [
+                        {
+                            "item": "SensorHubHandle",
+                            "type": "input"
+                        },
+                        {
+                            "item": "data",
+                            "type": "output"
+                        }
+                    ],
+                    "function": "Quaternions9X_GetData"
+                }
+            ],
+            "cssClasses": null,
+            "dependency": "Accelerometer,Gyroscope,Magnetometer",
+            "description": "Retrieves the orientation data in the magnetic North referential. The output data is an orientation in quaternion format. The orientation is computed usign accelerometer, gyroscope and magnetometer sensor. Sample rate for this algorithm is 100Hz, Data Rate of the Sensor Hub must be set equal or higher.",
+            "display_name": "Quaternions 9X",
+            "function": [
+            ],
+            "id": "eb7e60db-4604-47e8-ab49-a2f5d56b593f",
+            "init_code": [
+                {
+                    "args": [
+                    ],
+                    "function": "MotionFX_9X_Init"
+                }
+            ],
+            "inputs": [
+                {
+                    "description": "Connect to Sensor Hub output.",
+                    "name": "SensorHubHandle",
+                    "size": 1,
+                    "type": "void"
+                }
+            ],
+            "instances": 1,
+            "layout": null,
+            "layoutOptions": null,
+            "library_name": "MotionFX 9x",
+            "memory": [
+            ],
+            "name": "Quaternions 9X",
+            "node_number": 1,
+            "node_type": "functional",
+            "outputs": [
+                {
+                    "description": "Orientation data in quaternion format.",
+                    "name": "data",
+                    "size": 4,
+                    "type": "float"
+                }
+            ],
+            "position": {
+                "x": 145,
+                "y": 1
+            },
+            "properties_schema": {
+                "properties": {
+                }
+            },
+            "properties_values": {
+            },
+            "size": {
+                "height": 36,
+                "width": 108
+            },
+            "type": "node:component",
+            "version": "1.0"
+        },
+        {
+            "args": null,
+            "children": null,
+            "command": [
+                {
+                    "args": [
+                        {
+                            "item": "in",
+                            "type": "input"
+                        }
+                    ],
+                    "function": "Display_Update"
+                }
+            ],
+            "cssClasses": null,
+            "dependency": "",
+            "description": "Displays 3D visualization.",
+            "display_name": "Fusion",
+            "function": [
+            ],
+            "id": "103c6ea9-8249-47f2-b107-ee86cd45e40d",
+            "init_code": [
+            ],
+            "inputs": [
+                {
+                    "description": "Input data to display.",
+                    "name": "in",
+                    "size": 4,
+                    "type": "float"
+                }
+            ],
+            "instances": 0,
+            "layout": null,
+            "layoutOptions": null,
+            "library_name": "Display",
+            "memory": [
+            ],
+            "name": "Fusion",
+            "node_number": 1,
+            "node_type": "display",
+            "outputs": [
+            ],
+            "position": {
+                "x": 300,
+                "y": 0
+            },
+            "properties_schema": {
+                "properties": {
+                    "model_name": {
+                        "description": "Name of model which will be used for visualization.",
+                        "name": "Model Name",
+                        "oneOf": [
+                            {
+                                "const": "Teapot",
+                                "title": "Teapot"
+                            },
+                            {
+                                "const": "Nucleo Board",
+                                "title": "Nucleo Board"
+                            },
+                            {
+                                "const": "Car",
+                                "title": "Car"
+                            },
+                            {
+                                "const": "Head",
+                                "title": "Head"
+                            }
+                        ],
+                        "type": "string"
+                    },
+                    "window_name": {
+                        "description": "Label of the fusion window.",
+                        "name": "Name",
+                        "type": "string"
+                    }
+                }
+            },
+            "properties_values": {
+                "model_name": "Teapot",
+                "window_name": "Sensor##Fusion"
+            },
+            "size": {
+                "height": 36,
+                "width": 80
+            },
+            "type": "node:component",
+            "version": "1.0"
+        }
+    ],
+    "location": "B:/Documents/Programowanie/STM32/embedded-vehicle-telemetry/MEMS-Studio/SensorFusion",
+    "revision": 0,
+    "target": "NUCLEO-U385RG-Q + X-NUCLEO-IKS4A1 (LSM6DSV16X)",
+    "tool": {
+        "name": "MEMS Studio",
+        "version": "2.4.1"
+    },
+    "toolchain": "cube",
+    "type": "graph"
+}

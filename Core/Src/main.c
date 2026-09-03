@@ -122,6 +122,7 @@ int main(void)
   /* Initialize leds */
   BSP_LED_Init(LED_RED);
 
+
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   //printf("Hello World!\r\n");

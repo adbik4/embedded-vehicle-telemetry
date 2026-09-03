@@ -25,7 +25,6 @@
 #if defined(__ICCARM__)
 #include <LowLevelIOInterface.h>
 #endif /* __ICCARM__ */
-
 extern DMA_HandleTypeDef handle_GPDMA1_Channel0;
 
 /** @addtogroup BSP
@@ -411,8 +410,8 @@ int32_t BSP_PB_Init(Button_TypeDef Button, ButtonMode_TypeDef ButtonMode)
     (void)HAL_EXTI_GetHandle(&hpb_exti[Button], BUTTON_EXTI_LINE[Button]);
     (void)HAL_EXTI_RegisterCallback(&hpb_exti[Button],  HAL_EXTI_COMMON_CB_ID, ButtonCallback[Button]);
 
-    /* Enable and set Button EXTI Interrupt to the second lowest priority */
-    HAL_NVIC_SetPriority((BUTTON_IRQn[Button]), BSP_BUTTON_PRIO[Button], 0x01);
+    /* Enable and set Button EXTI Interrupt to the lowest priority */
+    HAL_NVIC_SetPriority((BUTTON_IRQn[Button]), BSP_BUTTON_PRIO[Button], 0x00);
     HAL_NVIC_EnableIRQ((BUTTON_IRQn[Button]));
   }
 
@@ -734,7 +733,7 @@ static void BUTTON_USER_EXTI_Callback(void)
 static void COM1_MspInit(UART_HandleTypeDef *huart)
 {
   GPIO_InitTypeDef gpio_init_structure;
-  (void)huart;
+
   /* Prevent unused argument(s) compilation warning */
   UNUSED(huart);
 
@@ -744,12 +743,11 @@ static void COM1_MspInit(UART_HandleTypeDef *huart)
 
   /* Enable USART clock */
   COM1_CLK_ENABLE();
-
-  /* Enable DMA clock and configure USART3 RX DMA */
+  /* Enable DMA clock and configure USART1 RX DMA */
   __HAL_RCC_GPDMA1_CLK_ENABLE();
 
   handle_GPDMA1_Channel0.Instance = GPDMA1_Channel0;
-  handle_GPDMA1_Channel0.Init.Request = GPDMA1_REQUEST_USART3_RX;
+  handle_GPDMA1_Channel0.Init.Request = GPDMA1_REQUEST_USART1_RX;
   handle_GPDMA1_Channel0.Init.BlkHWRequest = DMA_BREQ_SINGLE_BURST;
   handle_GPDMA1_Channel0.Init.Direction = DMA_PERIPH_TO_MEMORY;
   handle_GPDMA1_Channel0.Init.SrcInc = DMA_SINC_FIXED;
@@ -766,6 +764,7 @@ static void COM1_MspInit(UART_HandleTypeDef *huart)
   HAL_DMA_Init(&handle_GPDMA1_Channel0);
 
   __HAL_LINKDMA(huart, hdmarx, handle_GPDMA1_Channel0);
+
 
   /* Configure USART Tx as alternate function */
   gpio_init_structure.Pin       = COM1_TX_PIN;
@@ -792,8 +791,6 @@ static void COM1_MspDeInit(UART_HandleTypeDef *huart)
   GPIO_InitTypeDef          gpio_init_structure;
 
   /* Prevent unused argument(s) compilation warning */
-  UNUSED(huart);
-
   if (huart->hdmarx != NULL)
   {
     (void)HAL_DMA_DeInit(huart->hdmarx);

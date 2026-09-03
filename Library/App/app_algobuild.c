@@ -114,10 +114,10 @@ void MX_Library_Process(void)
 void AlgoBuilder_Init(void)
 {
   /* Initialize push button */
-  BSP_PB_Init(BUTTON_KEY, BUTTON_MODE_EXTI);
+  BSP_PB_Init(BUTTON_USER, BUTTON_MODE_EXTI);
 
   /* Initialize selected USART */
-  COM_InitTypeDef huart1;
+   COM_InitTypeDef huart1;
   huart1.BaudRate = 921600;
   huart1.WordLength = UART_WORDLENGTH_8B;
   huart1.StopBits = UART_STOPBITS_1;
@@ -219,9 +219,7 @@ void AlgoBuilder_Process(void)
 
     Time_Handler(&MsgDat);
 
-    BSP_LED_On(LED_RED);
     AB_Handler();
-    BSP_LED_Off(LED_RED);
 
     INIT_STREAMING_HEADER(&MsgDat);
     MsgDat.Len += Message_Length + 6;
@@ -404,9 +402,9 @@ void RTC_TimeRegulate(uint8_t hh, uint8_t mm, uint8_t ss)
   */
 void BSP_PB_Callback(Button_TypeDef Button)
 {
-  if (Button == BUTTON_KEY)
+  if (Button == BUTTON_USER)
   {
-    if (BSP_PB_GetState(BUTTON_KEY) == (uint32_t)GPIO_PIN_RESET)
+    if (BSP_PB_GetState(BUTTON_USER) == (uint32_t)GPIO_PIN_RESET)
     {
       if (DataLoggerStatusChanged == 0)
       {
