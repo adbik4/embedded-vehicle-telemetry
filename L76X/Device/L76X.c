@@ -253,7 +253,6 @@ GPSdata_t L76X_Parse_NMEA()
 
     #ifndef TESTING
     DEV_Uart_ReceiveString(buff_t, BUFFSIZE);
-    printf("%s\r\n", buff_t);
     #endif
 
     L76X_Extract_RMC(&GPS);

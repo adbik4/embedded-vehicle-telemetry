@@ -18,13 +18,16 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
-#include "app_algobuild.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "EPD_Test.h"
 #include "EPD_2in66.h"
 #include "L76X.h"
+#include "custom_algobuild.h"
+#include "algo_builder.h"
+
+#include <stdint.h>
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -34,7 +37,6 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
-#define MEMS_APP 1U
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -114,46 +116,48 @@ int main(void)
   MX_CRC_Init();
   MX_UART4_Init();
   MX_RTC_Init();
-  MX_Library_Init();
+  
   /* USER CODE BEGIN 2 */
+  AlgoBuilder_Init();
   L76X_DEV_Module_Init();
   /* USER CODE END 2 */
 
   /* Initialize leds */
   BSP_LED_Init(LED_RED);
 
-
-  /* Infinite loop */
-  /* USER CODE BEGIN WHILE */
-  //printf("Hello World!\r\n");
-
-  /* --------- E-INK TEST --------- */
-  // if (EPD_test())
-  // {
-  //   printf("E-INK test failed :(\r\n");
-  // }
+  /* Initialize COM1 port (115200, 8 bits (7-bit data + 1 stop bit), no parity */
+  BspCOMInit.BaudRate   = 115200;
+  BspCOMInit.WordLength = COM_WORDLENGTH_8B;
+  BspCOMInit.StopBits   = COM_STOPBITS_1;
+  BspCOMInit.Parity     = COM_PARITY_NONE;
+  BspCOMInit.HwFlowCtl  = COM_HWCONTROL_NONE;
+  if (BSP_COM_Init(COM1, &BspCOMInit) != BSP_ERROR_NONE)
+  {
+    Error_Handler();
+  }
 
   while (1)
   {
     /* USER CODE END WHILE */
-
-  MX_Library_Process();
     /* USER CODE BEGIN 3 */
-    /* --------- GPS TEST --------- */
-    // GPS1 = L76X_Parse_NMEA();
-    // Coordinates google_coors = L76X_Google_Coordinates(&GPS1);
-    // DMS_Coordinates dms_coors = Google2DMS(google_coors, GPS1.Lat_area, GPS1.Lon_area);
+    Time_Handler();
+    AB_Handler();
 
-    // printf ("Lat: %d°%d'%f\"%c Lon: %d°%d'%f\"%c Time:%02d:%02d:%02d Status:%s\r\n",
-    //         dms_coors.Lat.Degrees, dms_coors.Lat.Minutes, dms_coors.Lat.Seconds,
-    //         dms_coors.Lat.Area,
-    //         dms_coors.Lon.Degrees, dms_coors.Lon.Minutes, dms_coors.Lon.Seconds,
-    //         dms_coors.Lon.Area,
-    //         GPS1.Time_H, GPS1.Time_M, GPS1.Time_S,
-    //         (GPS1.Status == 1) ? "OK" : "INVALID"
-    // );
+    GPS1 = L76X_Parse_NMEA();
+    Coordinates google_coors = L76X_Google_Coordinates(&GPS1);
+    DMS_Coordinates dms_coors = Google2DMS(google_coors, GPS1.Lat_area, GPS1.Lon_area);
 
-    //HAL_Delay(1000);
+    printf("t %d, acc_x %f, acc_y %f, acc_z %f : Lat: %d°%d'%f\"%c Lon: %d°%d'%f\"%c Status:%s\r\n",
+      (int)sensor_hub_data.timestamp_us,
+      sensor_hub_data.acceleration[0],
+      sensor_hub_data.acceleration[1],
+      sensor_hub_data.acceleration[2],
+      dms_coors.Lat.Degrees, dms_coors.Lat.Minutes, dms_coors.Lat.Seconds,
+      dms_coors.Lat.Area,
+      dms_coors.Lon.Degrees, dms_coors.Lon.Minutes, dms_coors.Lon.Seconds,
+      dms_coors.Lon.Area,
+      (GPS1.Status == 1) ? "OK" : "INVALID"
+    );
   }
   /* USER CODE END 3 */
 }
@@ -669,18 +673,7 @@ static void MX_GPIO_Init(void)
 }
 
 /* USER CODE BEGIN 4 */
-/**
- * @brief Retargets the C library printf function to the USART.
- * None
- * @retval None
- */
-#ifndef MEMS_APP
-int __io_putchar(int ch)
-{
-  HAL_UART_Transmit(&huart3, (uint8_t *)&ch, 1, HAL_MAX_DELAY);
-  return ch;
-}
-#endif
+
 /* USER CODE END 4 */
 
 /**

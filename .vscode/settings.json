@@ -5,5 +5,8 @@
     ],
     "cmake.preferredGenerators": [
         "Ninja"
+    ],
+    "clangd.arguments": [
+        "--compile-commands-dir=${workspaceFolder}/build/Debug"
     ]
 }
