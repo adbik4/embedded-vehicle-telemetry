@@ -64,7 +64,6 @@ void MX_TIM4_Init(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
-#define BSP_BUTTON_EXTI_IRQn EXTI13_IRQn
 #define RCC_OSC32_IN_Pin GPIO_PIN_14
 #define RCC_OSC32_IN_GPIO_Port GPIOC
 #define RCC_OSC32_OUT_Pin GPIO_PIN_15
@@ -74,12 +73,14 @@ void MX_TIM4_Init(void);
 #define ACCEL_GYRO_INT_Pin GPIO_PIN_3
 #define ACCEL_GYRO_INT_GPIO_Port GPIOC
 #define ACCEL_GYRO_INT_EXTI_IRQn EXTI3_IRQn
-#define DEBUG_USART_RX_Pin GPIO_PIN_5
-#define DEBUG_USART_RX_GPIO_Port GPIOA
 #define DEBUG_USART_TX_Pin GPIO_PIN_7
 #define DEBUG_USART_TX_GPIO_Port GPIOA
 #define VBUS_DET_Pin GPIO_PIN_12
 #define VBUS_DET_GPIO_Port GPIOF
+#define BUTTON2_Pin GPIO_PIN_15
+#define BUTTON2_GPIO_Port GPIOB
+#define BUTTON3_Pin GPIO_PIN_9
+#define BUTTON3_GPIO_Port GPIOD
 #define USB_DM_Pin GPIO_PIN_11
 #define USB_DM_GPIO_Port GPIOA
 #define USB_DP_Pin GPIO_PIN_12
@@ -96,6 +97,8 @@ void MX_TIM4_Init(void);
 #define FDCAN_STBY_GPIO_Port GPIOD
 #define DEBUG_JTDO_SWO_Pin GPIO_PIN_3
 #define DEBUG_JTDO_SWO_GPIO_Port GPIOB
+#define BUTTON1_Pin GPIO_PIN_6
+#define BUTTON1_GPIO_Port GPIOB
 
 /* USER CODE BEGIN Private defines */
 // E-paper GPIO

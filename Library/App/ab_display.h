@@ -80,7 +80,6 @@ typedef struct
 #define INFO_TYPE_PLOT3D  12
 #define INFO_TYPE_FFT     13
 #define INFO_TYPE_ANGLE   14
-#define INFO_TYPE_COMPASS 15
 
 /* External variables --------------------------------------------------------*/
 /* Exported macros -----------------------------------------------------------*/

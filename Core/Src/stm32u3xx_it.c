@@ -229,20 +229,6 @@ void EXTI3_IRQHandler(void)
 }
 
 /**
-  * @brief This function handles EXTI Line 13 interrupt.
-  */
-void EXTI13_IRQHandler(void)
-{
-  /* USER CODE BEGIN EXTI13_IRQn 0 */
-
-  /* USER CODE END EXTI13_IRQn 0 */
-  BSP_PB_IRQHandler(BUTTON_USER);
-  /* USER CODE BEGIN EXTI13_IRQn 1 */
-
-  /* USER CODE END EXTI13_IRQn 1 */
-}
-
-/**
   * @brief This function handles TIM1 Capture Compare interrupt.
   */
 void TIM1_CC_IRQHandler(void)

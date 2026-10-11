@@ -45,6 +45,8 @@ TUart_Engine_t Uart_Engine;
 
 extern TMsg MsgDat;
 
+#define COM1 0U
+
 /* Private function prototypes -----------------------------------------------*/
 uint32_t Get_DMA_Flag_Status(DMA_HandleTypeDef *handle_dma);
 uint32_t Get_DMA_Counter(DMA_HandleTypeDef *handle_dma);

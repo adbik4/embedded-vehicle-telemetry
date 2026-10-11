@@ -116,14 +116,6 @@ void AlgoBuilder_Init(void)
   /* Initialize push button */
   BSP_PB_Init(BUTTON_USER, BUTTON_MODE_EXTI);
 
-  /* Initialize selected USART */
-   COM_InitTypeDef huart1;
-  huart1.BaudRate = 921600;
-  huart1.WordLength = UART_WORDLENGTH_8B;
-  huart1.StopBits = UART_STOPBITS_1;
-  huart1.Parity = UART_PARITY_NONE;
-  huart1.HwFlowCtl = UART_HWCONTROL_NONE;
-  BSP_COM_Init(COM1, &huart1);
 
   /* Initialize timer for AlgoBuilder process synchronization */
   BSP_IP_TIM_INIT_AB();
@@ -219,7 +211,9 @@ void AlgoBuilder_Process(void)
 
     Time_Handler(&MsgDat);
 
+    BSP_LED_On(LED_RED);
     AB_Handler();
+    BSP_LED_Off(LED_RED);
 
     INIT_STREAMING_HEADER(&MsgDat);
     MsgDat.Len += Message_Length + 6;

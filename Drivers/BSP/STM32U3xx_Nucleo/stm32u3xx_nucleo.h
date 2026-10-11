@@ -71,8 +71,6 @@ typedef enum
   LED_RED   = LD2,
   LD3 = 2U,
   LED_BLUE  = LD3,
-  /* alias */
-  LED2 = LD2,
   LEDn
 } Led_TypeDef;
 #else
@@ -88,8 +86,6 @@ typedef enum
 {
   B1 = 0U,
   BUTTON_USER = B1,
-  /* Alias */
-  BUTTON_KEY  = BUTTON_USER,
   BUTTONn
 } Button_TypeDef;
 

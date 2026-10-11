@@ -63,6 +63,10 @@
 #define USE_NUCLEO_144                      1U
 #define USE_NUCLEO_144                      1U
 #define USE_NUCLEO_144                      1U
+#define USE_NUCLEO_144                      1U
+#define USE_NUCLEO_144                      1U
+#define USE_NUCLEO_144                      1U
+#define USE_NUCLEO_144                      1U
 
 /* I2C1 Frequency in Hz  */
 #define BUS_I2C1_FREQUENCY                  100000U /* Frequency of I2C1 = 100 KHz*/

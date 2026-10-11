@@ -21,8 +21,6 @@
 #include "custom_mems_conf_app.h"
 #include "custom_mems_control_ex.h"
 
-extern void *MotionCompObj[CUSTOM_MOTION_INSTANCES_NBR];
-
 /**
   * @brief  Get the register value from accelerometer
   * @param  Reg address to be read
@@ -237,9 +235,6 @@ void BSP_SENSOR_ACC_GetOrientation(char *Orientation)
 {
 #if (defined BSP_MOTION_SENSORS || defined BSP_HYBRID_SENSORS)
 #ifdef CUSTOM_ACC_INSTANCE_0
-  Orientation[0] = 'n'; // north
-  Orientation[1] = 'w'; // west
-  Orientation[2] = 'u'; // up
 #endif
 #endif
 }
@@ -255,9 +250,6 @@ void BSP_SENSOR_GYR_GetOrientation(char *Orientation)
 {
 #if (defined BSP_MOTION_SENSORS)
 #ifdef CUSTOM_GYR_INSTANCE_0
-  Orientation[0] = 'n'; // north
-  Orientation[1] = 'w'; // west
-  Orientation[2] = 'u'; // up
 #endif
 #endif
 }
@@ -273,9 +265,6 @@ void BSP_SENSOR_MAG_GetOrientation(char *Orientation)
 {
 #if (defined BSP_MOTION_SENSORS)
 #ifdef CUSTOM_MAG_INSTANCE_0
-  Orientation[0] = 's'; // south
-  Orientation[1] = 'w'; // west
-  Orientation[2] = 'u'; // up
 #endif
 #endif
 }
@@ -291,14 +280,17 @@ void BSP_SENSOR_ACC_SetDRDYMode(uint8_t Mode)
 {
 #if (defined BSP_MOTION_SENSORS)
 #ifdef CUSTOM_ACC_INSTANCE_0
+/*
+  Example:
   if (Mode == 1)
   {
-    (void)LSM6DSV16X_DRDY_Set_Mode(MotionCompObj[CUSTOM_ACC_INSTANCE_0], LSM6DSV16X_DRDY_PULSED);
+    (void)CUSTOM_MOTION_SENSOR_DRDY_Set_Mode(CUSTOM_ACC_INSTANCE_0, DRDY_PULSED);
   }
   else
   {
-    (void)LSM6DSV16X_DRDY_Set_Mode(MotionCompObj[CUSTOM_ACC_INSTANCE_0], LSM6DSV16X_DRDY_LATCHED);
+    (void)CUSTOM_MOTION_SENSOR_DRDY_Set_Mode(CUSTOM_ACC_INSTANCE_0, DRDY_LATCHED);
   }
+*/
 #endif
 #endif
 }
@@ -312,14 +304,17 @@ void BSP_SENSOR_GYR_SetDRDYMode(uint8_t Mode)
 {
 #if (defined BSP_MOTION_SENSORS)
 #ifdef CUSTOM_GYR_INSTANCE_0
+/*
+  Example:
   if (Mode == 1)
   {
-    (void)LSM6DSV16X_DRDY_Set_Mode(MotionCompObj[CUSTOM_GYR_INSTANCE_0], LSM6DSV16X_DRDY_PULSED);
+    (void)CUSTOM_MOTION_SENSOR_DRDY_Set_Mode(CUSTOM_GYR_INSTANCE_0, DRDY_PULSED);
   }
   else
   {
-    (void)LSM6DSV16X_DRDY_Set_Mode(MotionCompObj[CUSTOM_GYR_INSTANCE_0], LSM6DSV16X_DRDY_LATCHED);
+    (void)CUSTOM_MOTION_SENSOR_DRDY_Set_Mode(CUSTOM_GYR_INSTANCE_0, DRDY_LATCHED);
   }
+*/
 #endif
 #endif
 }
@@ -333,7 +328,23 @@ void BSP_SENSOR_ACC_SetDRDYInt(uint8_t Enable)
 {
 #if (defined BSP_MOTION_SENSORS)
 #ifdef CUSTOM_ACC_INSTANCE_0
-  LSM6DSV16X_ACC_Enable_DRDY_On_INT1(MotionCompObj[CUSTOM_ACC_INSTANCE_0]);
+/*
+  Example:
+  uint8_t reg = 0;
+
+  (void)CUSTOM_MOTION_SENSOR_Read_Register(CUSTOM_ACC_INSTANCE_0, INT1_CTRL, &reg);
+
+  if (Enable == 1)
+  {
+    reg = reg | 0x01;
+  }
+  else
+  {
+    reg = reg & ~0x01;
+  }
+
+  (void)CUSTOM_MOTION_SENSOR_Write_Register(CUSTOM_ACC_INSTANCE_0, INT1_CTRL, reg);
+*/
 #endif
 #endif
 }
@@ -347,7 +358,23 @@ void BSP_SENSOR_GYR_SetDRDYInt(uint8_t Enable)
 {
 #if (defined BSP_MOTION_SENSORS)
 #ifdef CUSTOM_GYR_INSTANCE_0
-  LSM6DSV16X_GYRO_Enable_DRDY_On_INT2(MotionCompObj[CUSTOM_GYR_INSTANCE_0]);
+/*
+  Example:
+  uint8_t reg = 0;
+
+  (void)CUSTOM_MOTION_SENSOR_Read_Register(CUSTOM_GYR_INSTANCE_0, INT1_CTRL, &reg);
+
+  if (Enable == 1)
+  {
+    reg = reg | 0x02;
+  }
+  else
+  {
+    reg = reg & ~0x02;
+  }
+
+  (void)CUSTOM_MOTION_SENSOR_Write_Register(CUSTOM_GYR_INSTANCE_0, INT1_CTRL, reg);
+*/
 #endif
 #endif
 }
