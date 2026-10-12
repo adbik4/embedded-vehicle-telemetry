@@ -18,6 +18,7 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
+#include "app_freertos.h"
 #include "app_algobuild.h"
 
 /* Private includes ----------------------------------------------------------*/
@@ -124,6 +125,11 @@ int main(void)
   L76X_DEV_Module_Init();
   /* USER CODE END 2 */
 
+  /* Init scheduler */
+  osKernelInitialize();
+  /* Call init function for freertos objects (in app_freertos.c) */
+  MX_FREERTOS_Init();
+
   /* Initialize leds */
   BSP_LED_Init(LED_GREEN);
   BSP_LED_Init(LED_RED);
@@ -140,6 +146,11 @@ int main(void)
     Error_Handler();
   }
 
+  /* Start scheduler */
+  osKernelStart();
+
+  /* We should never get here as control is now taken by the scheduler */
+
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
@@ -148,24 +159,7 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-    Time_Handler();
-    AB_Handler();
 
-    GPS1 = L76X_Parse_NMEA();
-    Coordinates google_coors = L76X_Google_Coordinates(&GPS1);
-    DMS_Coordinates dms_coors = Google2DMS(google_coors, GPS1.Lat_area, GPS1.Lon_area);
-
-    printf("t %d, acc_x %f, acc_y %f, acc_z %f : Lat: %d°%d'%f\"%c Lon: %d°%d'%f\"%c Status:%s\r\n",
-      (int)sensor_hub_data.timestamp_us,
-      sensor_hub_data.acceleration[0],
-      sensor_hub_data.acceleration[1],
-      sensor_hub_data.acceleration[2],
-      dms_coors.Lat.Degrees, dms_coors.Lat.Minutes, dms_coors.Lat.Seconds,
-      dms_coors.Lat.Area,
-      dms_coors.Lon.Degrees, dms_coors.Lon.Minutes, dms_coors.Lon.Seconds,
-      dms_coors.Lon.Area,
-      (GPS1.Status == 1) ? "OK" : "INVALID"
-    );
   }
   /* USER CODE END 3 */
 }
@@ -616,8 +610,8 @@ static void MX_GPIO_Init(void)
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOD, MAG_CS_Pin|FDCAN_STBY_Pin, GPIO_PIN_RESET);
 
-  /*Configure GPIO pin : PF7 */
-  GPIO_InitStruct.Pin = GPIO_PIN_7;
+  /*Configure GPIO pins : PF7 PF8 */
+  GPIO_InitStruct.Pin = GPIO_PIN_7|GPIO_PIN_8;
   GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
@@ -703,7 +697,7 @@ static void MX_GPIO_Init(void)
   HAL_GPIO_Init(GPIOD, &GPIO_InitStruct);
 
   /* EXTI interrupt init*/
-  HAL_NVIC_SetPriority(ACCEL_GYRO_INT_EXTI_IRQn, 0, 0);
+  HAL_NVIC_SetPriority(ACCEL_GYRO_INT_EXTI_IRQn, 5, 0);
   HAL_NVIC_EnableIRQ(ACCEL_GYRO_INT_EXTI_IRQn);
 
   /* USER CODE BEGIN MX_GPIO_Init_2 */
@@ -714,6 +708,28 @@ static void MX_GPIO_Init(void)
 /* USER CODE BEGIN 4 */
 
 /* USER CODE END 4 */
+
+/**
+  * @brief  Period elapsed callback in non blocking mode
+  * @note   This function is called  when TIM2 interrupt took place, inside
+  * HAL_TIM_IRQHandler(). It makes a direct call to HAL_IncTick() to increment
+  * a global variable "uwTick" used as application time base.
+  * @param  htim : TIM handle
+  * @retval None
+  */
+void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
+{
+  /* USER CODE BEGIN Callback 0 */
+
+  /* USER CODE END Callback 0 */
+  if (htim->Instance == TIM2)
+  {
+    HAL_IncTick();
+  }
+  /* USER CODE BEGIN Callback 1 */
+
+  /* USER CODE END Callback 1 */
+}
 
 /**
   * @brief  This function is executed in case of error occurrence.

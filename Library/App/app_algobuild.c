@@ -422,13 +422,6 @@ void BSP_PB_Callback(Button_TypeDef Button)
   *              the configuration information for TIM module.
   * @retval None
   */
-void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
-{
-  if (htim->Instance == BSP_IP_TIM_HANDLE_AB.Instance)
-  {
-    SensorReadRequest = 1;
-  }
-}
 
 /**
   * @brief  Output Compare callback in non blocking mode
