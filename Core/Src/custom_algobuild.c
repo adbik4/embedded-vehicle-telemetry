@@ -16,50 +16,122 @@ extern "C" {
 
 extern uint64_t StartTime;
 extern sensor_hub_data_t sensor_hub_data;
+extern uint32_t SensorReadRequest;
 
-static void TIM_AL_Config(void);
 static uint32_t DWT_Delay_Init(void);
 
 /**
-  * @brief  TIM_AL config function
+  * @brief  Measure ODR of the sensor
   * @param  None
-  * @retval None
-  * @details This function initialize the timer used to synchronize the enabled algorithms
+  * @retval 1 in case of success 0 otherwise
   */
-void TIM_AL_Config(void)
+static int32_t meas_odr(float_t *odr_measured)
 {
-  uint32_t prescaler_value;
-  TIM_OC_InitTypeDef sConfig;
+  uint8_t  odr_meas_enable = 1;
+  uint16_t odr_meas_iter = 0;
+  uint16_t odr_meas_start_time = 0;
+  uint16_t odr_meas_stop_time = 0;
+  uint16_t odr_meas_samples = 150; /* number of measured samples for calculating ODR */
+  volatile uint32_t start = 0;
 
-  /* Compute the prescaler value to have TIM1 counter clock equal to 10 KHz */
-  prescaler_value = (uint32_t)((SystemCoreClock / 10000) - 1);
+  /* Set DRDY pulsed mode */
+  BSP_SENSOR_ACC_SetDRDYMode(1U);
 
-  BSP_IP_TIM_HANDLE_AL.Init.Prescaler = prescaler_value;
-  BSP_IP_TIM_HANDLE_AL.Init.CounterMode   = TIM_COUNTERMODE_UP;
-  BSP_IP_TIM_HANDLE_AL.Init.Period = 0xFFFF;
-  BSP_IP_TIM_HANDLE_AL.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
-  HAL_TIM_OC_Init(&BSP_IP_TIM_HANDLE_AL);
+  start = HAL_GetTick();
 
-  /* Configure the Output Compare channels */
-  /* Common configuration for all channels */
-  sConfig.OCMode     = TIM_OCMODE_TOGGLE;
-  sConfig.OCPolarity = TIM_OCPOLARITY_LOW;
+  while (odr_meas_enable != 0U)
+  {
+    if ((HAL_GetTick() - start) > 100000U)
+    {
+      /* Timeout */
+      return 1;
+    }
 
-  /* Output Compare Toggle Mode configuration: Channel1 */
-  sConfig.Pulse = DEFAULT_UHCCR1_VAL;
-  HAL_TIM_OC_ConfigChannel(&BSP_IP_TIM_HANDLE_AL, &sConfig, TIM_CHANNEL_1);
+    /* Get start time */
+    if (odr_meas_iter == 0U)
+    {
+      odr_meas_start_time = (uint16_t)HAL_GetTick();
+    }
 
-  /* Output Compare Toggle Mode configuration: Channel2 */
-  sConfig.Pulse = DEFAULT_UHCCR2_VAL;
-  HAL_TIM_OC_ConfigChannel(&BSP_IP_TIM_HANDLE_AL, &sConfig, TIM_CHANNEL_2);
+    /* Get stop time */
+    if (odr_meas_iter == (odr_meas_samples - 1U))
+    {
+      odr_meas_stop_time = (uint16_t)HAL_GetTick();
+      odr_meas_enable = 0;
+    }
 
-  /* Output Compare Toggle Mode configuration: Channel3 */
-  sConfig.Pulse = DEFAULT_UHCCR3_VAL;
-  HAL_TIM_OC_ConfigChannel(&BSP_IP_TIM_HANDLE_AL, &sConfig, TIM_CHANNEL_3);
+    /* Stop after measuring "odr_meas_samples" values */
+    if (odr_meas_iter < odr_meas_samples)
+    {
+      odr_meas_iter++;
+    }
+  }
 
-  /* Output Compare Toggle Mode configuration: Channel4 */
-  sConfig.Pulse = DEFAULT_UHCCR4_VAL;
-  HAL_TIM_OC_ConfigChannel(&BSP_IP_TIM_HANDLE_AL, &sConfig, TIM_CHANNEL_4);
+  /* Calculate measured ODR */
+  *odr_measured = (1000.0f * (float_t)odr_meas_samples) / ((float_t)odr_meas_stop_time - (float_t)odr_meas_start_time);
+
+  /* Set DRDY latched mode */
+  BSP_SENSOR_ACC_SetDRDYMode(0U);
+
+  return 0;
+}
+
+/**
+  * @brief  Set accelerometer full scale
+  */
+static void Set_Accelero_FS(uint32_t accel_fs)
+{
+  int32_t fs;
+
+  switch (accel_fs)
+  {
+    case 0:
+      fs =  2;
+      break;
+    case 1:
+      fs =  4;
+      break;
+    case 2:
+      fs =  8;
+      break;
+    case 3:
+      fs = 16;
+      break;
+    default:
+      fs = 4;
+      break;
+  }
+
+  BSP_SENSOR_ACC_SetFullScale(fs);
+}
+
+/**
+  * @brief  Set gyroscope full scale
+  */
+static void Set_Gyro_FS(uint32_t gyro_fs)
+{
+  int32_t fs;
+
+  switch (gyro_fs)
+  {
+    case 0:
+      fs =  245;
+      break;
+    case 1:
+      fs =  500;
+      break;
+    case 2:
+      fs = 1000;
+      break;
+    case 3:
+      fs = 2000;
+      break;
+    default:
+      fs = 500;
+      break;
+  }
+
+  BSP_SENSOR_GYR_SetFullScale(fs);
 }
 
 /**
@@ -99,13 +171,7 @@ static uint32_t DWT_Delay_Init(void)
 
 void AlgoBuilder_Init(void)
 {
-    /* Initialize timer for AlgoBuilder process synchronization */
-  BSP_IP_TIM_INIT_AB();
-
-  /* Initialize timer for motion libraries synchronization */
-  BSP_IP_TIM_INIT_AL();
-  TIM_AL_Config();
-
+  // TODO: replace with freeRTOS
   /* Initialize cycle counter */
   DWT_Delay_Init();
 
@@ -126,15 +192,10 @@ void AlgoBuilder_Init(void)
   HAL_Delay(500);
   BSP_LED_Off(LED_RED);
 
-  /* AlgoBuilder initialization */
-  AB_Init();
+  SensorHub_Init(DRC_ACCELEROMETER, 100, 1, 1);
 
   /* Check if UCF loading changed ODR or FS */
   FSM_MLC_Check_ODR_FS_Change();
-
-  /* Start both the AlgoBuilder and Motion Library timers */
-  TIM_AB_Start();
-  TIM_AL_Start();
 }
 
 /**
@@ -145,6 +206,87 @@ void AlgoBuilder_Init(void)
 void Time_Handler(void)
 {
   sensor_hub_data.timestamp_us = DWT_GetTickUS() - StartTime;
+}
+
+/**
+  * @brief  SensorHub initialization, set data polling period and full scales
+  */
+void SensorHub_Init(uint32_t data_rate_control, uint32_t data_rate, uint32_t accel_fs, uint32_t gyro_fs)
+{
+  sensor_hub_data.data_rate_control = (data_rate_control_t)data_rate_control;
+
+  if ((data_rate_control_t)data_rate_control == DRC_OFFLINE)
+  {
+    sensor_hub_data.data_rate_Hz = data_rate;
+    sensor_hub_data.meas_data_rate_Hz = data_rate;
+    sensor_hub_data.iteration_counter = 0;
+
+    offline_data.timestamp_ms = 0;
+  }
+  else
+  {
+    float_t real_odr = 0.0f;
+
+    sensor_hub_data.motion_ac_enable = 0;
+    sensor_hub_data.motion_aw_enable = 0;
+    sensor_hub_data.motion_ec_enable = 0;
+    sensor_hub_data.motion_fx_6x_enable = 0;
+    sensor_hub_data.motion_fx_9x_enable = 0;
+    sensor_hub_data.motion_gc_enable = 0;
+    sensor_hub_data.motion_id_enable = 0;
+    sensor_hub_data.motion_mc_enable = 0;
+    sensor_hub_data.motion_pm_enable = 0;
+    sensor_hub_data.motion_pw_enable = 0;
+    sensor_hub_data.motion_tl_enable = 0;
+
+    sensor_hub_data.data_rate_Hz = data_rate;
+
+    switch (data_rate_control)
+    {
+      case DRC_TIMER:
+        TIM_AB_Config(data_rate);
+        BSP_SENSOR_ACC_SetDRDYInt(0U);
+        BSP_SENSOR_GYR_SetDRDYInt(0U);
+        break;
+
+      case DRC_ACCELEROMETER:
+        sensor_hub_data.acceleration_enable = 1;
+        BSP_SENSOR_ACC_SetDRDYInt(1U);
+        BSP_SENSOR_GYR_SetDRDYInt(0U);
+        break;
+
+      case DRC_GYROSCOPE:
+        sensor_hub_data.angular_rate_enable = 1;
+        BSP_SENSOR_ACC_SetDRDYInt(0U);
+        BSP_SENSOR_GYR_SetDRDYInt(1U);
+        break;
+
+      default:
+        break;
+    }
+
+    Set_Accelero_FS(accel_fs);
+    Set_Gyro_FS(gyro_fs);
+
+    BSP_SENSOR_ACC_SetOutputDataRate((float_t)sensor_hub_data.data_rate_Hz);
+    BSP_SENSOR_GYR_SetOutputDataRate((float_t)sensor_hub_data.data_rate_Hz);
+    BSP_SENSOR_MAG_SetOutputDataRate((float_t)sensor_hub_data.data_rate_Hz);
+    BSP_SENSOR_PRESS_SetOutputDataRate((float_t)sensor_hub_data.data_rate_Hz);
+    BSP_SENSOR_TEMP_SetOutputDataRate((float_t)sensor_hub_data.data_rate_Hz);
+    BSP_SENSOR_HUM_SetOutputDataRate((float_t)sensor_hub_data.data_rate_Hz);
+
+    if (((data_rate_control_t)data_rate_control == DRC_ACCELEROMETER)
+        || ((data_rate_control_t)data_rate_control == DRC_GYROSCOPE))
+    {
+      if (meas_odr(&real_odr) == 1U) { sensor_hub_data.meas_data_rate_Hz = (uint32_t) real_odr; }
+    }
+    else
+    {
+      sensor_hub_data.meas_data_rate_Hz = data_rate;
+    }
+
+    sensor_hub_data.iteration_counter = 0;
+  }
 }
 
 #ifdef __cplusplus

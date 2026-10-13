@@ -45,6 +45,17 @@
 /* COM Feature define */
 #define USE_BSP_COM_FEATURE                 1U
 #define USE_NUCLEO_144                      1U
+#define USE_NUCLEO_144                      1U
+#define USE_NUCLEO_144                      1U
+#define USE_NUCLEO_144                      1U
+#define USE_NUCLEO_144                      1U
+#define USE_NUCLEO_144                      1U
+#define USE_NUCLEO_144                      1U
+#define USE_NUCLEO_144                      1U
+#define USE_NUCLEO_144                      1U
+#define USE_NUCLEO_144                      1U
+#define USE_NUCLEO_144                      1U
+#define USE_NUCLEO_144                      1U
 
 /* COM define */
 #define USE_COM_LOG                         1U

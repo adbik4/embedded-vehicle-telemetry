@@ -24,6 +24,9 @@
 /* USER CODE BEGIN Includes */
 #include "cmsis_os2.h"
 #include "settings.h"
+#include "utilities.h"
+#include "custom_algobuild.h"
+#include "algo_builder.h"
 
 #include <string.h>
 
@@ -37,7 +40,7 @@ typedef StaticQueue_t osStaticMessageQDef_t;
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
-
+extern UART_HandleTypeDef hcom_uart[COMn];
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -47,17 +50,28 @@ typedef StaticQueue_t osStaticMessageQDef_t;
 
 /* Private variables ---------------------------------------------------------*/
 /* USER CODE BEGIN Variables */
-/* Definitions for ComdebugTask */
 osThreadId_t ComDebugTaskHandle;
 uint32_t ComDebugTaskBuffer[ COM_DEBUG_TASK_STACK_SIZE ];
 osStaticThreadDef_t ComDebugTaskControlBloc;
 const osThreadAttr_t ComDebugTask_attributes = {
-  .name = "ComdebugTask",
+  .name = "ComDebugTask",
   .stack_mem = &ComDebugTaskBuffer[0],
   .stack_size = sizeof(ComDebugTaskBuffer),
   .cb_mem = &ComDebugTaskControlBloc,
   .cb_size = sizeof(ComDebugTaskControlBloc),
-  .priority = (osPriority_t) osPriorityLow,
+  .priority = COM_DEBUG_TASK_PRIO,
+};
+
+osThreadId_t SensorHubTaskHandle;
+uint32_t SensorHubTaskBuffer[ SENSOR_HUB_TASK_STACK_SIZE ];
+osStaticThreadDef_t SensorHubTaskControlBloc;
+const osThreadAttr_t SensorHubTask_attributes = {
+  .name = "SensorHubTask",
+  .stack_mem = &SensorHubTaskBuffer[0],
+  .stack_size = sizeof(SensorHubTaskBuffer),
+  .cb_mem = &SensorHubTaskControlBloc,
+  .cb_size = sizeof(SensorHubTaskControlBloc),
+  .priority = SENSOR_HUB_TASK_PRIO,
 };
 
 /* Definitions for ComDebugQueue */
@@ -82,12 +96,15 @@ const osThreadAttr_t systemTask_attributes = {
   .stack_size = sizeof(SystemTaskBuffer),
   .cb_mem = &SystemTaskControlBloc,
   .cb_size = sizeof(SystemTaskControlBloc),
-  .priority = (osPriority_t) osPriorityNormal,
+  .priority = SYSTEM_TASK_PRIO,
 };
 
 /* Private function prototypes -----------------------------------------------*/
 /* USER CODE BEGIN FunctionPrototypes */
+
 void StartComDebugTask(void *argument);
+void StartSensorHubTask(void *argument);
+
 /* USER CODE END FunctionPrototypes */
 
 /* USER CODE BEGIN 1 */
@@ -135,6 +152,7 @@ void MX_FREERTOS_Init(void) {
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
   ComDebugTaskHandle = osThreadNew(StartComDebugTask, NULL, &ComDebugTask_attributes);
+  SensorHubTaskHandle = osThreadNew(StartSensorHubTask, NULL, &SensorHubTask_attributes);
   /* USER CODE END RTOS_THREADS */
 
   /* USER CODE BEGIN RTOS_EVENTS */
@@ -152,18 +170,28 @@ void MX_FREERTOS_Init(void) {
 void StartSystemTask(void *argument)
 {
   /* USER CODE BEGIN systemTask */
-  char msg[DEBUG_MSG_SIZE];
-  memset(msg, 0, sizeof(msg));
+  TickType_t xLastWakeTime = xTaskGetTickCount();
+  const TickType_t xPeriod = pdMS_TO_TICKS(1000);
 
   /* Infinite loop */
-  size_t count = 0;
   for(;;)
   {
-    snprintf(msg, sizeof(msg), "Hello World %d!", count);
-    osMessageQueuePut(ComDebugQueueHandle, msg, 0, 1000);
+    // TODO: Tell the screen to refresh every second
 
-    ++count;
-    osDelay(50);
+    /* Magnetometer management */
+    if (sensor_hub_data.mfx_magcal.cal_quality <  MFX_MAGCALOK)
+    {
+      PRINT_DEBUG("FUSION 6X\r\n");
+      sensor_hub_data.motion_fx_6x_enable = 1;
+      sensor_hub_data.motion_fx_9x_enable = 0;
+    } else
+    {
+      PRINT_DEBUG("FUSION 9X\r\n");
+      sensor_hub_data.motion_fx_6x_enable = 0;
+      sensor_hub_data.motion_fx_9x_enable = 1;
+    }
+
+    vTaskDelayUntil(&xLastWakeTime, xPeriod);
   }
   /* USER CODE END systemTask */
 }
@@ -172,16 +200,37 @@ void StartSystemTask(void *argument)
 /* USER CODE BEGIN Application */
 void StartComDebugTask(void *argument)
 {
-  /* USER CODE BEGIN ComdebugTask */
   char msg[DEBUG_MSG_SIZE];
 
-  /* Infinite loop */
   for(;;)
   {
+    /* Keep waiting for messages to display */
     if (osMessageQueueGet(ComDebugQueueHandle, msg, NULL, 1000) == osOK)
         {
-            printf("%s\r\n", msg);
+            HAL_UART_Transmit(&hcom_uart[COM1], (uint8_t *)&msg, strlen(msg), HAL_MAX_DELAY);
         }
+  }
+}
+
+void StartSensorHubTask(void *argument)
+{
+  TickType_t xLastWakeTime = xTaskGetTickCount();
+  const TickType_t xPeriod = pdMS_TO_TICKS(10);
+
+  for (;;)
+  {
+    Time_Handler();
+    AB_Handler();
+
+    PRINT_DEBUG(
+      "t %d, acc_x %f, acc_y %f, acc_z %f\r\n",
+      (int)sensor_hub_data.timestamp_us,
+      sensor_hub_data.acceleration[0],
+      sensor_hub_data.acceleration[1],
+      sensor_hub_data.acceleration[2]
+    );
+    
+    vTaskDelayUntil(&xLastWakeTime, xPeriod);
   }
 }
 /* USER CODE END Application */

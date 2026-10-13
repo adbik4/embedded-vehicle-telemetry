@@ -34,7 +34,7 @@
 EXTI_HandleTypeDef hexti3 = {.Line = EXTI_LINE_3};
 
 /* Global variables ----------------------------------------------------------*/
-extern volatile uint8_t SensorReadRequest;
+extern volatile uint32_t Update100Hz;
 
 /* Private function prototypes -----------------------------------------------*/
 static void mems_int_pin_a_hardware_event_isr(void);
@@ -45,13 +45,13 @@ void set_mems_int_pin_a_exti(void)
   /* register event irq handler */
   HAL_EXTI_GetHandle(&hexti3, EXTI_LINE_3);
   HAL_EXTI_RegisterCallback(&hexti3, HAL_EXTI_COMMON_CB_ID, mems_int_pin_a_hardware_event_isr);
-  HAL_NVIC_SetPriority(EXTI3_IRQn, 0, 0);
+  HAL_NVIC_SetPriority(EXTI3_IRQn, 5, 0);
   HAL_NVIC_EnableIRQ(EXTI3_IRQn);
 }
 
 static void mems_int_pin_a_hardware_event_isr(void)
 {
-  SensorReadRequest = 1;
+  Update100Hz = 1;
 }
 
 /**

@@ -6,7 +6,6 @@ const char Identification_String[] = "ID_STRING:SensorFusion.json,On-line";
 
 /* GENERATED CODE START - Variables */
 void *Sensor_Hub_1_out;
-float Quaternions_9X_1_data[4];
 
 /* GENERATED CODE END - Variables */
 
@@ -15,16 +14,14 @@ float Quaternions_9X_1_data[4];
 
 /* GENERATED CODE START - Display Info */
 sDISPLAY_INFO display_info_list[] = {
-{INFO_TYPE_FUSION,1,4,VAR_TYPE_FLOAT,0,"fusion|Sensor\nFusion|Teapot",0},
 {0,0,0,0,0,0,0}};
 /* GENERATED CODE END - Display Info */
 
 /* GENERATED CODE START - Init */
 void AB_Init(void)
 {
-  Sensor_Hub_Init(0, 100, 1, 1);
-  MotionFX_9X_Init();
-  Message_Length = 16;
+  Sensor_Hub_Init(1, 100, 1, 1);
+  Message_Length = 0;
 }
 /* GENERATED CODE END - Init */
 
@@ -32,7 +29,5 @@ void AB_Init(void)
 void AB_Handler(void)
 {
   Sensor_Hub_Handler(&Sensor_Hub_1_out);
-  Quaternions9X_GetData(Sensor_Hub_1_out, Quaternions_9X_1_data);
-  Display_Update(Quaternions_9X_1_data, &display_info_list[0]);
 }
 /* GENERATED CODE END - Main loop */

@@ -1,30 +1,6 @@
 {
     "children": [
         {
-            "children": [
-            ],
-            "cssClasses": [
-            ],
-            "id": "e4efe329-65c9-4092-b9ab-863ef48101a5",
-            "routingPoints": [
-            ],
-            "sourceId": "badb869d-416a-47af-a5b1-00acab5fbce4_outPort_out",
-            "targetId": "eb7e60db-4604-47e8-ab49-a2f5d56b593f_inPort_SensorHubHandle",
-            "type": "edge"
-        },
-        {
-            "children": [
-            ],
-            "cssClasses": [
-            ],
-            "id": "428dd1c4-8bf1-44de-ae97-03bba0887e39",
-            "routingPoints": [
-            ],
-            "sourceId": "eb7e60db-4604-47e8-ab49-a2f5d56b593f_outPort_data",
-            "targetId": "103c6ea9-8249-47f2-b107-ee86cd45e40d_inPort_in",
-            "type": "edge"
-        },
-        {
             "args": null,
             "children": null,
             "command": [
@@ -93,7 +69,7 @@
             ],
             "position": {
                 "x": 10,
-                "y": 1
+                "y": 0
             },
             "properties_schema": {
                 "properties": {
@@ -178,175 +154,12 @@
             "properties_values": {
                 "accelerometer_fs": 1,
                 "data_rate": 100,
-                "data_rate_control": 0,
+                "data_rate_control": 1,
                 "gyroscope_fs": 1
             },
             "size": {
                 "height": 36,
                 "width": 100
-            },
-            "type": "node:component",
-            "version": "1.0"
-        },
-        {
-            "args": null,
-            "children": null,
-            "command": [
-                {
-                    "args": [
-                        {
-                            "item": "SensorHubHandle",
-                            "type": "input"
-                        },
-                        {
-                            "item": "data",
-                            "type": "output"
-                        }
-                    ],
-                    "function": "Quaternions9X_GetData"
-                }
-            ],
-            "cssClasses": null,
-            "dependency": "Accelerometer,Gyroscope,Magnetometer",
-            "description": "Retrieves the orientation data in the magnetic North referential. The output data is an orientation in quaternion format. The orientation is computed usign accelerometer, gyroscope and magnetometer sensor. Sample rate for this algorithm is 100Hz, Data Rate of the Sensor Hub must be set equal or higher.",
-            "display_name": "Quaternions 9X",
-            "function": [
-            ],
-            "id": "eb7e60db-4604-47e8-ab49-a2f5d56b593f",
-            "init_code": [
-                {
-                    "args": [
-                    ],
-                    "function": "MotionFX_9X_Init"
-                }
-            ],
-            "inputs": [
-                {
-                    "description": "Connect to Sensor Hub output.",
-                    "name": "SensorHubHandle",
-                    "size": 1,
-                    "type": "void"
-                }
-            ],
-            "instances": 1,
-            "layout": null,
-            "layoutOptions": null,
-            "library_name": "MotionFX 9x",
-            "memory": [
-            ],
-            "name": "Quaternions 9X",
-            "node_number": 1,
-            "node_type": "functional",
-            "outputs": [
-                {
-                    "description": "Orientation data in quaternion format.",
-                    "name": "data",
-                    "size": 4,
-                    "type": "float"
-                }
-            ],
-            "position": {
-                "x": 145,
-                "y": 1
-            },
-            "properties_schema": {
-                "properties": {
-                }
-            },
-            "properties_values": {
-            },
-            "size": {
-                "height": 36,
-                "width": 108
-            },
-            "type": "node:component",
-            "version": "1.0"
-        },
-        {
-            "args": null,
-            "children": null,
-            "command": [
-                {
-                    "args": [
-                        {
-                            "item": "in",
-                            "type": "input"
-                        }
-                    ],
-                    "function": "Display_Update"
-                }
-            ],
-            "cssClasses": null,
-            "dependency": "",
-            "description": "Displays 3D visualization.",
-            "display_name": "Fusion",
-            "function": [
-            ],
-            "id": "103c6ea9-8249-47f2-b107-ee86cd45e40d",
-            "init_code": [
-            ],
-            "inputs": [
-                {
-                    "description": "Input data to display.",
-                    "name": "in",
-                    "size": 4,
-                    "type": "float"
-                }
-            ],
-            "instances": 0,
-            "layout": null,
-            "layoutOptions": null,
-            "library_name": "Display",
-            "memory": [
-            ],
-            "name": "Fusion",
-            "node_number": 1,
-            "node_type": "display",
-            "outputs": [
-            ],
-            "position": {
-                "x": 300,
-                "y": 0
-            },
-            "properties_schema": {
-                "properties": {
-                    "model_name": {
-                        "description": "Name of model which will be used for visualization.",
-                        "name": "Model Name",
-                        "oneOf": [
-                            {
-                                "const": "Teapot",
-                                "title": "Teapot"
-                            },
-                            {
-                                "const": "Nucleo Board",
-                                "title": "Nucleo Board"
-                            },
-                            {
-                                "const": "Car",
-                                "title": "Car"
-                            },
-                            {
-                                "const": "Head",
-                                "title": "Head"
-                            }
-                        ],
-                        "type": "string"
-                    },
-                    "window_name": {
-                        "description": "Label of the fusion window.",
-                        "name": "Name",
-                        "type": "string"
-                    }
-                }
-            },
-            "properties_values": {
-                "model_name": "Teapot",
-                "window_name": "Sensor##Fusion"
-            },
-            "size": {
-                "height": 36,
-                "width": 80
             },
             "type": "node:component",
             "version": "1.0"

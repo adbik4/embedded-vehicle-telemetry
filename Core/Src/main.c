@@ -18,6 +18,7 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
+#include "ab_sensor_hub.h"
 #include "app_freertos.h"
 #include "app_algobuild.h"
 
@@ -27,7 +28,6 @@
 #include "EPD_2in66.h"
 #include "L76X.h"
 #include "custom_algobuild.h"
-#include "algo_builder.h"
 
 #include <stdint.h>
 /* USER CODE END Includes */
@@ -131,9 +131,9 @@ int main(void)
   MX_FREERTOS_Init();
 
   /* Initialize leds */
-  BSP_LED_Init(LED_GREEN);
-  BSP_LED_Init(LED_RED);
-  BSP_LED_Init(LED_BLUE);
+  // BSP_LED_Init(LED_GREEN);
+  // BSP_LED_Init(LED_RED);
+  // BSP_LED_Init(LED_BLUE);
 
   /* Initialize COM1 port (115200, 8 bits (7-bit data + 1 stop bit), no parity */
   BspCOMInit.BaudRate   = 115200;

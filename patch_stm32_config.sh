@@ -45,7 +45,13 @@ if ! grep -Fq '${CMAKE_CURRENT_SOURCE_DIR}/../../Core/Src/custom_algobuild.c' "$
 fi
 
 #Core/Src/app_freertos.c
-sed -i 's/uint32_t SystemTaskBuffer\[ *[0-9][0-9]* *\]/uint32_t SystemTaskBuffer[ SYSTEM_TASK_STACK_SIZE ]/' \
+sed -i -E \
+    -e 's/uint32_t SystemTaskBuffer\[ *[0-9][0-9]* *\]/uint32_t SystemTaskBuffer[ SYSTEM_TASK_STACK_SIZE ]/' \
+    -e 's/\.priority[[:space:]]*=[[:space:]]*\(osPriority_t\)[[:space:]]*[a-zA-Z]+[[:space:]]*,/.priority = SYSTEM_TASK_PRIO,/' \
     "$ROOT/Core/Src/app_freertos.c"
+
+#Library/App/ab_libraries.h
+sed -i 's/#define MotionFX_6X  0/#define MotionFX_6X  1/' \
+    "$ROOT/Library/App/ab_libraries.h"
 
 echo "STM32 patches applied successfully."
