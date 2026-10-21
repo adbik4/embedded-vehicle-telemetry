@@ -22,10 +22,13 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+#include "App/system_state.hpp"
+#include "App/custom_algobuild.h"
+#include "App/settings.h"
+#include "App/utilities.h"
+
+#include "ab_sensor_hub.h"
 #include "cmsis_os2.h"
-#include "settings.h"
-#include "utilities.h"
-#include "custom_algobuild.h"
 #include "algo_builder.h"
 #include "L76X.h"
 
@@ -51,18 +54,18 @@ extern UART_HandleTypeDef hcom_uart[COMn];
 
 /* Private variables ---------------------------------------------------------*/
 /* USER CODE BEGIN Variables */
-GPSdata_t GPS1;
+static SystemState system_state;
 
 osThreadId_t ComDebugTaskHandle;
 uint32_t ComDebugTaskBuffer[ COM_DEBUG_TASK_STACK_SIZE ];
 osStaticThreadDef_t ComDebugTaskControlBloc;
 const osThreadAttr_t ComDebugTask_attributes = {
   .name = "ComDebugTask",
-  .stack_mem = &ComDebugTaskBuffer[0],
-  .stack_size = sizeof(ComDebugTaskBuffer),
   .cb_mem = &ComDebugTaskControlBloc,
   .cb_size = sizeof(ComDebugTaskControlBloc),
-  .priority = COM_DEBUG_TASK_PRIO,
+  .stack_mem = &ComDebugTaskBuffer[0],
+  .stack_size = sizeof(ComDebugTaskBuffer),
+  .priority = COM_DEBUG_TASK_PRIO
 };
 
 osThreadId_t SensorHubTaskHandle;
@@ -70,11 +73,11 @@ uint32_t SensorHubTaskBuffer[ SENSOR_HUB_TASK_STACK_SIZE ];
 osStaticThreadDef_t SensorHubTaskControlBloc;
 const osThreadAttr_t SensorHubTask_attributes = {
   .name = "SensorHubTask",
-  .stack_mem = &SensorHubTaskBuffer[0],
-  .stack_size = sizeof(SensorHubTaskBuffer),
   .cb_mem = &SensorHubTaskControlBloc,
   .cb_size = sizeof(SensorHubTaskControlBloc),
-  .priority = SENSOR_HUB_TASK_PRIO,
+  .stack_mem = &SensorHubTaskBuffer[0],
+  .stack_size = sizeof(SensorHubTaskBuffer),
+  .priority = SENSOR_HUB_TASK_PRIO
 };
 
 osThreadId_t GNSSTaskHandle;
@@ -82,11 +85,11 @@ uint32_t GNSSTaskBuffer[ GNSS_TASK_STACK_SIZE ];
 osStaticThreadDef_t GNSSTaskControlBloc;
 const osThreadAttr_t GNSSTask_attributes = {
   .name = "GNSSTask",
-  .stack_mem = &GNSSTaskBuffer[0],
-  .stack_size = sizeof(GNSSTaskBuffer),
   .cb_mem = &GNSSTaskControlBloc,
   .cb_size = sizeof(GNSSTaskControlBloc),
-  .priority = GNSS_TASK_PRIO,
+  .stack_mem = &GNSSTaskBuffer[0],
+  .stack_size = sizeof(GNSSTaskBuffer),
+  .priority = GNSS_TASK_PRIO
 };
 
 /* Definitions for ComDebugQueue */
@@ -108,11 +111,11 @@ uint32_t SystemTaskBuffer[ SYSTEM_TASK_STACK_SIZE ];
 osStaticThreadDef_t SystemTaskControlBloc;
 const osThreadAttr_t systemTask_attributes = {
   .name = "systemTask",
+    .cb_mem = &SystemTaskControlBloc,
+  .cb_size = sizeof(SystemTaskControlBloc),
   .stack_mem = &SystemTaskBuffer[0],
   .stack_size = sizeof(SystemTaskBuffer),
-  .cb_mem = &SystemTaskControlBloc,
-  .cb_size = sizeof(SystemTaskControlBloc),
-  .priority = SYSTEM_TASK_PRIO,
+  .priority = SYSTEM_TASK_PRIO
 };
 
 /* Private function prototypes -----------------------------------------------*/
@@ -144,7 +147,6 @@ return 0;
   */
 void MX_FREERTOS_Init(void) {
   /* USER CODE BEGIN Init */
-
   /* USER CODE END Init */
 
   /* USER CODE BEGIN RTOS_MUTEX */
@@ -197,7 +199,7 @@ void StartSystemTask(void *argument)
     // TODO: Tell the screen to refresh every second
 
     /* Magnetometer management */
-    if (sensor_hub_data.mfx_magcal.cal_quality <  MFX_MAGCALOK)
+    if (system_state.getIMUdata().mfx_magcal.cal_quality <  MFX_MAGCALOK)
     {
       PRINT_DEBUG("FUSION 6X\r\n");
       sensor_hub_data.motion_fx_6x_enable = 1;
@@ -240,13 +242,13 @@ void StartSensorHubTask(void *argument)
     Time_Handler();
     AB_Handler();
 
-    // PRINT_DEBUG(
-    //   "t %d, acc_x %f, acc_y %f, acc_z %f\r\n",
-    //   (int)sensor_hub_data.timestamp_us,
-    //   sensor_hub_data.acceleration[0],
-    //   sensor_hub_data.acceleration[1],
-    //   sensor_hub_data.acceleration[2]
-    // );
+    PRINT_DEBUG(
+      "t %d, acc_x %f, acc_y %f, acc_z %f\r\n",
+      (int)system_state.getIMUdata().timestamp_us,
+      system_state.getIMUdata().acceleration[0],
+      system_state.getIMUdata().acceleration[1],
+      system_state.getIMUdata().acceleration[2]
+    );
     
     vTaskDelayUntil(&xLastWakeTime, xPeriod);
   }
@@ -254,11 +256,13 @@ void StartSensorHubTask(void *argument)
 
 void StartGNSSTask(void *argument)
 {
+  GPSdata_t& gnss = system_state.getGNSSdata();
+
   for (;;)
   {
-    GPS1 = L76X_Receive_NMEA(); // Blocking
-    Coordinates google_coors = L76X_Google_Coordinates(&GPS1);
-    DMS_Coordinates dms_coors = Google2DMS(google_coors, GPS1.Lat_area, GPS1.Lon_area);
+    gnss = L76X_Receive_NMEA(); // Blocking
+    Coordinates google_coors = L76X_Google_Coordinates(&gnss);
+    DMS_Coordinates dms_coors = Google2DMS(google_coors, gnss.Lat_area, gnss.Lon_area);
 
     PRINT_DEBUG(
       "Lat: %d°%d'%f\"%c Lon: %d°%d'%f\"%c Time:%02d:%02d:%02d Status:%s\r\n",
@@ -266,8 +270,8 @@ void StartGNSSTask(void *argument)
       dms_coors.Lat.Area,
       dms_coors.Lon.Degrees, dms_coors.Lon.Minutes, dms_coors.Lon.Seconds,
       dms_coors.Lon.Area,
-      GPS1.Time_H, GPS1.Time_M, GPS1.Time_S,
-      (GPS1.Status == 1) ? "OK" : "INVALID"
+      gnss.Time_H, gnss.Time_M, gnss.Time_S,
+      (gnss.Status == 1) ? "OK" : "INVALID"
     );
   }
 }

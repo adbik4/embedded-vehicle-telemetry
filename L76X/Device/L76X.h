@@ -94,6 +94,10 @@ typedef struct {
     DMS_t Lon;
 }DMS_Coordinates;
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 int findMessageId(const char* id);
 void L76X_Send_Command(char *data);
 Coordinates L76X_Baidu_Coordinates(const GPSdata_t* data);
@@ -103,5 +107,9 @@ GPSdata_t L76X_Receive_NMEA(void);
 void L76X_Extract_RMC(GPSdata_t* result);
 void L76X_Extract_VTG(GPSdata_t* result);
 void L76X_Exit_BackupMode(void);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

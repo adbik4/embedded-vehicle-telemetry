@@ -41,7 +41,8 @@ if ! grep -Fq '${CMAKE_CURRENT_SOURCE_DIR}/../../Core/Src/custom_algobuild.c' "$
     sed -i \
         -e '\|${CMAKE_CURRENT_SOURCE_DIR}/../../Core/Src/syscalls\.c|a\
     ${CMAKE_CURRENT_SOURCE_DIR}/../../Core/Src/custom_algobuild.c' \
-        "$CMAKE_FILE"
+        -e 's/${CMAKE_CURRENT_SOURCE_DIR}/\.\./\.\./Core/Src/app_freertos\.c/${CMAKE_CURRENT_SOURCE_DIR}/\.\./\.\./Core/Src/app_freertos\.cpp/' \
+    "$CMAKE_FILE"
 fi
 
 #Core/Src/app_freertos.c

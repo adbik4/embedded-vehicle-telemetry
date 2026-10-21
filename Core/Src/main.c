@@ -18,16 +18,13 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
-#include "ab_sensor_hub.h"
 #include "app_freertos.h"
 #include "app_algobuild.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include "EPD_Test.h"
-#include "EPD_2in66.h"
 #include "L76X.h"
-#include "custom_algobuild.h"
+#include "App/custom_algobuild.h"
 
 #include <stdint.h>
 /* USER CODE END Includes */
