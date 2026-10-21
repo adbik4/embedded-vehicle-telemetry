@@ -99,7 +99,7 @@ void L76X_Send_Command(char *data);
 Coordinates L76X_Baidu_Coordinates(const GPSdata_t* data);
 Coordinates L76X_Google_Coordinates(const GPSdata_t* data);
 DMS_Coordinates Google2DMS(Coordinates coors, char lat_area, char lon_area);
-GPSdata_t L76X_Parse_NMEA(void);
+GPSdata_t L76X_Receive_NMEA(void);
 void L76X_Extract_RMC(GPSdata_t* result);
 void L76X_Extract_VTG(GPSdata_t* result);
 void L76X_Exit_BackupMode(void);

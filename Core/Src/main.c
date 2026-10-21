@@ -64,8 +64,6 @@ TIM_HandleTypeDef htim4;
 UART_HandleTypeDef huart4;
 
 /* USER CODE BEGIN PV */
-GPSdata_t GPS1;
-DMA_HandleTypeDef handle_GPDMA1_Channel0;
 
 /* USER CODE END PV */
 

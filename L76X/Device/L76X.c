@@ -247,7 +247,7 @@ void L76X_Extract_VTG(GPSdata_t* result) {
     // to implement
 }
 
-GPSdata_t L76X_Parse_NMEA()
+GPSdata_t L76X_Receive_NMEA()
 {
     GPSdata_t GPS;
 
