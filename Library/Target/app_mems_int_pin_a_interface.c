@@ -34,7 +34,7 @@
 EXTI_HandleTypeDef hexti3 = {.Line = EXTI_LINE_3};
 
 /* Global variables ----------------------------------------------------------*/
-extern volatile uint32_t Update100Hz;
+extern volatile uint32_t SensorReadRequest;
 
 /* Private function prototypes -----------------------------------------------*/
 static void mems_int_pin_a_hardware_event_isr(void);
@@ -51,7 +51,7 @@ void set_mems_int_pin_a_exti(void)
 
 static void mems_int_pin_a_hardware_event_isr(void)
 {
-  Update100Hz = 1;
+  SensorReadRequest = 1;
 }
 
 /**

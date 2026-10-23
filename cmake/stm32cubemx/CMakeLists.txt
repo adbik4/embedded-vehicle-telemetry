@@ -43,7 +43,7 @@ set(MX_Include_Dirs
 set(MX_Application_Src
     ${CMAKE_CURRENT_SOURCE_DIR}/../../Library/Target/com.c
     ${CMAKE_CURRENT_SOURCE_DIR}/../../Library/Target/custom_mems_control.c
-    ${CMAKE_CURRENT_SOURCE_DIR}/../../Library/Target/custom_mems_control_ex.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../Core/Src/App/custom_mems_control_ex.c
     ${CMAKE_CURRENT_SOURCE_DIR}/../../Library/Target/app_mems_int_pin_a_interface.c
     ${CMAKE_CURRENT_SOURCE_DIR}/../../Library/App/app_algobuild.c
     ${CMAKE_CURRENT_SOURCE_DIR}/../../Library/App/ab_buffers.c

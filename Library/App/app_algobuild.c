@@ -23,7 +23,6 @@ extern "C" {
 /* Includes ------------------------------------------------------------------*/
 #include "app_algobuild.h"
 #include "main.h"
-#include <stdio.h>
 
 #include "bsp_ip_conf.h"
 #include "algo_builder.h"

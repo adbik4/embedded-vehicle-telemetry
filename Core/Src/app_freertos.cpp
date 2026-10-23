@@ -239,15 +239,16 @@ void StartSensorHubTask(void *argument)
 
   for (;;)
   {
+    // TODO: Find the cause of SensorReadRequest not getting set by NVIC (the alternative is Refresh100Hz)
     Time_Handler();
     AB_Handler();
 
     PRINT_DEBUG(
       "t %d, acc_x %f, acc_y %f, acc_z %f\r\n",
-      (int)system_state.getIMUdata().timestamp_us,
-      system_state.getIMUdata().acceleration[0],
-      system_state.getIMUdata().acceleration[1],
-      system_state.getIMUdata().acceleration[2]
+      (int)sensor_hub_data.timestamp_us,
+      sensor_hub_data.acceleration[0],
+      sensor_hub_data.acceleration[1],
+      sensor_hub_data.acceleration[2]
     );
     
     vTaskDelayUntil(&xLastWakeTime, xPeriod);
