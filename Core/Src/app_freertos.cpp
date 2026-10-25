@@ -196,17 +196,15 @@ void StartSystemTask(void *argument)
   /* Infinite loop */
   for(;;)
   {
-    // TODO: Tell the screen to refresh every second
+    // TODO: Every second, tell the screen to refresh 
 
     /* Magnetometer management */
     if (system_state.getIMUdata().mfx_magcal.cal_quality <  MFX_MAGCALOK)
     {
-      PRINT_DEBUG("FUSION 6X\r\n");
       sensor_hub_data.motion_fx_6x_enable = 1;
       sensor_hub_data.motion_fx_9x_enable = 0;
     } else
     {
-      PRINT_DEBUG("FUSION 9X\r\n");
       sensor_hub_data.motion_fx_6x_enable = 0;
       sensor_hub_data.motion_fx_9x_enable = 1;
     }
@@ -243,13 +241,35 @@ void StartSensorHubTask(void *argument)
     Time_Handler();
     AB_Handler();
 
-    PRINT_DEBUG(
-      "t %d, acc_x %f, acc_y %f, acc_z %f\r\n",
-      (int)sensor_hub_data.timestamp_us,
-      sensor_hub_data.acceleration[0],
-      sensor_hub_data.acceleration[1],
-      sensor_hub_data.acceleration[2]
-    );
+    switch(system_state.getIMUdata().motion_fx_6x_enable)
+    {
+      case (1):
+        PRINT_DEBUG(
+          "%s t %d, q0 %f, q1 %f, q2 %f, q3 %f\r\n",
+          "FUSION_6X",
+          (int)system_state.getIMUdata().timestamp_us,
+          system_state.getIMUdata().mfx_6x.quaternion[0],
+          system_state.getIMUdata().mfx_6x.quaternion[1],
+          system_state.getIMUdata().mfx_6x.quaternion[2],
+          system_state.getIMUdata().mfx_6x.quaternion[3]
+        );
+        break;
+      case (0):
+        PRINT_DEBUG(
+          "%s t %d, q0 %f, q1 %f, q2 %f, q3 %f\r\n",
+          "FUSION_9X",
+          (int)system_state.getIMUdata().timestamp_us,
+          system_state.getIMUdata().mfx_9x.quaternion[0],
+          system_state.getIMUdata().mfx_9x.quaternion[1],
+          system_state.getIMUdata().mfx_9x.quaternion[2],
+          system_state.getIMUdata().mfx_9x.quaternion[3]
+        );
+        break;
+
+      default:
+        break;
+    }
+    
     
     vTaskDelayUntil(&xLastWakeTime, xPeriod);
   }
