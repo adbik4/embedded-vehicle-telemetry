@@ -16,8 +16,11 @@ add_library(epd_lib STATIC
     GUI/GUI_Paint.c
 )
 
-target_link_libraries(epd_lib PUBLIC
+target_link_libraries(epd_lib 
+PUBLIC
     stm32cubemx
+PRIVATE
+    telemetry_app_lib
 )
 
 target_include_directories(epd_lib PUBLIC

@@ -36,6 +36,16 @@
 #include "Debug.h"
 #include <stdlib.h> // malloc() free()
 
-int EPD_test(void);
+#include "cmsis_os2.h"
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+int EPD_test(osMessageQueueId_t ComDebugQueueHandle);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

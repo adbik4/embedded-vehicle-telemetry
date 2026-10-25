@@ -27,6 +27,7 @@
 #include "App/settings.h"
 #include "App/utilities.h"
 
+#include "EPD_Test.h"
 #include "ab_sensor_hub.h"
 #include "cmsis_os2.h"
 #include "algo_builder.h"
@@ -92,6 +93,18 @@ const osThreadAttr_t GNSSTask_attributes = {
   .priority = GNSS_TASK_PRIO
 };
 
+osThreadId_t DisplayTaskHandle;
+uint32_t DisplayTaskBuffer[ DISPLAY_TASK_STACK_SIZE ];
+osStaticThreadDef_t DisplayTaskControlBloc;
+const osThreadAttr_t DisplayTask_attributes = {
+  .name = "DisplayTask",
+  .cb_mem = &DisplayTaskControlBloc,
+  .cb_size = sizeof(DisplayTaskControlBloc),
+  .stack_mem = &DisplayTaskBuffer[0],
+  .stack_size = sizeof(DisplayTaskBuffer),
+  .priority = DISPLAY_TASK_PRIO
+};
+
 /* Definitions for ComDebugQueue */
 osMessageQueueId_t ComDebugQueueHandle;
 uint8_t ComDebugQueueBuffer[DEBUG_QUEUE_LENGTH * DEBUG_MSG_SIZE];
@@ -124,6 +137,7 @@ const osThreadAttr_t systemTask_attributes = {
 void StartComDebugTask(void *argument);
 void StartSensorHubTask(void *argument);
 void StartGNSSTask(void *argument);
+void StartDisplayTask(void *argument);
 
 /* USER CODE END FunctionPrototypes */
 
@@ -173,6 +187,7 @@ void MX_FREERTOS_Init(void) {
   ComDebugTaskHandle = osThreadNew(StartComDebugTask, NULL, &ComDebugTask_attributes);
   SensorHubTaskHandle = osThreadNew(StartSensorHubTask, NULL, &SensorHubTask_attributes);
   GNSSTaskHandle = osThreadNew(StartGNSSTask, NULL, &GNSSTask_attributes);
+  DisplayTaskHandle = osThreadNew(StartDisplayTask, NULL, &DisplayTask_attributes);
   /* USER CODE END RTOS_THREADS */
 
   /* USER CODE BEGIN RTOS_EVENTS */
@@ -244,26 +259,26 @@ void StartSensorHubTask(void *argument)
     switch(system_state.getIMUdata().motion_fx_6x_enable)
     {
       case (1):
-        PRINT_DEBUG(
-          "%s t %d, q0 %f, q1 %f, q2 %f, q3 %f\r\n",
-          "FUSION_6X",
-          (int)system_state.getIMUdata().timestamp_us,
-          system_state.getIMUdata().mfx_6x.quaternion[0],
-          system_state.getIMUdata().mfx_6x.quaternion[1],
-          system_state.getIMUdata().mfx_6x.quaternion[2],
-          system_state.getIMUdata().mfx_6x.quaternion[3]
-        );
+        // PRINT_DEBUG(
+        //   "%s t %d, q0 %f, q1 %f, q2 %f, q3 %f\r\n",
+        //   "FUSION_6X",
+        //   (int)system_state.getIMUdata().timestamp_us,
+        //   system_state.getIMUdata().mfx_6x.quaternion[0],
+        //   system_state.getIMUdata().mfx_6x.quaternion[1],
+        //   system_state.getIMUdata().mfx_6x.quaternion[2],
+        //   system_state.getIMUdata().mfx_6x.quaternion[3]
+        // );
         break;
       case (0):
-        PRINT_DEBUG(
-          "%s t %d, q0 %f, q1 %f, q2 %f, q3 %f\r\n",
-          "FUSION_9X",
-          (int)system_state.getIMUdata().timestamp_us,
-          system_state.getIMUdata().mfx_9x.quaternion[0],
-          system_state.getIMUdata().mfx_9x.quaternion[1],
-          system_state.getIMUdata().mfx_9x.quaternion[2],
-          system_state.getIMUdata().mfx_9x.quaternion[3]
-        );
+        // PRINT_DEBUG(
+        //   "%s t %d, q0 %f, q1 %f, q2 %f, q3 %f\r\n",
+        //   "FUSION_9X",
+        //   (int)system_state.getIMUdata().timestamp_us,
+        //   system_state.getIMUdata().mfx_9x.quaternion[0],
+        //   system_state.getIMUdata().mfx_9x.quaternion[1],
+        //   system_state.getIMUdata().mfx_9x.quaternion[2],
+        //   system_state.getIMUdata().mfx_9x.quaternion[3]
+        // );
         break;
 
       default:
@@ -294,6 +309,20 @@ void StartGNSSTask(void *argument)
       gnss.Time_H, gnss.Time_M, gnss.Time_S,
       (gnss.Status == 1) ? "OK" : "INVALID"
     );
+  }
+}
+
+void StartDisplayTask(void *argument)
+{
+  TickType_t xLastWakeTime = xTaskGetTickCount();
+  const TickType_t xPeriod = pdMS_TO_TICKS(DISPLAY_REFRESH_RATE);
+
+  PRINT_DEBUG("HELLO FROM THE DISPLAY TASK\r\n");
+  for (;;)
+  {
+    EPD_test(ComDebugQueueHandle);
+    
+    vTaskDelayUntil(&xLastWakeTime, xPeriod);
   }
 }
 /* USER CODE END Application */

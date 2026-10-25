@@ -30,14 +30,18 @@
 #include "EPD_Test.h"
 #include "EPD_2in66.h"
 
-int EPD_test(void)
+#include "GUI_Paint.h"
+#include "ImageData.h"
+#include "utilities.h"
+
+int EPD_test(osMessageQueueId_t ComDebugQueueHandle)
 {
-    printf("EPD_2IN66_test Demo\r\n");
+    PRINT_DEBUG("EPD_2IN66_test Demo\r\n");
     if(EPD_DEV_Module_Init()!=0){
         return -1;
     }
 
-    printf("e-Paper Init and Clear...\r\n");
+    PRINT_DEBUG("e-Paper Init and Clear...\r\n");
     EPD_2IN66_Init();
     EPD_2IN66_Clear();
     DEV_Delay_ms(500);
@@ -47,14 +51,15 @@ int EPD_test(void)
     /* you have to edit the startup_stm32fxxx.s file and set a big enough heap size */
     UWORD Imagesize = ((EPD_2IN66_WIDTH % 8 == 0)? (EPD_2IN66_WIDTH / 8 ): (EPD_2IN66_WIDTH / 8 + 1)) * EPD_2IN66_HEIGHT;
     if((BlackImage = (UBYTE *)malloc(Imagesize)) == NULL) {
-        printf("Failed to apply for black memory...\r\n");
+        PRINT_DEBUG("Failed to apply for black memory...\r\n");
         return -1;
     }
-    printf("Paint_NewImage\r\n");
+    PRINT_DEBUG("Paint_NewImage\r\n");
     Paint_NewImage(BlackImage, EPD_2IN66_WIDTH, EPD_2IN66_HEIGHT, 270, WHITE);
+    Paint_SetRotate(ROTATE_90);
 
 #if 1   //show image for array    
-    printf("show image for array\r\n");
+    PRINT_DEBUG("show image for array\r\n");
     Paint_SelectImage(BlackImage);
     Paint_Clear(WHITE);
     Paint_DrawBitMap(gImage_2in66);
@@ -69,7 +74,7 @@ int EPD_test(void)
     Paint_Clear(WHITE);
 
     // 2.Drawing on the image
-    printf("Drawing:BlackImage\r\n");
+    PRINT_DEBUG("Drawing:BlackImage\r\n");
     Paint_DrawPoint(10, 80, BLACK, DOT_PIXEL_1X1, DOT_STYLE_DFT);
     Paint_DrawPoint(10, 90, BLACK, DOT_PIXEL_2X2, DOT_STYLE_DFT);
     Paint_DrawPoint(10, 100, BLACK, DOT_PIXEL_3X3, DOT_STYLE_DFT);
@@ -100,7 +105,7 @@ int EPD_test(void)
 #endif
 
 #if 1	//partial refresh, show time
-    printf("EPD_2IN66_DisplayPart\r\n");
+    PRINT_DEBUG("EPD_2IN66_DisplayPart\r\n");
     EPD_2IN66_Init_Partial();
 	
 	Paint_SelectImage(BlackImage);
@@ -134,7 +139,7 @@ int EPD_test(void)
             break;
         }
 		
-	printf("Part refresh...\r\n");
+	PRINT_DEBUG("Part refresh...\r\n");
     EPD_2IN66_Display(BlackImage);
 
 	DEV_Delay_ms(500);
@@ -142,17 +147,17 @@ int EPD_test(void)
 	EPD_2IN66_Clear();
 #endif
 	
-    printf("Clear...\r\n");
+    PRINT_DEBUG("Clear...\r\n");
 	EPD_2IN66_Init();
 	EPD_2IN66_Clear();
 	
-    printf("Goto Sleep...\r\n");
+    PRINT_DEBUG("Goto Sleep...\r\n");
 	EPD_2IN66_Sleep();
 	
     free(BlackImage);
     BlackImage = NULL;
     // close 5V
-    printf("close 5V, Module enters 0 power consumption ...\r\n");
+    PRINT_DEBUG("close 5V, Module enters 0 power consumption ...\r\n");
     EPD_DEV_Module_Exit();
     
     return 0;

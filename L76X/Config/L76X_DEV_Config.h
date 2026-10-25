@@ -7,11 +7,14 @@
 #include <stdint.h>
 #include <stdio.h>
 
+#include "FreeRTOS.h"
+#include "task.h"
+
 #define UBYTE   uint8_t
 #define UWORD   uint16_t
 #define UDOUBLE uint32_t
 
-#ifndef _EPD_DEV_CONFIG_H_
+#if !defined(_EPD_DEV_CONFIG_H_) && !defined(_EPD_DEV_CONFIG_H_)
 /**
  * GPIO read and write
 **/
@@ -21,7 +24,7 @@
 /**
  * delay x ms
 **/
-#define DEV_Delay_ms(__xms)    HAL_Delay(__xms)
+#define DEV_Delay_ms(__xms)    vTaskDelay(pdMS_TO_TICKS(__xms))
 #endif
 
 /**

@@ -54,6 +54,9 @@
 #include <stdint.h>
 #include <stdio.h>
 
+#include "FreeRTOS.h"
+#include "task.h"
+
 /**
  * data
 **/
@@ -81,7 +84,7 @@
 /**
  * delay x ms
 **/
-#define DEV_Delay_ms(__xms) HAL_Delay(__xms);
+#define DEV_Delay_ms(__xms) vTaskDelay(pdMS_TO_TICKS(__xms))
 
 void DEV_SPI_WriteByte(UBYTE value);
 void DEV_SPI_Write_nByte(UBYTE *value, UDOUBLE len);

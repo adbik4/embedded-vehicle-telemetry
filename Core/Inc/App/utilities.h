@@ -1,7 +1,9 @@
 #pragma once
 #include "settings.h"
 
-char debug_msg_tx_buf[DEBUG_MSG_SIZE];
+#include "cmsis_os2.h"
+
+static char debug_msg_tx_buf[DEBUG_MSG_SIZE];
 
 /* MACROS */
 #ifndef NDEBUG

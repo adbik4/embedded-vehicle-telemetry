@@ -48,16 +48,6 @@ sed -i \
     's/target_link_libraries(${CMAKE_PROJECT_NAME} ${MX_LINK_LIBS})/target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE ${MX_LINK_LIBS})/' \
     "$CMAKE_FILE"
 
-# Add custom_algobuild.c if missing.
-if ! grep -Fq \
-    '${CMAKE_CURRENT_SOURCE_DIR}/../../Core/Src/custom_algobuild.c' \
-    "$CMAKE_FILE"; then
-    sed -i \
-        '\|${CMAKE_CURRENT_SOURCE_DIR}/../../Core/Src/syscalls.c|a\
-    ${CMAKE_CURRENT_SOURCE_DIR}/../../Core/Src/custom_algobuild.c' \
-        "$CMAKE_FILE"
-fi
-
 # Replace source paths literally, without regex-escaping errors.
 sed -i \
     -e 's|${CMAKE_CURRENT_SOURCE_DIR}/../../Core/Src/app_freertos.c|${CMAKE_CURRENT_SOURCE_DIR}/../../Core/Src/app_freertos.cpp|g' \

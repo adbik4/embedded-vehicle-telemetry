@@ -5,7 +5,12 @@ add_library(l76x_lib STATIC
     Device/L76X.c
 )
 
-target_link_libraries(l76x_lib PUBLIC stm32cubemx)
+target_link_libraries(l76x_lib 
+PUBLIC
+    stm32cubemx
+PRIVATE
+    telemetry_app_lib    
+)
 
 target_include_directories(l76x_lib PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}/Config

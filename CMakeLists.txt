@@ -32,6 +32,7 @@ add_executable(${CMAKE_PROJECT_NAME})
 add_subdirectory(cmake/stm32cubemx)
 
 # Add feature libraries
+add_subdirectory(Core)
 add_subdirectory(EPD)
 add_subdirectory(L76X)
 
@@ -56,6 +57,7 @@ list(REMOVE_ITEM CMAKE_C_IMPLICIT_LINK_LIBRARIES ob)
 # Add linked libraries
 target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE
     stm32cubemx
+    telemetry_app_lib
     epd_lib
     l76x_lib
 )
