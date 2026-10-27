@@ -48,6 +48,10 @@
 #ifndef _EPD_DEV_CONFIG_H_
 #define _EPD_DEV_CONFIG_H_
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include "main.h"
 #include "stm32u3xx_hal.h"
 #include "stm32u3xx_hal_gpio.h"
@@ -95,4 +99,9 @@ void DEV_GPIO_Init(void);
 void DEV_SPI_Init(void);
 void DEV_SPI_SendData(UBYTE Reg);
 UBYTE DEV_SPI_ReadData(void);
+
+#ifdef __cplusplus
+}
+#endif
+
 #endif

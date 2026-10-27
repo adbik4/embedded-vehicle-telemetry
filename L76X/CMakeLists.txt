@@ -8,8 +8,6 @@ add_library(l76x_lib STATIC
 target_link_libraries(l76x_lib 
 PUBLIC
     stm32cubemx
-PRIVATE
-    telemetry_app_lib    
 )
 
 target_include_directories(l76x_lib PUBLIC

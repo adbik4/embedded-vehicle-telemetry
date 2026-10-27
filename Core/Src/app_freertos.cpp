@@ -23,9 +23,9 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "App/system_state.hpp"
-#include "App/custom_algobuild.h"
+#include "custom_algobuild.h"
 #include "App/settings.h"
-#include "App/utilities.h"
+#include "App/utilities.hpp"
 
 #include "EPD_Test.h"
 #include "ab_sensor_hub.h"
@@ -320,8 +320,7 @@ void StartDisplayTask(void *argument)
   PRINT_DEBUG("HELLO FROM THE DISPLAY TASK\r\n");
   for (;;)
   {
-    EPD_test(ComDebugQueueHandle);
-    
+    // DO STH    
     vTaskDelayUntil(&xLastWakeTime, xPeriod);
   }
 }

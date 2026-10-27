@@ -6,7 +6,6 @@
 #define COM_DEBUG_TASK_STACK_SIZE   (185)   // optimal - 185
 #define SENSOR_HUB_TASK_STACK_SIZE  (1024)   // optimal - ??
 #define GNSS_TASK_STACK_SIZE        (1024)   // optimal - ??
-#define GNSS_TASK_STACK_SIZE        (1024)   // optimal - ??
 #define DISPLAY_TASK_STACK_SIZE     (1024)   // optimal - ??
 
 #define SYSTEM_TASK_PRIO        ((osPriority_t) osPriorityRealtime)

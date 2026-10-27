@@ -42,7 +42,7 @@
 extern "C" {
 #endif
 
-int EPD_test(osMessageQueueId_t ComDebugQueueHandle);
+int EPD_test();
 
 #ifdef __cplusplus
 }

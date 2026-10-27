@@ -24,7 +24,7 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "L76X.h"
-#include "App/custom_algobuild.h"
+#include "custom_algobuild.h"
 
 #include <stdint.h>
 /* USER CODE END Includes */
