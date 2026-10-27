@@ -19,8 +19,6 @@ add_library(epd_lib STATIC
 target_link_libraries(epd_lib 
 PUBLIC
     stm32cubemx
-PRIVATE
-    telemetry_app_lib
 )
 
 target_include_directories(epd_lib PUBLIC

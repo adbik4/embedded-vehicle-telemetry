@@ -16,3 +16,4 @@ Release/
 CMakeFiles/
 CMakeCache.txt
 cmake-build-*/
+Tests/deps/
