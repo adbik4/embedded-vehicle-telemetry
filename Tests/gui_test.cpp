@@ -1,15 +1,16 @@
+#include "gui.hpp"
 #include <gtest/gtest.h>
 
 //#include "gui.hpp"
 
 class GUITest: public ::testing::Test {
 protected:
-    // Do Sth
+    GUI& gui = GUI::getInstance();
 };
 
-TEST(HelloTest, BasicAssertions) {
-  // Expect two strings not to be equal.
-  EXPECT_STRNE("hello", "world");
-  // Expect equality.
-  EXPECT_EQ(7 * 6, 42);
+TEST_F(GUITest, InitialState) {
+    ScreenState& state = gui.getCurrentScreen();
+    ScreenState& target = DebugScreen::getInstance();
+
+    ASSERT_EQ(&state, &target);
 }

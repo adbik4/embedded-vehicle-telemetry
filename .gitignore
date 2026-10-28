@@ -7,6 +7,7 @@ Release/
 .settings/
 *.user
 *.launch
+.clangd
 
 # CubeIDE
 *.metadata/

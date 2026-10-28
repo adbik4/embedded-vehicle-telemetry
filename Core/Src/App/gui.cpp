@@ -1,16 +1,20 @@
 #include "gui.hpp"
+#include "utilities.h"
 
+#if defined(UNIT_TEST)
 #include "cmsis_os2.h"
 #include "EPD_DEV_Config.h"
 #include "EPD_2in66.h"
 #include "GUI_Paint.h"
-#include "utilities.hpp"
 #include <stdlib.h>
 
 extern osMessageQueueId_t ComDebugQueueHandle;
+#endif
 
-GUI::GUI() {
-    setScreen(DebugScreen::getInstance());
+/* --------- GUI ---------- */
+
+GUI::GUI() : currentScreen(DebugScreen::getInstance()) {
+#if defined(UNIT_TEST)
 
     if(EPD_DEV_Module_Init() != 0){
         PRINT_DEBUG("E-ink display initialisation failed.");
@@ -32,27 +36,52 @@ GUI::GUI() {
     PRINT_DEBUG("Paint_NewImage\r\n");
     Paint_NewImage(BlackImage, EPD_2IN66_WIDTH, EPD_2IN66_HEIGHT, 270, WHITE);
     Paint_SetRotate(ROTATE_90);
+#endif
 }
 
 void GUI::setScreen(ScreenState& nextScreen) {
-    currentScreen = &nextScreen;
-    currentScreen->init(this);
+    currentScreen = nextScreen;
+    currentScreen.init(this);
 }
 
 void GUI::switchScreen() {
-    currentScreen->switchScreen(this);
+    currentScreen.switchScreen(this);
 }
 
-ScreenState& DebugScreen::switchScreen(GUI* gui) {
-    ScreenState& nextScreen = *screenTransitions.at(this);
+void GUI::refreshScreen() {
+    currentScreen->refresh(this);
+}
+
+/* ----- DEBUG SCREEN ----- */
+
+void DebugScreen::switchScreen(GUI* gui) {
+    ScreenState& nextScreen = MainScreen::getInstance();
     gui->setScreen(nextScreen);
-    return nextScreen;
 }
 
 void DebugScreen::init(GUI* gui) {
     (void)gui;
+    PRINT_DEBUG("Initialising Debug Screen...")
 }
 
 void DebugScreen::refresh(GUI* gui) {
     (void)gui;
+    PRINT_DEBUG("Refreshing Debug Screen...")
+}
+
+/* ----- MAIN SCREEN ----- */
+
+void MainScreen::switchScreen(GUI* gui) {
+    ScreenState& nextScreen = DebugScreen::getInstance();
+    gui->setScreen(nextScreen);
+}
+
+void MainScreen::init(GUI* gui) {
+    (void)gui;
+    PRINT_DEBUG("Initialising Main Screen...")
+}
+
+void MainScreen::refresh(GUI* gui) {
+    (void)gui;
+    PRINT_DEBUG("Refreshing Main Screen...")
 }

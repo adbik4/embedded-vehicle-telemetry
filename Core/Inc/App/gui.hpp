@@ -6,16 +6,19 @@
 
 class ScreenState;
 
-class GUI {
+// TODO: Detect button presses
+
+class GUI : public Singleton<GUI> {
 private:
-    ScreenState* currentScreen = nullptr;
+    ScreenState& currentScreen;
 
 public:
     GUI();
 
-    inline ScreenState* getCurrentScreen() const { return currentScreen; }
+    inline ScreenState& getCurrentScreen() const { return currentScreen; }
     void switchScreen();
     void setScreen(ScreenState& nextScreen);
+    void refreshScreen();
 };
 
 class ScreenState {
@@ -29,12 +32,14 @@ public:
     virtual void refresh(GUI* gui) = 0;
     
     /* Points to the next screen */
-    virtual ScreenState& switchScreen(GUI* gui) = 0;
+    virtual void switchScreen(GUI* gui) = 0;
 };
+
+/* ----- Concrete Screens ----- */
 
 class DebugScreen : public Singleton<DebugScreen>, public ScreenState {
 private:
-    const std::array<const char*, 3> bottom_bar = {"", "", "BACK"};
+    const std::array<const char*, 3> bottom_bar = {"", "", "Back"};
 
 public:
     void init(GUI* gui) override;
@@ -42,6 +47,12 @@ public:
     ScreenState& switchScreen(GUI* gui) override;
 };
 
-static std::map<ScreenState*, ScreenState*> screenTransitions = {
-    {&DebugScreen::getInstance(), &DebugScreen::getInstance()}
+class MainScreen : public Singleton<MainScreen>, public ScreenState {
+private:
+    const std::array<const char*, 3> bottom_bar = {USERNAME_A, USERNAME_B, "Stats"};
+
+public:
+    void init(GUI* gui) override;
+    void refresh(GUI* gui) override;
+    ScreenState& switchScreen(GUI* gui) override;
 };

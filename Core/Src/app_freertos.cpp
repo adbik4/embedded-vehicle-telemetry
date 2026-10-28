@@ -32,6 +32,7 @@
 #include "cmsis_os2.h"
 #include "algo_builder.h"
 #include "L76X.h"
+#include "gui.hpp"
 
 #include <string.h>
 
@@ -211,8 +212,6 @@ void StartSystemTask(void *argument)
   /* Infinite loop */
   for(;;)
   {
-    // TODO: Every second, tell the screen to refresh 
-
     /* Magnetometer management */
     if (system_state.getIMUdata().mfx_magcal.cal_quality <  MFX_MAGCALOK)
     {
@@ -317,10 +316,11 @@ void StartDisplayTask(void *argument)
   TickType_t xLastWakeTime = xTaskGetTickCount();
   const TickType_t xPeriod = pdMS_TO_TICKS(DISPLAY_REFRESH_RATE);
 
-  PRINT_DEBUG("HELLO FROM THE DISPLAY TASK\r\n");
+  GUI& gui = GUI::getInstance();
+
   for (;;)
   {
-    // DO STH    
+    gui.refreshScreen();
     vTaskDelayUntil(&xLastWakeTime, xPeriod);
   }
 }

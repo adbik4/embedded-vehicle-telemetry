@@ -8,15 +8,15 @@ target_include_directories(telemetry_app_lib PUBLIC
 
 target_sources(telemetry_app_lib PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/Src/App/utilities.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/Src/App/gui.cpp
 )
 
 if(TARGET stm32cubemx AND TARGET epd_lib)
-    target_sources(telemetry_app_lib PRIVATE
-        ${CMAKE_CURRENT_SOURCE_DIR}/Src/App/gui.cpp
-    )
-
     target_link_libraries(telemetry_app_lib PUBLIC
         stm32cubemx
         epd_lib
+    )
+    target_compile_definitions(telemetry_app_lib PRIVATE
+        UNIT_TEST
     )
 endif()
