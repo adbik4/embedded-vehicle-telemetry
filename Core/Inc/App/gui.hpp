@@ -1,8 +1,13 @@
 #pragma once
 
 #include "utilities.hpp"
+#include "io.hpp"
 #include <array>
+#include <functional>
 #include <map>
+#include <optional>
+
+namespace gui {
 
 class ScreenState;
 
@@ -11,11 +16,15 @@ class ScreenState;
 class GUI : public Singleton<GUI> {
 private:
     ScreenState& currentScreen;
+    ButtonState button1;
+    ButtonState button2;
+    ButtonState button3;
 
 public:
     GUI();
 
-    inline ScreenState& getCurrentScreen() const { return currentScreen; }
+    inline ScreenState& getCurrentScreen() const { return currentScreen; };
+    std::optional<const ButtonState> getButtonState(const Button id) const;
     void switchScreen();
     void setScreen(ScreenState& nextScreen);
     void refreshScreen();
@@ -44,7 +53,7 @@ private:
 public:
     void init(GUI* gui) override;
     void refresh(GUI* gui) override;
-    ScreenState& switchScreen(GUI* gui) override;
+    void switchScreen(GUI* gui) override;
 };
 
 class MainScreen : public Singleton<MainScreen>, public ScreenState {
@@ -54,5 +63,7 @@ private:
 public:
     void init(GUI* gui) override;
     void refresh(GUI* gui) override;
-    ScreenState& switchScreen(GUI* gui) override;
+    void switchScreen(GUI* gui) override;
 };
+
+} // namespace gui

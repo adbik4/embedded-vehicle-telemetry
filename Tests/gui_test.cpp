@@ -1,7 +1,7 @@
 #include "gui.hpp"
 #include <gtest/gtest.h>
 
-//#include "gui.hpp"
+using namespace gui;
 
 class GUITest: public ::testing::Test {
 protected:

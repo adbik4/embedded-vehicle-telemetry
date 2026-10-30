@@ -1,42 +1,42 @@
 #include "gui.hpp"
-#include "utilities.h"
 
-#if defined(UNIT_TEST)
-#include "cmsis_os2.h"
-#include "EPD_DEV_Config.h"
-#include "EPD_2in66.h"
-#include "GUI_Paint.h"
-#include <stdlib.h>
+#include "utilities.hpp"
+#include "io.hpp"
+#include <optional>
 
-extern osMessageQueueId_t ComDebugQueueHandle;
+#if !defined(UNIT_TEST)
+    #include "EPD_2in66.h"
+    #include "EPD_DEV_Config.h"
+    #include "GUI_Paint.h"
+    #include "cmsis_os2.h"
+    #include <stdlib.h>
+
+    extern osMessageQueueId_t ComDebugQueueHandle;
+#endif
+
+namespace gui {
+
+#if !defined(UNIT_TEST)
+    #define IMAGE_SIZE ((EPD_2IN66_WIDTH % 8 == 0)? (EPD_2IN66_WIDTH / 8 ): (EPD_2IN66_WIDTH / 8 + 1)) * EPD_2IN66_HEIGHT
+    static UBYTE Canvas[IMAGE_SIZE];
 #endif
 
 /* --------- GUI ---------- */
 
 GUI::GUI() : currentScreen(DebugScreen::getInstance()) {
-#if defined(UNIT_TEST)
+    #if !defined(UNIT_TEST)
+        if(EPD_DEV_Module_Init() != 0){
+            PRINT_DEBUG("E-ink display initialisation failed.");
+        }
 
-    if(EPD_DEV_Module_Init() != 0){
-        PRINT_DEBUG("E-ink display initialisation failed.");
-    }
+        PRINT_DEBUG("e-Paper Init and Clear...\r\n");
+        EPD_2IN66_Init();
+        EPD_2IN66_Clear();
+        DEV_Delay_ms(500);
 
-    PRINT_DEBUG("e-Paper Init and Clear...\r\n");
-    EPD_2IN66_Init();
-    EPD_2IN66_Clear();
-    DEV_Delay_ms(500);
-
-    //Create a new image cache 
-    UBYTE *BlackImage;
-    UWORD Imagesize = ((EPD_2IN66_WIDTH % 8 == 0)? (EPD_2IN66_WIDTH / 8 ): (EPD_2IN66_WIDTH / 8 + 1)) * EPD_2IN66_HEIGHT;
-    if((BlackImage = (UBYTE *)malloc(Imagesize)) == NULL) {
-        PRINT_DEBUG("Failed to apply for black memory...\r\n");
-        return;
-    }
-    
-    PRINT_DEBUG("Paint_NewImage\r\n");
-    Paint_NewImage(BlackImage, EPD_2IN66_WIDTH, EPD_2IN66_HEIGHT, 270, WHITE);
-    Paint_SetRotate(ROTATE_90);
-#endif
+        Paint_NewImage(Canvas, EPD_2IN66_WIDTH, EPD_2IN66_HEIGHT, 90, WHITE);
+    #endif
+    currentScreen.init(this);
 }
 
 void GUI::setScreen(ScreenState& nextScreen) {
@@ -49,7 +49,28 @@ void GUI::switchScreen() {
 }
 
 void GUI::refreshScreen() {
-    currentScreen->refresh(this);
+    currentScreen.refresh(this);
+}
+
+std::optional<const ButtonState> GUI::getButtonState(const Button id) const {
+    switch(id) {
+        case Button::B1 :
+            return button1;
+            break;
+
+        case Button::B2 :
+            return button2;
+            break;
+
+        case Button::B3 :
+            return button3;
+            break;
+
+        default :
+            PRINT_DEBUG("[GetButtonState] Unknown Button ID: %d", static_cast<int>(id));
+            return std::nullopt;
+            break;
+    }
 }
 
 /* ----- DEBUG SCREEN ----- */
@@ -60,13 +81,22 @@ void DebugScreen::switchScreen(GUI* gui) {
 }
 
 void DebugScreen::init(GUI* gui) {
-    (void)gui;
-    PRINT_DEBUG("Initialising Debug Screen...")
+    (void)gui;  // unused
+    PRINT_DEBUG("Initialising Debug Screen...");
+
+    #if !defined(UNIT_TEST)
+        Paint_Clear(WHITE);
+        
+        Paint_DrawString_EN(10, 0, "Debug Screen", &Font16, BLACK, WHITE);
+        
+        EPD_2IN66_Display(Canvas);
+        // DEV_Delay_ms(2000);
+    #endif
 }
 
 void DebugScreen::refresh(GUI* gui) {
-    (void)gui;
-    PRINT_DEBUG("Refreshing Debug Screen...")
+    (void)gui;  // unused
+    PRINT_DEBUG("Refreshing Debug Screen...");
 }
 
 /* ----- MAIN SCREEN ----- */
@@ -77,11 +107,22 @@ void MainScreen::switchScreen(GUI* gui) {
 }
 
 void MainScreen::init(GUI* gui) {
-    (void)gui;
-    PRINT_DEBUG("Initialising Main Screen...")
+    (void)gui;  // unused
+    PRINT_DEBUG("Initialising Main Screen...");
+
+#if !defined(UNIT_TEST)
+    Paint_Clear(WHITE);
+
+    Paint_DrawString_EN(10, 0, "Main Screen", &Font16, BLACK, WHITE);
+    
+    EPD_2IN66_Display(Canvas);
+    // DEV_Delay_ms(2000);
+#endif
 }
 
 void MainScreen::refresh(GUI* gui) {
-    (void)gui;
-    PRINT_DEBUG("Refreshing Main Screen...")
+    (void)gui;  // unused
+    PRINT_DEBUG("Refreshing Main Screen...");
 }
+
+} // namespace gui

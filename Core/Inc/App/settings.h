@@ -3,7 +3,7 @@
 #define USERNAME_A "Adrian"
 #define USERNAME_B "Natalia"
 
-#define DISPLAY_REFRESH_RATE 1000
+#define DISPLAY_REFRESH_RATE 5000
 
 #define SYSTEM_TASK_STACK_SIZE      (1024)   // optimal - ??
 #define COM_DEBUG_TASK_STACK_SIZE   (185)   // optimal - 185

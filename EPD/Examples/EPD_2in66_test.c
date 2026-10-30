@@ -56,8 +56,7 @@ int EPD_test()
         return -1;
     }
     printf("Paint_NewImage\r\n");
-    Paint_NewImage(BlackImage, EPD_2IN66_WIDTH, EPD_2IN66_HEIGHT, 270, WHITE);
-    Paint_SetRotate(ROTATE_90);
+    Paint_NewImage(BlackImage, EPD_2IN66_WIDTH, EPD_2IN66_HEIGHT, 90, WHITE);
 
 #if 1   //show image for array    
     printf("show image for array\r\n");

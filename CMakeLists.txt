@@ -32,8 +32,8 @@ add_executable(${CMAKE_PROJECT_NAME})
 add_subdirectory(cmake/stm32cubemx)
 
 # Add feature libraries
-add_subdirectory(Core)
 add_subdirectory(EPD)
+add_subdirectory(Core)
 add_subdirectory(L76X)
 
 # Add sources to executable

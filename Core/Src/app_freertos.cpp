@@ -41,6 +41,7 @@
 /* Private typedef -----------------------------------------------------------*/
 typedef StaticTask_t osStaticThreadDef_t;
 /* USER CODE BEGIN PTD */
+using gui::GUI;
 typedef StaticQueue_t osStaticMessageQDef_t;
 /* USER CODE END PTD */
 

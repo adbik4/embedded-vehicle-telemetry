@@ -32,6 +32,10 @@
 #ifndef _IMAGEDATA_H_
 #define _IMAGEDATA_H_
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 // ImageData2.c
 /* --------------------------------------- */
 extern const unsigned char gImage_2in15g[];
@@ -122,7 +126,9 @@ extern const unsigned char gImage_7in5bc_ry[];
 extern const unsigned char gImage_7in5_V2_b[];
 extern const unsigned char gImage_7in5_V2_ry[];
 
+#ifdef __cplusplus
+}
+#endif
+
 #endif
 /* FILE END */
-
-

@@ -32,6 +32,10 @@
 
 #include "EPD_DEV_Config.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 // Display resolution
 #define EPD_2IN66_WIDTH       152
 #define EPD_2IN66_HEIGHT      296
@@ -42,5 +46,9 @@ void EPD_2IN66_Init_Partial(void);
 void EPD_2IN66_Clear(void);
 void EPD_2IN66_Display(UBYTE *Image);
 void EPD_2IN66_Sleep(void);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

@@ -29,6 +29,10 @@ add_executable(gtest_ut)
 
 add_subdirectory(../Core Core)
 
+target_compile_definitions(telemetry_app_lib PRIVATE
+    UNIT_TEST
+)
+
 target_include_directories(gtest_ut PRIVATE
     ../Middlewares/Third_Party/CMSIS/RTOS2/Include
 )

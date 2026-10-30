@@ -11,12 +11,10 @@ target_sources(telemetry_app_lib PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/Src/App/gui.cpp
 )
 
-if(TARGET stm32cubemx AND TARGET epd_lib)
-    target_link_libraries(telemetry_app_lib PUBLIC
-        stm32cubemx
-        epd_lib
-    )
-    target_compile_definitions(telemetry_app_lib PRIVATE
-        UNIT_TEST
-    )
+if(TARGET stm32cubemx)
+    target_link_libraries(telemetry_app_lib PUBLIC stm32cubemx)
+endif()
+
+if(TARGET epd_lib)
+    target_link_libraries(telemetry_app_lib PUBLIC epd_lib)
 endif()

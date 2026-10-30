@@ -4,7 +4,7 @@
 #include <cstdio>
 
 /* MACROS */
-#ifndef NDEBUG
+#if !defined(NDEBUG) && !defined(UNIT_TEST)
 #define PRINT_DEBUG(...) do { \
   char debug_msg_tx_buf[DEBUG_MSG_SIZE + 1]; \
   snprintf(debug_msg_tx_buf, DEBUG_MSG_SIZE, __VA_ARGS__); \
