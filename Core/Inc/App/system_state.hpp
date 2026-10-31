@@ -4,7 +4,6 @@
 #include "ab_sensor_hub.h"
 #include "io.hpp"
 #include "utilities.hpp"
-#include <optional>
 
 extern sensor_hub_data_t sensor_hub_data;
 
@@ -26,7 +25,7 @@ public:
 
     /* read-only */
     const sensor_hub_data_t& getIMUdata() const;
-    std::optional<const ButtonState> getButtonState(const Button id) const;
+    const ButtonState& getButtonState(const Button id) const;
 
     /* read-write */
     GPSdata_t& getGNSSdata();

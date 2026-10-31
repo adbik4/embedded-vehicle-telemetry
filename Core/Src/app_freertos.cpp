@@ -33,6 +33,7 @@
 #include "algo_builder.h"
 #include "L76X.h"
 #include "gui.hpp"
+#include "io.hpp"
 #include "main.h"
 #include "portmacrocommon.h"
 #include "projdefs.h"
@@ -346,20 +347,40 @@ void StartDisplayTask(void *argument)
 
 void StartInputManagerTask(void *argument)
 {
+  bool press_detected{false};
+  GUI& gui = GUI::GetInstance();
+  
   for (;;)
   {
+    press_detected = false;
     ulTaskNotifyTake(pdTRUE, portMAX_DELAY);
 
     /* Handle button trigger */
     vTaskDelay(pdMS_TO_TICKS(DEBOUNCE_MS)); // Debounce button press
-    if (HAL_GPIO_ReadPin(BUTTON2_GPIO_Port, BUTTON2_Pin) == GPIO_PIN_RESET) {
-      system_state.button2._isPressed = true; // button was released
+    if (!HAL_isButtonPressed(Button::B2)) {  // TODO: Replace with actual runtime button from ISR
+      /* The button was released */
+      system_state.button2._isPressed = true;
+      press_detected = true;
     }
-
 
     /* Wait to detect held button presses */
     vTaskDelay(pdMS_TO_TICKS(BUTTON_HOLD_THRESH_MS));
-    // Check each button
+    if (HAL_isButtonPressed(Button::B1)) {
+      system_state.button1._isHeld = true;
+      press_detected = true;
+    }
+    if (HAL_isButtonPressed(Button::B2)) {
+      system_state.button2._isHeld = true;
+      press_detected = true;
+    }
+    if (HAL_isButtonPressed(Button::B3)) {
+      system_state.button3._isHeld = true;
+      press_detected = true;
+    }
+
+    if (press_detected) {
+      gui.switchScreen();
+    }
   }
 }
 /* USER CODE END Application */

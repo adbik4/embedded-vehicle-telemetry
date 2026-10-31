@@ -19,3 +19,5 @@ public:
     bool isPressed() const;
     bool isHeld() const;
 };
+
+bool HAL_isButtonPressed(const Button id);

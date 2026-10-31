@@ -19,7 +19,7 @@ public:
 
     inline ScreenState& getCurrentScreen() const { return currentScreen; };
     void switchScreen();
-    void setScreen(ScreenState& nextScreen);
+    void setScreen(ScreenState* nextScreen);
     void refreshScreen();
 };
 
@@ -52,6 +52,16 @@ public:
 class MainScreen : public Singleton<MainScreen>, public ScreenState {
 private:
     const std::array<const char*, 3> bottom_bar = {USERNAME_A, USERNAME_B, "Stats"};
+
+public:
+    void init(GUI* gui) override;
+    void refresh(GUI* gui) override;
+    void switchScreen(GUI* gui) override;
+};
+
+class StatsScreen : public Singleton<StatsScreen>, public ScreenState {
+private:
+    const std::array<const char*, 3> bottom_bar = {"V", "^", "Main"};
 
 public:
     void init(GUI* gui) override;

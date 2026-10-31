@@ -1,6 +1,7 @@
 #include "gui.hpp"
 
 #include "utilities.hpp"
+#include "system_state.hpp"
 #include <optional>
 
 #if !defined(UNIT_TEST)
@@ -12,6 +13,8 @@
 
     extern osMessageQueueId_t ComDebugQueueHandle;
 #endif
+
+extern SystemState system_state;
 
 namespace gui {
 
@@ -38,8 +41,8 @@ GUI::GUI() : currentScreen(DebugScreen::getInstance()) {
     currentScreen.init(this);
 }
 
-void GUI::setScreen(ScreenState& nextScreen) {
-    currentScreen = nextScreen;
+void GUI::setScreen(ScreenState* nextScreen) {
+    currentScreen = *nextScreen;
     currentScreen.init(this);
 }
 
@@ -54,8 +57,17 @@ void GUI::refreshScreen() {
 /* ----- DEBUG SCREEN ----- */
 
 void DebugScreen::switchScreen(GUI* gui) {
-    ScreenState& nextScreen = MainScreen::getInstance();
-    gui->setScreen(nextScreen);
+    ScreenState* nextScreen = &(gui->getCurrentScreen());
+
+    /* Decide what the next state is */
+    if (system_state.getButtonState(Button::B3).isPressed()) {
+        nextScreen = &(MainScreen::getInstance()); 
+    }
+
+    /* Switch screen if it changed */
+    if (nextScreen != &(gui->getCurrentScreen())) {
+        gui->setScreen(nextScreen);
+    }
 }
 
 void DebugScreen::init(GUI* gui) {
@@ -80,8 +92,22 @@ void DebugScreen::refresh(GUI* gui) {
 /* ----- MAIN SCREEN ----- */
 
 void MainScreen::switchScreen(GUI* gui) {
-    ScreenState& nextScreen = DebugScreen::getInstance();
-    gui->setScreen(nextScreen);
+    ScreenState* nextScreen = &(gui->getCurrentScreen());
+
+    /* Decide what the next state is */
+    if (system_state.getButtonState(Button::B1).isHeld() &&
+        system_state.getButtonState(Button::B2).isHeld() &&
+        system_state.getButtonState(Button::B3).isHeld()) {
+        nextScreen = &(DebugScreen::getInstance());
+    }
+    else if (system_state.getButtonState(Button::B2).isPressed()) {
+        nextScreen = &(StatsScreen::getInstance()); 
+    }
+
+    /* Switch screen if it changed */
+    if (nextScreen != &(gui->getCurrentScreen())) {
+        gui->setScreen(nextScreen);
+    }
 }
 
 void MainScreen::init(GUI* gui) {
@@ -101,6 +127,46 @@ void MainScreen::init(GUI* gui) {
 void MainScreen::refresh(GUI* gui) {
     (void)gui;  // unused
     PRINT_DEBUG("Refreshing Main Screen...");
+}
+
+/* ----- STATS SCREEN ----- */
+
+void StatsScreen::switchScreen(GUI* gui) {
+    ScreenState* nextScreen = &(gui->getCurrentScreen());
+
+    /* Decide what the next state is */
+    if (system_state.getButtonState(Button::B1).isHeld() &&
+        system_state.getButtonState(Button::B2).isHeld() &&
+        system_state.getButtonState(Button::B3).isHeld()) {
+        nextScreen = &(DebugScreen::getInstance());
+    }
+    else if (system_state.getButtonState(Button::B2).isPressed()) {
+        nextScreen = &(MainScreen::getInstance()); 
+    }
+
+    /* Switch screen if it changed */
+    if (nextScreen != &(gui->getCurrentScreen())) {
+        gui->setScreen(nextScreen);
+    }
+}
+
+void StatsScreen::init(GUI* gui) {
+    (void)gui;  // unused
+    PRINT_DEBUG("Initialising Stats Screen...");
+
+#if !defined(UNIT_TEST)
+    Paint_Clear(WHITE);
+
+    Paint_DrawString_EN(10, 0, "Stats Screen", &Font16, BLACK, WHITE);
+    
+    EPD_2IN66_Display(Canvas);
+    // DEV_Delay_ms(2000);
+#endif
+}
+
+void StatsScreen::refresh(GUI* gui) {
+    (void)gui;  // unused
+    PRINT_DEBUG("Refreshing Stats Screen...");
 }
 
 } // namespace gui
