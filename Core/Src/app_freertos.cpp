@@ -33,6 +33,10 @@
 #include "algo_builder.h"
 #include "L76X.h"
 #include "gui.hpp"
+#include "main.h"
+#include "portmacrocommon.h"
+#include "projdefs.h"
+#include "stm32u3xx_hal_gpio.h"
 
 #include <string.h>
 
@@ -107,6 +111,18 @@ const osThreadAttr_t DisplayTask_attributes = {
   .priority = DISPLAY_TASK_PRIO
 };
 
+osThreadId_t InputManagerTaskHandle;
+uint32_t InputManagerTaskBuffer[ INPUT_MANAGER_TASK_STACK_SIZE ];
+osStaticThreadDef_t InputManagerTaskControlBloc;
+const osThreadAttr_t InputManagerTask_attributes = {
+  .name = "InputManagerTask",
+  .cb_mem = &InputManagerTaskControlBloc,
+  .cb_size = sizeof(InputManagerTaskControlBloc),
+  .stack_mem = &InputManagerTaskBuffer[0],
+  .stack_size = sizeof(InputManagerTaskBuffer),
+  .priority = INPUT_MANAGER_TASK_PRIO
+};
+
 /* Definitions for ComDebugQueue */
 osMessageQueueId_t ComDebugQueueHandle;
 uint8_t ComDebugQueueBuffer[DEBUG_QUEUE_LENGTH * DEBUG_MSG_SIZE];
@@ -140,6 +156,7 @@ void StartComDebugTask(void *argument);
 void StartSensorHubTask(void *argument);
 void StartGNSSTask(void *argument);
 void StartDisplayTask(void *argument);
+void StartInputManagerTask(void *argument);
 
 /* USER CODE END FunctionPrototypes */
 
@@ -190,6 +207,7 @@ void MX_FREERTOS_Init(void) {
   SensorHubTaskHandle = osThreadNew(StartSensorHubTask, NULL, &SensorHubTask_attributes);
   GNSSTaskHandle = osThreadNew(StartGNSSTask, NULL, &GNSSTask_attributes);
   DisplayTaskHandle = osThreadNew(StartDisplayTask, NULL, &DisplayTask_attributes);
+  InputManagerTaskHandle = osThreadNew(StartInputManagerTask, NULL, &InputManagerTask_attributes);
   /* USER CODE END RTOS_THREADS */
 
   /* USER CODE BEGIN RTOS_EVENTS */
@@ -315,7 +333,7 @@ void StartGNSSTask(void *argument)
 void StartDisplayTask(void *argument)
 {
   TickType_t xLastWakeTime = xTaskGetTickCount();
-  const TickType_t xPeriod = pdMS_TO_TICKS(DISPLAY_REFRESH_RATE);
+  const TickType_t xPeriod = pdMS_TO_TICKS(DISPLAY_REFRESH_RATE_MS);
 
   GUI& gui = GUI::getInstance();
 
@@ -323,6 +341,25 @@ void StartDisplayTask(void *argument)
   {
     gui.refreshScreen();
     vTaskDelayUntil(&xLastWakeTime, xPeriod);
+  }
+}
+
+void StartInputManagerTask(void *argument)
+{
+  for (;;)
+  {
+    ulTaskNotifyTake(pdTRUE, portMAX_DELAY);
+
+    /* Handle button trigger */
+    vTaskDelay(pdMS_TO_TICKS(DEBOUNCE_MS)); // Debounce button press
+    if (HAL_GPIO_ReadPin(BUTTON2_GPIO_Port, BUTTON2_Pin) == GPIO_PIN_RESET) {
+      system_state.button2._isPressed = true; // button was released
+    }
+
+
+    /* Wait to detect held button presses */
+    vTaskDelay(pdMS_TO_TICKS(BUTTON_HOLD_THRESH_MS));
+    // Check each button
   }
 }
 /* USER CODE END Application */

@@ -1,7 +1,6 @@
 #pragma once
 
 #include "utilities.hpp"
-#include "io.hpp"
 #include <array>
 #include <functional>
 #include <map>
@@ -11,20 +10,14 @@ namespace gui {
 
 class ScreenState;
 
-// TODO: Detect button presses
-
 class GUI : public Singleton<GUI> {
 private:
     ScreenState& currentScreen;
-    ButtonState button1;
-    ButtonState button2;
-    ButtonState button3;
 
 public:
     GUI();
 
     inline ScreenState& getCurrentScreen() const { return currentScreen; };
-    std::optional<const ButtonState> getButtonState(const Button id) const;
     void switchScreen();
     void setScreen(ScreenState& nextScreen);
     void refreshScreen();

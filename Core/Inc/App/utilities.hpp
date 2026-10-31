@@ -3,6 +3,8 @@
 #include "settings.h"
 #include <cstdio>
 
+extern osMessageQueueId_t ComDebugQueueHandle;
+
 /* MACROS */
 #if !defined(NDEBUG) && !defined(UNIT_TEST)
 #define PRINT_DEBUG(...) do { \

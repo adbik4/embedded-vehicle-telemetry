@@ -11,6 +11,8 @@ private:
     bool _isPressed;
     bool _isHeld;
 
+    friend void StartInputManagerTask(void *argument);
+
 public:
     ButtonState() : _isPressed(false), _isHeld(false) {};
 

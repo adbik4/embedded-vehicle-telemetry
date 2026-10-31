@@ -27,6 +27,7 @@ enable_testing()
 
 add_executable(gtest_ut)
 
+set(UNIT_TEST ON)
 add_subdirectory(../Core Core)
 
 target_compile_definitions(telemetry_app_lib PRIVATE

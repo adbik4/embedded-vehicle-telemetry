@@ -1,7 +1,6 @@
 #include "gui.hpp"
 
 #include "utilities.hpp"
-#include "io.hpp"
 #include <optional>
 
 #if !defined(UNIT_TEST)
@@ -50,27 +49,6 @@ void GUI::switchScreen() {
 
 void GUI::refreshScreen() {
     currentScreen.refresh(this);
-}
-
-std::optional<const ButtonState> GUI::getButtonState(const Button id) const {
-    switch(id) {
-        case Button::B1 :
-            return button1;
-            break;
-
-        case Button::B2 :
-            return button2;
-            break;
-
-        case Button::B3 :
-            return button3;
-            break;
-
-        default :
-            PRINT_DEBUG("[GetButtonState] Unknown Button ID: %d", static_cast<int>(id));
-            return std::nullopt;
-            break;
-    }
 }
 
 /* ----- DEBUG SCREEN ----- */

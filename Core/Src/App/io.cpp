@@ -1,9 +1,9 @@
-#include io.h
+#include "io.hpp"
 
-ButtonState::isPressed() const {
+bool ButtonState::isPressed() const {
     return _isPressed;
 }
 
-ButtonState::isHeld() const {
+bool ButtonState::isHeld() const {
     return _isHeld;
 }
