@@ -43,6 +43,8 @@ set(MX_Include_Dirs
 set(MX_Application_Src
     ${CMAKE_CURRENT_SOURCE_DIR}/../../Library/Target/com.c
     ${CMAKE_CURRENT_SOURCE_DIR}/../../Library/Target/custom_mems_control.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../Core/Src/custom_mems_control_ex.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../Core/Src/custom_algobuild.c
     ${CMAKE_CURRENT_SOURCE_DIR}/../../Library/Target/app_mems_int_pin_a_interface.c
     ${CMAKE_CURRENT_SOURCE_DIR}/../../Library/App/app_algobuild.c
     ${CMAKE_CURRENT_SOURCE_DIR}/../../Library/App/ab_buffers.c
@@ -59,8 +61,6 @@ set(MX_Application_Src
     ${CMAKE_CURRENT_SOURCE_DIR}/../../X-CUBE-MEMS1/Target/custom_motion_sensors.c
     ${CMAKE_CURRENT_SOURCE_DIR}/../../X-CUBE-MEMS1/Target/custom_motion_sensors_ex.c
     ${CMAKE_CURRENT_SOURCE_DIR}/../../Core/Src/main.c
-    ${CMAKE_CURRENT_SOURCE_DIR}/../../Core/Src/custom_algobuild.c
-    ${CMAKE_CURRENT_SOURCE_DIR}/../../Core/Src/custom_mems_control_ex.c
     ${CMAKE_CURRENT_SOURCE_DIR}/../../Core/Src/app_freertos.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/../../Core/Src/stm32u3xx_nucleo_bus.c
     ${CMAKE_CURRENT_SOURCE_DIR}/../../Core/Src/stm32u3xx_it.c
@@ -160,8 +160,7 @@ set(MX_LINK_LIBS
  "-Wl,--end-group"
     STM32_Drivers
     ${TOOLCHAIN_LINK_LIBRARIES}
-    RTOS2
-	
+    RTOS2	
 )
 # Interface library for includes and symbols
 add_library(stm32cubemx INTERFACE)

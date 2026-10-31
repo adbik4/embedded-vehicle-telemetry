@@ -126,9 +126,9 @@ int main(void)
   MX_FREERTOS_Init();
 
   /* Initialize leds */
-  // BSP_LED_Init(LED_GREEN);
-  // BSP_LED_Init(LED_RED);
-  // BSP_LED_Init(LED_BLUE);
+  BSP_LED_Init(LED_GREEN);
+  BSP_LED_Init(LED_RED);
+  BSP_LED_Init(LED_BLUE);
 
   /* Initialize COM1 port (115200, 8 bits (7-bit data + 1 stop bit), no parity */
   BspCOMInit.BaudRate   = 115200;
@@ -659,14 +659,14 @@ static void MX_GPIO_Init(void)
 
   /*Configure GPIO pins : BUTTON2_Pin BUTTON1_Pin */
   GPIO_InitStruct.Pin = BUTTON2_Pin|BUTTON1_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
-  GPIO_InitStruct.Pull = GPIO_PULLUP;
+  GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
   /*Configure GPIO pin : BUTTON3_Pin */
   GPIO_InitStruct.Pin = BUTTON3_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
-  GPIO_InitStruct.Pull = GPIO_PULLUP;
+  GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(BUTTON3_GPIO_Port, &GPIO_InitStruct);
 
   /*Configure GPIO pins : PA9 PA10 */
@@ -695,13 +695,24 @@ static void MX_GPIO_Init(void)
   HAL_NVIC_SetPriority(ACCEL_GYRO_INT_EXTI_IRQn, 5, 0);
   HAL_NVIC_EnableIRQ(ACCEL_GYRO_INT_EXTI_IRQn);
 
+  HAL_NVIC_SetPriority(BUTTON1_EXTI_IRQn, 5, 0);
+  HAL_NVIC_EnableIRQ(BUTTON1_EXTI_IRQn);
+
+  HAL_NVIC_SetPriority(BUTTON3_EXTI_IRQn, 5, 0);
+  HAL_NVIC_EnableIRQ(BUTTON3_EXTI_IRQn);
+
+  HAL_NVIC_SetPriority(BUTTON2_EXTI_IRQn, 5, 0);
+  HAL_NVIC_EnableIRQ(BUTTON2_EXTI_IRQn);
+
   /* USER CODE BEGIN MX_GPIO_Init_2 */
 
   /* USER CODE END MX_GPIO_Init_2 */
 }
 
 /* USER CODE BEGIN 4 */
-
+void HAL_GPIO_EXTI_Falling_Callback(uint16_t GPIO_Pin) {
+  
+}
 /* USER CODE END 4 */
 
 /**

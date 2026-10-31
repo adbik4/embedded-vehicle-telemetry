@@ -69,24 +69,28 @@ target_link_options(${PROJECT_NAME} PRIVATE
 
 set(TEST_BUILD_DIR "${CMAKE_BINARY_DIR}/Gtest")
 
-add_custom_target(run_unit_tests
-    COMMAND ${CMAKE_COMMAND}
-        -S "${CMAKE_SOURCE_DIR}/Tests"
-        -B "${TEST_BUILD_DIR}"
-        -DCMAKE_BUILD_TYPE=Debug
+option(ENABLE_UNIT_TESTS "Build and run native unit tests with the firmware" ON)
 
-    COMMAND ${CMAKE_COMMAND}
-        --build "${TEST_BUILD_DIR}"
-        --config Debug
+if(ENABLE_UNIT_TESTS)
+    add_custom_target(run_unit_tests
+        COMMAND ${CMAKE_COMMAND}
+            -S "${CMAKE_SOURCE_DIR}/Tests"
+            -B "${TEST_BUILD_DIR}"
+            -DCMAKE_BUILD_TYPE=Debug
 
-    COMMAND ${CMAKE_CTEST_COMMAND}
-        --test-dir "${TEST_BUILD_DIR}"
-        -C Debug
-        --output-on-failure
+        COMMAND ${CMAKE_COMMAND}
+            --build "${TEST_BUILD_DIR}"
+            --config Debug
 
-    WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
-    USES_TERMINAL
-    COMMENT "Building and running native unit tests"
-)
+        COMMAND ${CMAKE_CTEST_COMMAND}
+            --test-dir "${TEST_BUILD_DIR}"
+            -C Debug
+            --output-on-failure
 
-add_dependencies(${CMAKE_PROJECT_NAME} run_unit_tests)
+        WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
+        USES_TERMINAL
+        COMMENT "Building and running native unit tests"
+    )
+
+    add_dependencies(${CMAKE_PROJECT_NAME} run_unit_tests)
+endif()

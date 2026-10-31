@@ -65,7 +65,8 @@ sed -i -E \
 
 # Library/App/ab_libraries.h
 sed -i \
-    's/#define MotionFX_6X  0/#define MotionFX_6X  1/' \
+    -e 's/#define MotionFX_6X  0/#define MotionFX_6X  1/' \
+    -e 's/#define MotionFX_9X  0/#define MotionFX_9X  1/' \
     "$ROOT/Library/App/ab_libraries.h"
 
 echo "STM32 patches applied successfully."

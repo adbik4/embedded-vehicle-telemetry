@@ -1,7 +1,7 @@
 #ifndef _L76X_H_
 #define _L76X_H_
 
-#ifndef TESTING
+#ifndef UNIT_TEST
     #include "L76X_DEV_Config.h"
 #else
     #include <stdint.h>
@@ -11,7 +11,7 @@
 #endif
 #define BUFFSIZE 2048
 
-#ifdef TESTING
+#ifdef UNIT_TEST
 extern char buff_t[BUFFSIZE];
 #endif
 

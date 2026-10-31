@@ -62,7 +62,7 @@ extern UART_HandleTypeDef hcom_uart[COMn];
 
 /* Private variables ---------------------------------------------------------*/
 /* USER CODE BEGIN Variables */
-static SystemState system_state;
+SystemState system_state;
 
 osThreadId_t ComDebugTaskHandle;
 uint32_t ComDebugTaskBuffer[ COM_DEBUG_TASK_STACK_SIZE ];
@@ -348,7 +348,7 @@ void StartDisplayTask(void *argument)
 void StartInputManagerTask(void *argument)
 {
   bool press_detected{false};
-  GUI& gui = GUI::GetInstance();
+  GUI& gui = GUI::getInstance();
   
   for (;;)
   {

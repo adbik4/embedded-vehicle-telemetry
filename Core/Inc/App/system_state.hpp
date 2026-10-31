@@ -1,7 +1,14 @@
 #pragma once
 
-#include "L76X.h"
-#include "ab_sensor_hub.h"
+#if defined(UNIT_TEST)
+    #include "L76X.h"
+
+struct sensor_hub_data_t {};
+#else
+    #include "L76X.h"
+    #include "ab_sensor_hub.h"
+#endif
+
 #include "io.hpp"
 #include "utilities.hpp"
 

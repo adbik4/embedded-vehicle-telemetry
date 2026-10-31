@@ -1,4 +1,4 @@
-#ifndef TESTING
+#ifndef UNIT_TEST
 #include "L76X_DEV_Config.h"
 #endif
 
@@ -14,7 +14,7 @@ static const double a = 6378245.0;
 static const double ee = 0.00669342162296594323;
 static const double x_pi = 3.14159265358979324 * 3000.0 / 180.0;
 
-#ifdef TESTING
+#ifdef UNIT_TEST
 char buff_t[BUFFSIZE] = {0};
 #else
 static char buff_t[BUFFSIZE]={0};
@@ -107,7 +107,7 @@ static Coordinates transform(Coordinates gps)
 	return gg;
 }
 
-#ifndef TESTING
+#ifndef UNIT_TEST
 /******************************************************************************
 function:	
 	Send a command to the L76X，Automatic calculation of the code
@@ -251,7 +251,7 @@ GPSdata_t L76X_Receive_NMEA()
 {
     GPSdata_t GPS;
 
-    #ifndef TESTING
+    #ifndef UNIT_TEST
     DEV_Uart_ReceiveString(buff_t, BUFFSIZE);
     #endif
 

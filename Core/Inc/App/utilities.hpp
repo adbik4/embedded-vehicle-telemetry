@@ -1,5 +1,10 @@
 #pragma once
-#include "cmsis_os2.h"
+
+#if defined(UNIT_TEST)
+    using osMessageQueueId_t = void*;
+#else
+    #include "cmsis_os2.h"
+#endif
 #include "settings.h"
 #include <cstdio>
 

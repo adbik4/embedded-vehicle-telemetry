@@ -18,6 +18,15 @@
             }
         },
         {
+            "name": "Debug-no-tests",
+            "inherits": "default",
+            "binaryDir": "${sourceDir}/build/Debug-no-tests",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Debug",
+                "ENABLE_UNIT_TESTS": "OFF"
+            }
+        },
+        {
             "name": "Release",
             "inherits": "default",
             "cacheVariables": {

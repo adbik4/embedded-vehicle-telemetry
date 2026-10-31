@@ -1,8 +1,11 @@
 #include "io.hpp"
 
-#include "main.h"
-#include "stm32u3xx_hal_gpio.h"
 #include <cassert>
+
+#if !defined(UNIT_TEST)
+    #include "main.h"
+    #include "stm32u3xx_hal_gpio.h"
+#endif
 
 bool ButtonState::isPressed() const {
     return _isPressed;
@@ -15,6 +18,10 @@ bool ButtonState::isHeld() const {
 bool HAL_isButtonPressed(const Button idx) {
     assert(idx == Button::B1 || idx == Button::B2 || idx == Button::B3);
 
+#if defined(UNIT_TEST)
+    (void)idx;
+    return false;
+#else
     switch (idx) {
         case Button::B1:
             return HAL_GPIO_ReadPin(BUTTON1_GPIO_Port, BUTTON1_Pin) == GPIO_PIN_SET;
@@ -33,4 +40,5 @@ bool HAL_isButtonPressed(const Button idx) {
             break;
             
     }
+#endif
 }

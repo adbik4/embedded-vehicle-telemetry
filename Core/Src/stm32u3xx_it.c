@@ -191,6 +191,48 @@ void EXTI3_IRQHandler(void)
 }
 
 /**
+  * @brief This function handles EXTI Line 6 interrupt.
+  */
+void EXTI6_IRQHandler(void)
+{
+  /* USER CODE BEGIN EXTI6_IRQn 0 */
+
+  /* USER CODE END EXTI6_IRQn 0 */
+  HAL_GPIO_EXTI_IRQHandler(BUTTON1_Pin);
+  /* USER CODE BEGIN EXTI6_IRQn 1 */
+
+  /* USER CODE END EXTI6_IRQn 1 */
+}
+
+/**
+  * @brief This function handles EXTI Line 9 interrupt.
+  */
+void EXTI9_IRQHandler(void)
+{
+  /* USER CODE BEGIN EXTI9_IRQn 0 */
+
+  /* USER CODE END EXTI9_IRQn 0 */
+  HAL_GPIO_EXTI_IRQHandler(BUTTON3_Pin);
+  /* USER CODE BEGIN EXTI9_IRQn 1 */
+
+  /* USER CODE END EXTI9_IRQn 1 */
+}
+
+/**
+  * @brief This function handles EXTI Line 15 interrupt.
+  */
+void EXTI15_IRQHandler(void)
+{
+  /* USER CODE BEGIN EXTI15_IRQn 0 */
+
+  /* USER CODE END EXTI15_IRQn 0 */
+  HAL_GPIO_EXTI_IRQHandler(BUTTON2_Pin);
+  /* USER CODE BEGIN EXTI15_IRQn 1 */
+
+  /* USER CODE END EXTI15_IRQn 1 */
+}
+
+/**
   * @brief This function handles TIM1 Capture Compare interrupt.
   */
 void TIM1_CC_IRQHandler(void)

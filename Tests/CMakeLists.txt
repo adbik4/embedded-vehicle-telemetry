@@ -34,6 +34,10 @@ target_compile_definitions(telemetry_app_lib PRIVATE
     UNIT_TEST
 )
 
+target_compile_definitions(gtest_ut PRIVATE
+    UNIT_TEST
+)
+
 target_include_directories(gtest_ut PRIVATE
     ../Middlewares/Third_Party/CMSIS/RTOS2/Include
 )
@@ -45,6 +49,7 @@ target_sources(gtest_ut PRIVATE
 
 target_link_libraries(gtest_ut PRIVATE
     GTest::gtest_main
+    GTest::gmock
     telemetry_app_lib
 )
 
