@@ -7,7 +7,20 @@
 
 extern sensor_hub_data_t sensor_hub_data;
 
-class SystemState {
+class  StateIf {
+public:
+    virtual ~StateIf() {};
+
+    /* read-only */
+    virtual const sensor_hub_data_t& getIMUdata() const = 0;
+    virtual const ButtonState& getButtonState(const Button id) const = 0;
+
+    /* read-write */
+    virtual GPSdata_t& getGNSSdata() = 0;
+    virtual const GPSdata_t& getGNSSdata() const = 0;
+};
+
+class SystemState : public StateIf {
 private:
     sensor_hub_data_t& imu_data;
     GPSdata_t gnss_data;
@@ -24,10 +37,10 @@ public:
     SystemState() : imu_data(sensor_hub_data), gnss_data{} {}
 
     /* read-only */
-    const sensor_hub_data_t& getIMUdata() const;
-    const ButtonState& getButtonState(const Button id) const;
+    const sensor_hub_data_t& getIMUdata() const override;
+    const ButtonState& getButtonState(const Button id) const override;
 
     /* read-write */
-    GPSdata_t& getGNSSdata();
-    const GPSdata_t& getGNSSdata() const;
+    GPSdata_t& getGNSSdata() override;
+    const GPSdata_t& getGNSSdata() const override;
 };
