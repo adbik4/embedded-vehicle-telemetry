@@ -70,4 +70,8 @@ sed -i \
     -e 's/#define MotionFX_9X  0/#define MotionFX_9X  1/' \
     "$ROOT/Library/App/ab_libraries.h"
 
+# Remove unnecessary files
+rm -f Core/Src/main.c \
+    Core/Src/app_freertos.c
+
 echo "STM32 patches applied successfully."

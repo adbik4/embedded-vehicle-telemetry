@@ -40,6 +40,7 @@
 #include "stm32u3xx_hal_gpio.h"
 
 #include <string.h>
+#include <atomic>
 
 /* USER CODE END Includes */
 
@@ -52,6 +53,7 @@ typedef StaticQueue_t osStaticMessageQDef_t;
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
+extern std::atomic_flag processingBusy;
 extern UART_HandleTypeDef hcom_uart[COMn];
 /* USER CODE END PD */
 
@@ -319,15 +321,15 @@ void StartGNSSTask(void *argument)
     Coordinates google_coors = L76X_Google_Coordinates(&gnss);
     DMS_Coordinates dms_coors = Google2DMS(google_coors, gnss.Lat_area, gnss.Lon_area);
 
-    PRINT_DEBUG(
-      "Lat: %d°%d'%f\"%c Lon: %d°%d'%f\"%c Time:%02d:%02d:%02d Status:%s\r\n",
-      dms_coors.Lat.Degrees, dms_coors.Lat.Minutes, dms_coors.Lat.Seconds,
-      dms_coors.Lat.Area,
-      dms_coors.Lon.Degrees, dms_coors.Lon.Minutes, dms_coors.Lon.Seconds,
-      dms_coors.Lon.Area,
-      gnss.Time_H, gnss.Time_M, gnss.Time_S,
-      (gnss.Status == 1) ? "OK" : "INVALID"
-    );
+    // PRINT_DEBUG(
+    //   "Lat: %d°%d'%f\"%c Lon: %d°%d'%f\"%c Time:%02d:%02d:%02d Status:%s\r\n",
+    //   dms_coors.Lat.Degrees, dms_coors.Lat.Minutes, dms_coors.Lat.Seconds,
+    //   dms_coors.Lat.Area,
+    //   dms_coors.Lon.Degrees, dms_coors.Lon.Minutes, dms_coors.Lon.Seconds,
+    //   dms_coors.Lon.Area,
+    //   gnss.Time_H, gnss.Time_M, gnss.Time_S,
+    //   (gnss.Status == 1) ? "OK" : "INVALID"
+    // );
   }
 }
 
@@ -348,48 +350,54 @@ void StartDisplayTask(void *argument)
 void StartInputManagerTask(void *argument)
 {
   uint32_t pin_id;
-  bool press_detected{false};
+  bool action_detected{false};
   GUI& gui = GUI::getInstance();
   
   for (;;)
   {
-    press_detected = false;
+    action_detected = false;
+    processingBusy.clear(std::memory_order_relaxed);
 
     /* Wait for trigger */
-    xTaskNotifyWait(
+    if (xTaskNotifyWait(
             0,
             UINT32_MAX,
             &pin_id,
-            portMAX_DELAY
-    );
+            portMAX_DELAY) == pdTRUE) 
+    {
 
-    /* Handle button trigger */
-    vTaskDelay(pdMS_TO_TICKS(DEBOUNCE_MS)); // Debounce button press
-    const Button button = pinIdToButton(pin_id);
+      /* Handle button trigger */
+      vTaskDelay(pdMS_TO_TICKS(DEBOUNCE_MS)); // Debounce button press
+      const Button button = pinIdToButton(pin_id);
 
-    if (!HAL_isButtonPressed(button)) {
-      /* The button was released */
-      system_state.setButtonState(button, true, false);
-      press_detected = true;
-    }
+      if (!HAL_isButtonPressed(button)) {
+        /* The button was released */
+        system_state.setButtonState(button, true, false);
+        action_detected = true;
+        PRINT_DEBUG("Button %d pressed.\r\n", static_cast<int>(button) + 1);
+      }
 
-    /* Wait to detect held button presses */
-    vTaskDelay(pdMS_TO_TICKS(BUTTON_HOLD_THRESH_MS));
-    if (HAL_isButtonPressed(Button::B1)) {
-      system_state.setButtonState(Button::B1, false, true);
-      press_detected = true;
-    }
-    if (HAL_isButtonPressed(Button::B2)) {
-      system_state.setButtonState(Button::B2, false, true);
-      press_detected = true;
-    }
-    if (HAL_isButtonPressed(Button::B3)) {
-      system_state.setButtonState(Button::B3, false, true);
-      press_detected = true;
-    }
+      /* Wait to detect held button presses */
+      vTaskDelay(pdMS_TO_TICKS(BUTTON_HOLD_THRESH_MS));
+      if (HAL_isButtonPressed(Button::B1)) {
+        system_state.setButtonState(Button::B1, false, true);
+        action_detected = true;
+        PRINT_DEBUG("Button 1 held.\r\n");
+      }
+      if (HAL_isButtonPressed(Button::B2)) {
+        system_state.setButtonState(Button::B2, false, true);
+        action_detected = true;
+        PRINT_DEBUG("Button 2 held.\r\n");
+      }
+      if (HAL_isButtonPressed(Button::B3)) {
+        system_state.setButtonState(Button::B3, false, true);
+        action_detected = true;
+        PRINT_DEBUG("Button 3 held.\r\n");
+      }
 
-    if (press_detected) {
-      gui.switchScreen();
+      if (action_detected) {
+        gui.switchScreen();
+      }
     }
   }
 }

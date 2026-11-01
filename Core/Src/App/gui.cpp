@@ -73,7 +73,7 @@ void DebugScreen::switchScreen(GUI* gui) {
 
 void DebugScreen::init(GUI* gui) {
     (void)gui;  // unused
-    PRINT_DEBUG("Initialising Debug Screen...");
+    PRINT_DEBUG("Initialising Debug Screen...\r\n");
 
     #if !defined(UNIT_TEST)
         Paint_Clear(WHITE);
@@ -87,7 +87,7 @@ void DebugScreen::init(GUI* gui) {
 
 void DebugScreen::refresh(GUI* gui) {
     (void)gui;  // unused
-    PRINT_DEBUG("Refreshing Debug Screen...");
+    PRINT_DEBUG("Refreshing Debug Screen...\r\n");
 }
 
 /* ----- MAIN SCREEN ----- */
@@ -118,7 +118,7 @@ void MainScreen::switchScreen(GUI* gui) {
 
 void MainScreen::init(GUI* gui) {
     (void)gui;  // unused
-    PRINT_DEBUG("Initialising Main Screen...");
+    PRINT_DEBUG("Initialising Main Screen...\r\n");
 
 #if !defined(UNIT_TEST)
     Paint_Clear(WHITE);
@@ -132,7 +132,7 @@ void MainScreen::init(GUI* gui) {
 
 void MainScreen::refresh(GUI* gui) {
     (void)gui;  // unused
-    PRINT_DEBUG("Refreshing Main Screen...");
+    PRINT_DEBUG("Refreshing Main Screen...\r\n");
 }
 
 /* ----- STATS SCREEN ----- */
@@ -163,7 +163,7 @@ void StatsScreen::switchScreen(GUI* gui) {
 
 void StatsScreen::init(GUI* gui) {
     (void)gui;  // unused
-    PRINT_DEBUG("Initialising Stats Screen...");
+    PRINT_DEBUG("Initialising Stats Screen...\r\n");
 
 #if !defined(UNIT_TEST)
     Paint_Clear(WHITE);
@@ -177,7 +177,7 @@ void StatsScreen::init(GUI* gui) {
 
 void StatsScreen::refresh(GUI* gui) {
     (void)gui;  // unused
-    PRINT_DEBUG("Refreshing Stats Screen...");
+    PRINT_DEBUG("Refreshing Stats Screen...\r\n");
 }
 
 } // namespace gui

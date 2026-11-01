@@ -25,11 +25,11 @@ bool HAL_isButtonPressed(const Button idx) {
     #else
         switch (idx) {
             case Button::B1:
-                return HAL_GPIO_ReadPin(BUTTON1_GPIO_Port, BUTTON1_Pin) == GPIO_PIN_SET;
+                return HAL_GPIO_ReadPin(BUTTON1_GPIO_Port, BUTTON1_Pin) == GPIO_PIN_RESET;
             case Button::B2:
-                return HAL_GPIO_ReadPin(BUTTON2_GPIO_Port, BUTTON2_Pin) == GPIO_PIN_SET;
+                return HAL_GPIO_ReadPin(BUTTON2_GPIO_Port, BUTTON2_Pin) == GPIO_PIN_RESET;
             case Button::B3:
-                return HAL_GPIO_ReadPin(BUTTON3_GPIO_Port, BUTTON3_Pin) == GPIO_PIN_SET;
+                return HAL_GPIO_ReadPin(BUTTON3_GPIO_Port, BUTTON3_Pin) == GPIO_PIN_RESET;
             default:
                 assert(false && "[HAL_isButtonPressed] Invalid button pin ID");
                 return false;

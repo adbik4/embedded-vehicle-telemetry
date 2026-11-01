@@ -711,11 +711,12 @@ static void MX_GPIO_Init(void)
 }
 
 /* USER CODE BEGIN 4 */
-static std::atomic_flag processingBusy = ATOMIC_FLAG_INIT;
+std::atomic_flag processingBusy = ATOMIC_FLAG_INIT;
 
 void HAL_GPIO_EXTI_Falling_Callback(uint16_t GPIO_Pin) {
   BaseType_t higherPriorityTaskWoken = pdFALSE;
-  TaskHandle_t taskHandle = static_cast<TaskHandle_t>(InputManagerTaskHandle);
+  TaskHandle_t taskHandle = reinterpret_cast<TaskHandle_t>(InputManagerTaskHandle);
+  configASSERT(InputManagerTaskHandle != nullptr);
 
   /* Drop any new inputs until processing finishes */
   if (!processingBusy.test_and_set(std::memory_order_relaxed)) {

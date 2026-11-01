@@ -3,9 +3,9 @@
 #define USERNAME_A "Adrian"
 #define USERNAME_B "Natalia"
 
-#define DISPLAY_REFRESH_RATE_MS 5000
+#define DISPLAY_REFRESH_RATE_MS 30000
 #define BUTTON_HOLD_THRESH_MS 500
-#define DEBOUNCE_MS 10
+#define DEBOUNCE_MS 6
 
 #define SYSTEM_TASK_STACK_SIZE          (1024)   // optimal - ??
 #define COM_DEBUG_TASK_STACK_SIZE       (185)   // optimal - 185
