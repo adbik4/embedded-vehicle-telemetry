@@ -25,7 +25,7 @@ namespace gui {
 
 /* --------- GUI ---------- */
 
-GUI::GUI() : currentScreen(DebugScreen::getInstance()) {
+GUI::GUI() : currentScreen(MainScreen::getInstance()) {
     #if !defined(UNIT_TEST)
         if(EPD_DEV_Module_Init() != 0){
             PRINT_DEBUG("E-ink display initialisation failed.");
@@ -62,6 +62,7 @@ void DebugScreen::switchScreen(GUI* gui) {
     /* Decide what the next state is */
     if (system_state.getButtonState(Button::B3).isPressed()) {
         nextScreen = &(MainScreen::getInstance()); 
+        system_state.clearButtonState(Button::B3);
     }
 
     /* Switch screen if it changed */
@@ -80,7 +81,7 @@ void DebugScreen::init(GUI* gui) {
         Paint_DrawString_EN(10, 0, "Debug Screen", &Font16, BLACK, WHITE);
         
         EPD_2IN66_Display(Canvas);
-        // DEV_Delay_ms(2000);
+        DEV_Delay_ms(500);
     #endif
 }
 
@@ -97,11 +98,16 @@ void MainScreen::switchScreen(GUI* gui) {
     /* Decide what the next state is */
     if (system_state.getButtonState(Button::B1).isHeld() &&
         system_state.getButtonState(Button::B2).isHeld() &&
-        system_state.getButtonState(Button::B3).isHeld()) {
+        system_state.getButtonState(Button::B3).isHeld())
+    {
         nextScreen = &(DebugScreen::getInstance());
+        system_state.clearButtonState(Button::B1);
+        system_state.clearButtonState(Button::B2);
+        system_state.clearButtonState(Button::B3);
     }
     else if (system_state.getButtonState(Button::B2).isPressed()) {
         nextScreen = &(StatsScreen::getInstance()); 
+        system_state.clearButtonState(Button::B2);
     }
 
     /* Switch screen if it changed */
@@ -120,7 +126,7 @@ void MainScreen::init(GUI* gui) {
     Paint_DrawString_EN(10, 0, "Main Screen", &Font16, BLACK, WHITE);
     
     EPD_2IN66_Display(Canvas);
-    // DEV_Delay_ms(2000);
+    DEV_Delay_ms(500);
 #endif
 }
 
@@ -137,11 +143,16 @@ void StatsScreen::switchScreen(GUI* gui) {
     /* Decide what the next state is */
     if (system_state.getButtonState(Button::B1).isHeld() &&
         system_state.getButtonState(Button::B2).isHeld() &&
-        system_state.getButtonState(Button::B3).isHeld()) {
+        system_state.getButtonState(Button::B3).isHeld())
+    {
         nextScreen = &(DebugScreen::getInstance());
+        system_state.clearButtonState(Button::B1);
+        system_state.clearButtonState(Button::B2);
+        system_state.clearButtonState(Button::B3);
     }
     else if (system_state.getButtonState(Button::B2).isPressed()) {
         nextScreen = &(MainScreen::getInstance()); 
+        system_state.clearButtonState(Button::B2);
     }
 
     /* Switch screen if it changed */
@@ -160,7 +171,7 @@ void StatsScreen::init(GUI* gui) {
     Paint_DrawString_EN(10, 0, "Stats Screen", &Font16, BLACK, WHITE);
     
     EPD_2IN66_Display(Canvas);
-    // DEV_Delay_ms(2000);
+    DEV_Delay_ms(500);
 #endif
 }
 

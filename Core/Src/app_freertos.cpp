@@ -62,7 +62,7 @@ extern UART_HandleTypeDef hcom_uart[COMn];
 
 /* Private variables ---------------------------------------------------------*/
 /* USER CODE BEGIN Variables */
-SystemState system_state;
+SystemState& system_state = SystemState::getInstance();
 
 osThreadId_t ComDebugTaskHandle;
 uint32_t ComDebugTaskBuffer[ COM_DEBUG_TASK_STACK_SIZE ];
@@ -347,34 +347,44 @@ void StartDisplayTask(void *argument)
 
 void StartInputManagerTask(void *argument)
 {
+  uint32_t pin_id;
   bool press_detected{false};
   GUI& gui = GUI::getInstance();
   
   for (;;)
   {
     press_detected = false;
-    ulTaskNotifyTake(pdTRUE, portMAX_DELAY);
+
+    /* Wait for trigger */
+    xTaskNotifyWait(
+            0,
+            UINT32_MAX,
+            &pin_id,
+            portMAX_DELAY
+    );
 
     /* Handle button trigger */
     vTaskDelay(pdMS_TO_TICKS(DEBOUNCE_MS)); // Debounce button press
-    if (!HAL_isButtonPressed(Button::B2)) {  // TODO: Replace with actual runtime button from ISR
+    const Button button = pinIdToButton(pin_id);
+
+    if (!HAL_isButtonPressed(button)) {
       /* The button was released */
-      system_state.button2._isPressed = true;
+      system_state.setButtonState(button, true, false);
       press_detected = true;
     }
 
     /* Wait to detect held button presses */
     vTaskDelay(pdMS_TO_TICKS(BUTTON_HOLD_THRESH_MS));
     if (HAL_isButtonPressed(Button::B1)) {
-      system_state.button1._isHeld = true;
+      system_state.setButtonState(Button::B1, false, true);
       press_detected = true;
     }
     if (HAL_isButtonPressed(Button::B2)) {
-      system_state.button2._isHeld = true;
+      system_state.setButtonState(Button::B2, false, true);
       press_detected = true;
     }
     if (HAL_isButtonPressed(Button::B3)) {
-      system_state.button3._isHeld = true;
+      system_state.setButtonState(Button::B3, false, true);
       press_detected = true;
     }
 

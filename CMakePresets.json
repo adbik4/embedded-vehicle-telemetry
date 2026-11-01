@@ -20,7 +20,7 @@
         {
             "name": "Debug-no-tests",
             "inherits": "default",
-            "binaryDir": "${sourceDir}/build/Debug-no-tests",
+            "binaryDir": "${sourceDir}/build/Debug",
             "cacheVariables": {
                 "CMAKE_BUILD_TYPE": "Debug",
                 "ENABLE_UNIT_TESTS": "OFF"

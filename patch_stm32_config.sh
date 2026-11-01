@@ -51,6 +51,7 @@ sed -i \
 # Replace source paths literally, without regex-escaping errors.
 sed -i \
     -e 's|${CMAKE_CURRENT_SOURCE_DIR}/../../Core/Src/app_freertos.c|${CMAKE_CURRENT_SOURCE_DIR}/../../Core/Src/app_freertos.cpp|g' \
+    -e 's|${CMAKE_CURRENT_SOURCE_DIR}/../../Core/Src/main.c|${CMAKE_CURRENT_SOURCE_DIR}/../../Core/Src/main.cpp|g' \
     -e 's|${CMAKE_CURRENT_SOURCE_DIR}/../../Library/Target/custom_mems_control_ex.c|${CMAKE_CURRENT_SOURCE_DIR}/../../Core/Src/custom_mems_control_ex.c|g' \
     -e '/custom_mems_control_ex\.c/a\    ${CMAKE_CURRENT_SOURCE_DIR}/../../Core/Src/custom_algobuild.c' \
     "$CMAKE_FILE"

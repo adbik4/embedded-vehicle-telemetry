@@ -40,6 +40,9 @@
 */
 #define TRIES 5
 
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 /*-----------------------------------------------------------------------------*/
 int L76X_DEV_Module_Init(void);
@@ -49,5 +52,9 @@ void DEV_Uart_SendString(char *data);
 void DEV_Uart_ReceiveString(char *data, UWORD Num);
 
 void DEV_Set_GPIOMode(GPIO_TypeDef *GPIOx, uint16_t GPIO_Pin, UWORD mode);
+
+#ifdef __cplusplus
+}
 #endif
 
+#endif

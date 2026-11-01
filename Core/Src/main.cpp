@@ -26,12 +26,13 @@
 #include "L76X.h"
 #include "custom_algobuild.h"
 
+#include <atomic>
 #include <stdint.h>
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
 /* USER CODE BEGIN PTD */
-
+extern osThreadId_t InputManagerTaskHandle;
 /* USER CODE END PTD */
 
 /* Private define ------------------------------------------------------------*/
@@ -659,14 +660,14 @@ static void MX_GPIO_Init(void)
 
   /*Configure GPIO pins : BUTTON2_Pin BUTTON1_Pin */
   GPIO_InitStruct.Pin = BUTTON2_Pin|BUTTON1_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Mode = GPIO_MODE_IT_FALLING;
+  GPIO_InitStruct.Pull = GPIO_PULLUP;
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
   /*Configure GPIO pin : BUTTON3_Pin */
   GPIO_InitStruct.Pin = BUTTON3_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Mode = GPIO_MODE_IT_FALLING;
+  GPIO_InitStruct.Pull = GPIO_PULLUP;
   HAL_GPIO_Init(BUTTON3_GPIO_Port, &GPIO_InitStruct);
 
   /*Configure GPIO pins : PA9 PA10 */
@@ -710,8 +711,23 @@ static void MX_GPIO_Init(void)
 }
 
 /* USER CODE BEGIN 4 */
+static std::atomic_flag processingBusy = ATOMIC_FLAG_INIT;
+
 void HAL_GPIO_EXTI_Falling_Callback(uint16_t GPIO_Pin) {
-  
+  BaseType_t higherPriorityTaskWoken = pdFALSE;
+  TaskHandle_t taskHandle = static_cast<TaskHandle_t>(InputManagerTaskHandle);
+
+  /* Drop any new inputs until processing finishes */
+  if (!processingBusy.test_and_set(std::memory_order_relaxed)) {
+    xTaskNotifyFromISR(
+      taskHandle,
+      GPIO_Pin,
+      eSetValueWithOverwrite,
+      &higherPriorityTaskWoken
+    );
+  }
+
+  portYIELD_FROM_ISR(higherPriorityTaskWoken);
 }
 /* USER CODE END 4 */
 

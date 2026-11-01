@@ -27,7 +27,7 @@ public:
     virtual const GPSdata_t& getGNSSdata() const = 0;
 };
 
-class SystemState : public StateIf {
+class SystemState : public Singleton<SystemState>, public StateIf {
 private:
     sensor_hub_data_t& imu_data;
     GPSdata_t gnss_data;
@@ -50,4 +50,8 @@ public:
     /* read-write */
     GPSdata_t& getGNSSdata() override;
     const GPSdata_t& getGNSSdata() const override;
+
+    /* write */
+    void setButtonState(const Button idx, const bool isPressed, const bool isHeld);
+    void clearButtonState(const Button idx);
 };

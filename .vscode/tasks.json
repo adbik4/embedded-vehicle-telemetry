@@ -34,7 +34,7 @@
             "command": "cube-cmake",
             "args": [
                 "--build",
-                "${workspaceFolder}\\build\\Debug-no-tests"
+                "${workspaceFolder}\\build\\Debug"
             ],
             "dependsOn": "Configure embedded-vehicle-telemetry (without tests)",
             "options": {
