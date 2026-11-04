@@ -35,5 +35,7 @@ public:
     void goIdle();
 };
 
-bool HAL_isButtonPressed(const ButtonId idx);
-ButtonId pinIdToButton(uint32_t pin_id);
+#ifndef UNIT_TEST
+    bool HAL_isButtonPressed(const ButtonId idx);
+    ButtonId pinIdToButton(uint32_t pin_id);
+#endif

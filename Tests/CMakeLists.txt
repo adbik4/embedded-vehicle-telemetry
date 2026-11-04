@@ -45,6 +45,7 @@ target_include_directories(gtest_ut PRIVATE
 target_sources(gtest_ut PRIVATE
     singleton_test.cpp
     gui_test.cpp
+    button_test.cpp
 )
 
 target_link_libraries(gtest_ut PRIVATE

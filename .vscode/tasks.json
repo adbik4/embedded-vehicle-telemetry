@@ -28,32 +28,19 @@
             },
             "problemMatcher": []
         },
-        {
+                {
             "type": "shell",
-            "label": "Build embedded-vehicle-telemetry (without tests)",
+            "label": "Build embedded-vehicle-telemetry",
             "command": "cube-cmake",
             "args": [
                 "--build",
                 "${workspaceFolder}\\build\\Debug"
             ],
-            "dependsOn": "Configure embedded-vehicle-telemetry (without tests)",
+            "dependsOn": "Configure embedded-vehicle-telemetry",
             "options": {
                 "cwd": "${workspaceFolder}"
             },
             "problemMatcher": "$gcc"
-        },
-        {
-            "type": "shell",
-            "label": "Configure embedded-vehicle-telemetry (without tests)",
-            "command": "cube-cmake",
-            "args": [
-                "--preset",
-                "Debug-no-tests"
-            ],
-            "options": {
-                "cwd": "${workspaceFolder}"
-            },
-            "problemMatcher": []
         }
     ],
     "version": "2.0.0"
