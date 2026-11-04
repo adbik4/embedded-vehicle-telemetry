@@ -365,39 +365,7 @@ void StartInputManagerTask(void *argument)
             &pin_id,
             portMAX_DELAY) == pdTRUE) 
     {
-
-      /* Handle button trigger */
-      vTaskDelay(pdMS_TO_TICKS(DEBOUNCE_MS)); // Debounce button press
-      const Button button = pinIdToButton(pin_id);
-
-      if (!HAL_isButtonPressed(button)) {
-        /* The button was released */
-        system_state.setButtonState(button, true, false);
-        action_detected = true;
-        PRINT_DEBUG("Button %d pressed.\r\n", static_cast<int>(button) + 1);
-      }
-
-      /* Wait to detect held button presses */
-      vTaskDelay(pdMS_TO_TICKS(BUTTON_HOLD_THRESH_MS));
-      if (HAL_isButtonPressed(Button::B1)) {
-        system_state.setButtonState(Button::B1, false, true);
-        action_detected = true;
-        PRINT_DEBUG("Button 1 held.\r\n");
-      }
-      if (HAL_isButtonPressed(Button::B2)) {
-        system_state.setButtonState(Button::B2, false, true);
-        action_detected = true;
-        PRINT_DEBUG("Button 2 held.\r\n");
-      }
-      if (HAL_isButtonPressed(Button::B3)) {
-        system_state.setButtonState(Button::B3, false, true);
-        action_detected = true;
-        PRINT_DEBUG("Button 3 held.\r\n");
-      }
-
-      if (action_detected) {
-        gui.switchScreen();
-      }
+      // TODO: implement
     }
   }
 }

@@ -1,26 +1,39 @@
 #pragma once
 
+#include <array>
 #include <cstdint>
 
-enum class Button {
+enum class ButtonId {
     B1 = 0,
     B2,
     B3
 };
 
-class ButtonState {
-private:
-    bool _isPressed;
-    bool _isHeld;
-
-    friend class SystemState;
-
-public:
-    ButtonState() : _isPressed(false), _isHeld(false) {};
-
-    bool isPressed() const;
-    bool isHeld() const;
+enum class ButtonState {
+    idle = 0,
+    debouncing,
+    pressed,
+    held
 };
 
-bool HAL_isButtonPressed(const Button idx);
-Button pinIdToButton(uint32_t pin_id);
+static const std::array<ButtonState, 4> transitions = {
+    ButtonState::idle,
+    ButtonState::debouncing,
+    ButtonState::pressed,
+    ButtonState::held
+};
+
+class Button {
+private:
+    ButtonState curr_state;
+
+public:
+    Button() : curr_state(ButtonState::idle) {};
+
+    const ButtonState getState() const;
+    void advanceState();
+    void goIdle();
+};
+
+bool HAL_isButtonPressed(const ButtonId idx);
+ButtonId pinIdToButton(uint32_t pin_id);

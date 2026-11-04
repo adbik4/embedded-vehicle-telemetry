@@ -20,7 +20,6 @@ public:
 
     /* read-only */
     virtual const sensor_hub_data_t& getIMUdata() const = 0;
-    virtual const ButtonState& getButtonState(const Button id) const = 0;
 
     /* read-write */
     virtual GPSdata_t& getGNSSdata() = 0;
@@ -32,9 +31,10 @@ private:
     sensor_hub_data_t& imu_data;
     GPSdata_t gnss_data;
     
-    ButtonState button1;
-    ButtonState button2;
-    ButtonState button3;
+    // TODO: redo button state handling (remove from here)
+    Button button1;
+    Button button2;
+    Button button3;
 
     friend void StartInputManagerTask(void *argument);
 
@@ -45,13 +45,8 @@ public:
 
     /* read-only */
     const sensor_hub_data_t& getIMUdata() const override;
-    const ButtonState& getButtonState(const Button id) const override;
 
     /* read-write */
     GPSdata_t& getGNSSdata() override;
     const GPSdata_t& getGNSSdata() const override;
-
-    /* write */
-    void setButtonState(const Button idx, const bool isPressed, const bool isHeld);
-    void clearButtonState(const Button idx);
 };

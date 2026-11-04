@@ -57,18 +57,7 @@ void GUI::refreshScreen() {
 /* ----- DEBUG SCREEN ----- */
 
 void DebugScreen::switchScreen(GUI* gui) {
-    ScreenState* nextScreen = &(gui->getCurrentScreen());
-
-    /* Decide what the next state is */
-    if (system_state.getButtonState(Button::B3).isPressed()) {
-        nextScreen = &(MainScreen::getInstance()); 
-        system_state.clearButtonState(Button::B3);
-    }
-
-    /* Switch screen if it changed */
-    if (nextScreen != &(gui->getCurrentScreen())) {
-        gui->setScreen(nextScreen);
-    }
+    // TODO: implement
 }
 
 void DebugScreen::init(GUI* gui) {
@@ -93,27 +82,7 @@ void DebugScreen::refresh(GUI* gui) {
 /* ----- MAIN SCREEN ----- */
 
 void MainScreen::switchScreen(GUI* gui) {
-    ScreenState* nextScreen = &(gui->getCurrentScreen());
-
-    /* Decide what the next state is */
-    if (system_state.getButtonState(Button::B1).isHeld() &&
-        system_state.getButtonState(Button::B2).isHeld() &&
-        system_state.getButtonState(Button::B3).isHeld())
-    {
-        nextScreen = &(DebugScreen::getInstance());
-        system_state.clearButtonState(Button::B1);
-        system_state.clearButtonState(Button::B2);
-        system_state.clearButtonState(Button::B3);
-    }
-    else if (system_state.getButtonState(Button::B2).isPressed()) {
-        nextScreen = &(StatsScreen::getInstance()); 
-        system_state.clearButtonState(Button::B2);
-    }
-
-    /* Switch screen if it changed */
-    if (nextScreen != &(gui->getCurrentScreen())) {
-        gui->setScreen(nextScreen);
-    }
+    // TODO: implement
 }
 
 void MainScreen::init(GUI* gui) {
@@ -138,27 +107,7 @@ void MainScreen::refresh(GUI* gui) {
 /* ----- STATS SCREEN ----- */
 
 void StatsScreen::switchScreen(GUI* gui) {
-    ScreenState* nextScreen = &(gui->getCurrentScreen());
-
-    /* Decide what the next state is */
-    if (system_state.getButtonState(Button::B1).isHeld() &&
-        system_state.getButtonState(Button::B2).isHeld() &&
-        system_state.getButtonState(Button::B3).isHeld())
-    {
-        nextScreen = &(DebugScreen::getInstance());
-        system_state.clearButtonState(Button::B1);
-        system_state.clearButtonState(Button::B2);
-        system_state.clearButtonState(Button::B3);
-    }
-    else if (system_state.getButtonState(Button::B2).isPressed()) {
-        nextScreen = &(MainScreen::getInstance()); 
-        system_state.clearButtonState(Button::B2);
-    }
-
-    /* Switch screen if it changed */
-    if (nextScreen != &(gui->getCurrentScreen())) {
-        gui->setScreen(nextScreen);
-    }
+    // TODO: implement
 }
 
 void StatsScreen::init(GUI* gui) {

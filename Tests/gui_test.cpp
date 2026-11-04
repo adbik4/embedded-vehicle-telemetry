@@ -23,7 +23,6 @@ using ::testing::Return;
 class MockState : public StateIf {
 public:
     MOCK_METHOD((const sensor_hub_data_t&), getIMUdata, (), (const, override));
-    MOCK_METHOD(const ButtonState&, getButtonState, (const Button id), (const, override));
     MOCK_METHOD((GPSdata_t&), getGNSSdata, (), (override));
     MOCK_METHOD((const GPSdata_t&), getGNSSdata, (), (const, override));
 };
