@@ -353,7 +353,7 @@ void StartDisplayTask(void *argument)
 void StartInputManagerTask(void *argument)
 {
   uint32_t notification;
-  
+
   for (;;)
   {
     /* Wait for trigger */

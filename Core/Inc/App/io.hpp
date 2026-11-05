@@ -24,7 +24,7 @@ static const std::array<ButtonState, 4> transitions = {
 };
 
 class Button {
-private:
+protected:
     ButtonState curr_state;
 
 public:
@@ -38,4 +38,11 @@ public:
 #ifndef UNIT_TEST
     bool HAL_isButtonPressed(const ButtonId idx);
     ButtonId pinIdToButton(uint32_t pin_id);
+#else
+    class ButtonMock : public Button {
+    public:
+        void setState(const ButtonState state) {
+            curr_state = state;
+        }
+    };
 #endif

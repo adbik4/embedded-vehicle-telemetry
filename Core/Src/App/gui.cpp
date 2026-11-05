@@ -4,7 +4,7 @@
 #include "system_state.hpp"
 #include <optional>
 
-#if !defined(UNIT_TEST)
+#ifndef UNIT_TEST
     #include "EPD_2in66.h"
     #include "EPD_DEV_Config.h"
     #include "GUI_Paint.h"
@@ -15,9 +15,16 @@
 #endif
 
 extern SystemState system_state;
-extern Button button1;
-extern Button button2;
-extern Button button3;
+
+#ifndef UNIT_TEST
+    extern Button button1;
+    extern Button button2;
+    extern Button button3;
+#else
+    extern ButtonMock button1;
+    extern ButtonMock button2;
+    extern ButtonMock button3;
+#endif
 
 namespace gui {
 
