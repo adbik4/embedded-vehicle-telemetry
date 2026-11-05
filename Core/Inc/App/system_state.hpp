@@ -30,11 +30,6 @@ class SystemState : public Singleton<SystemState>, public StateIf {
 private:
     sensor_hub_data_t& imu_data;
     GPSdata_t gnss_data;
-    
-    // TODO: redo button state handling (remove from here)
-    Button button1;
-    Button button2;
-    Button button3;
 
     friend void StartInputManagerTask(void *argument);
 

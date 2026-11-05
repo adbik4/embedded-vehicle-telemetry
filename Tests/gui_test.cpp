@@ -52,9 +52,9 @@ TEST_F(GUITest, InitialState) {
 //         .Times(Exactly(2))
 //         .WillRepeatedly(Return(button_pressed));
     
-//     gui.switchScreen();
+//     gui.processScreen();
 //     assertCurrStateIs<StatsScreen>(gui);
 
-//     gui.switchScreen();
+//     gui.processScreen();
 //     assertCurrStateIs<MainScreen>(gui);
 // }

@@ -53,7 +53,6 @@ typedef StaticQueue_t osStaticMessageQDef_t;
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
-extern std::atomic_flag processingBusy;
 extern UART_HandleTypeDef hcom_uart[COMn];
 /* USER CODE END PD */
 
@@ -65,6 +64,9 @@ extern UART_HandleTypeDef hcom_uart[COMn];
 /* Private variables ---------------------------------------------------------*/
 /* USER CODE BEGIN Variables */
 SystemState& system_state = SystemState::getInstance();
+Button button1;
+Button button2;
+Button button3;
 
 osThreadId_t ComDebugTaskHandle;
 uint32_t ComDebugTaskBuffer[ COM_DEBUG_TASK_STACK_SIZE ];
@@ -273,7 +275,6 @@ void StartSensorHubTask(void *argument)
 
   for (;;)
   {
-    // TODO: Find the cause of SensorReadRequest not getting set by NVIC (the alternative is Refresh100Hz)
     Time_Handler();
     AB_Handler();
 
@@ -335,38 +336,42 @@ void StartGNSSTask(void *argument)
 
 void StartDisplayTask(void *argument)
 {
-  TickType_t xLastWakeTime = xTaskGetTickCount();
-  const TickType_t xPeriod = pdMS_TO_TICKS(DISPLAY_REFRESH_RATE_MS);
-
   GUI& gui = GUI::getInstance();
 
   for (;;)
   {
     gui.refreshScreen();
-    vTaskDelayUntil(&xLastWakeTime, xPeriod);
+    xTaskNotifyWait(
+      0,
+      UINT32_MAX,
+      NULL,
+      pdMS_TO_TICKS(DISPLAY_REFRESH_RATE_MS)
+    );
   }
 }
 
 void StartInputManagerTask(void *argument)
 {
-  uint32_t pin_id;
-  bool action_detected{false};
-  GUI& gui = GUI::getInstance();
+  uint32_t notification;
   
   for (;;)
   {
-    action_detected = false;
-    processingBusy.clear(std::memory_order_relaxed);
-
     /* Wait for trigger */
-    if (xTaskNotifyWait(
-            0,
-            UINT32_MAX,
-            &pin_id,
-            portMAX_DELAY) == pdTRUE) 
-    {
-      // TODO: implement
-    }
+    xTaskNotifyWait(
+      0,
+      UINT32_MAX,
+      &notification, // TODO: replace with the proper ISR data
+      portMAX_DELAY
+    );
+
+    /* Process button interrupt flags*/
+
+    /* Send a refresh request to the display manager*/
+    xTaskNotify(
+      reinterpret_cast<TaskHandle_t>(DisplayTaskHandle),
+      0,
+      eNoAction
+    );
   }
 }
 /* USER CODE END Application */

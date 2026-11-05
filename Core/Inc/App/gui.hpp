@@ -18,7 +18,7 @@ public:
     GUI();
 
     inline ScreenState& getCurrentScreen() const { return currentScreen; };
-    void switchScreen();
+    void processScreen();
     void setScreen(ScreenState* nextScreen);
     void refreshScreen();
 };
@@ -34,7 +34,7 @@ public:
     virtual void refresh(GUI* gui) = 0;
     
     /* Points to the next screen */
-    virtual void switchScreen(GUI* gui) = 0;
+    virtual void processScreen(GUI* gui) = 0;
 };
 
 /* ----- Concrete Screens ----- */
@@ -46,7 +46,7 @@ private:
 public:
     void init(GUI* gui) override;
     void refresh(GUI* gui) override;
-    void switchScreen(GUI* gui) override;
+    void processScreen(GUI* gui) override;
 };
 
 class MainScreen : public Singleton<MainScreen>, public ScreenState {
@@ -56,7 +56,7 @@ private:
 public:
     void init(GUI* gui) override;
     void refresh(GUI* gui) override;
-    void switchScreen(GUI* gui) override;
+    void processScreen(GUI* gui) override;
 };
 
 class StatsScreen : public Singleton<StatsScreen>, public ScreenState {
@@ -66,7 +66,7 @@ private:
 public:
     void init(GUI* gui) override;
     void refresh(GUI* gui) override;
-    void switchScreen(GUI* gui) override;
+    void processScreen(GUI* gui) override;
 };
 
 } // namespace gui

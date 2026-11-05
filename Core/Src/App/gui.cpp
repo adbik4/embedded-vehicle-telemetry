@@ -15,6 +15,9 @@
 #endif
 
 extern SystemState system_state;
+extern Button button1;
+extern Button button2;
+extern Button button3;
 
 namespace gui {
 
@@ -46,8 +49,8 @@ void GUI::setScreen(ScreenState* nextScreen) {
     currentScreen.init(this);
 }
 
-void GUI::switchScreen() {
-    currentScreen.switchScreen(this);
+void GUI::processScreen() {
+    currentScreen.processScreen(this);
 }
 
 void GUI::refreshScreen() {
@@ -56,8 +59,23 @@ void GUI::refreshScreen() {
 
 /* ----- DEBUG SCREEN ----- */
 
-void DebugScreen::switchScreen(GUI* gui) {
-    // TODO: implement
+void DebugScreen::processScreen(GUI* gui) {
+    ScreenState* nextScreen = &(gui->getCurrentScreen());
+
+    /* Decide on the next state */
+    if(button3.getState() == ButtonState::pressed) {
+        nextScreen = &(MainScreen::getInstance());
+    }
+
+    /* Update screen if state has changed */
+    if(nextScreen != &(gui->getCurrentScreen())) {
+        gui->setScreen(nextScreen);
+    }
+
+    /* Clear button states */
+    button1.goIdle();
+    button2.goIdle();
+    button3.goIdle();
 }
 
 void DebugScreen::init(GUI* gui) {
@@ -81,8 +99,30 @@ void DebugScreen::refresh(GUI* gui) {
 
 /* ----- MAIN SCREEN ----- */
 
-void MainScreen::switchScreen(GUI* gui) {
-    // TODO: implement
+void MainScreen::processScreen(GUI* gui) {
+    ScreenState* nextScreen = &(gui->getCurrentScreen());
+    
+    /* Decide on the next state */
+    if(
+        button1.getState() == ButtonState::held &&
+        button2.getState() == ButtonState::held &&
+        button3.getState() == ButtonState::held
+    ) {
+        nextScreen = &(DebugScreen::getInstance());
+    }
+    else if(button2.getState() == ButtonState::pressed) {
+        nextScreen = &(StatsScreen::getInstance());
+    }
+
+    /* Update screen if state has changed */
+    if(nextScreen != &(gui->getCurrentScreen())) {
+        gui->setScreen(nextScreen);
+    }
+
+    /* Clear button states */
+    button1.goIdle();
+    button2.goIdle();
+    button3.goIdle();
 }
 
 void MainScreen::init(GUI* gui) {
@@ -106,8 +146,30 @@ void MainScreen::refresh(GUI* gui) {
 
 /* ----- STATS SCREEN ----- */
 
-void StatsScreen::switchScreen(GUI* gui) {
-    // TODO: implement
+void StatsScreen::processScreen(GUI* gui) {
+    ScreenState* nextScreen = &(gui->getCurrentScreen());
+    
+    /* Decide on the next state */
+    if(
+        button1.getState() == ButtonState::held &&
+        button2.getState() == ButtonState::held &&
+        button3.getState() == ButtonState::held
+    ) {
+        nextScreen = &(DebugScreen::getInstance());
+    }
+    else if(button2.getState() == ButtonState::pressed) {
+        nextScreen = &(MainScreen::getInstance());
+    }
+
+    /* Update screen if state has changed */
+    if(nextScreen != &(gui->getCurrentScreen())) {
+        gui->setScreen(nextScreen);
+    }
+
+    /* Clear button states */
+    button1.goIdle();
+    button2.goIdle();
+    button3.goIdle();
 }
 
 void StatsScreen::init(GUI* gui) {
