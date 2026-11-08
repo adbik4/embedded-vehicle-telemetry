@@ -31,6 +31,10 @@
 #ifndef __FREERTOS_CONFIG_H
 #define __FREERTOS_CONFIG_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /*-----------------------------------------------------------
  * Application specific definitions.
  *
@@ -186,5 +190,9 @@ header file. */
 /* USER CODE BEGIN Defines */
 /* Section where parameter definitions can be added (for instance, to override default ones in FreeRTOS.h) */
 /* USER CODE END Defines */
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* __FREERTOS_CONFIG_H */

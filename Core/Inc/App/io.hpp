@@ -1,5 +1,10 @@
 #pragma once
 
+#if defined(UNIT_TEST)
+using TickType_t = unsigned long;
+#else
+#include "FreeRTOS.h"
+#endif
 #include <array>
 #include <cstdint>
 
@@ -13,22 +18,23 @@ enum class ButtonState {
     idle = 0,
     debouncing,
     pressed,
-    held
 };
 
 static const std::array<ButtonState, 4> transitions = {
     ButtonState::idle,
     ButtonState::debouncing,
     ButtonState::pressed,
-    ButtonState::held
 };
 
 class Button {
 protected:
     ButtonState curr_state;
+    TickType_t _tickRef;
+
+    friend void handleButtonEvent(Button& button, bool* actionDetected);
 
 public:
-    Button() : curr_state(ButtonState::idle) {};
+    Button() : curr_state(ButtonState::idle), _tickRef(0) {};
 
     const ButtonState getState() const;
     void advanceState();
@@ -36,6 +42,7 @@ public:
 };
 
 #ifndef UNIT_TEST
+    void handleButtonEvent(Button& button, bool* actionDetected);
     bool HAL_isButtonPressed(const ButtonId idx);
     ButtonId pinIdToButton(uint32_t pin_id);
 #else

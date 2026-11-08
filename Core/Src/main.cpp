@@ -25,6 +25,7 @@
 /* USER CODE BEGIN Includes */
 #include "L76X.h"
 #include "custom_algobuild.h"
+#include "io.hpp"
 
 #include <atomic>
 #include <stdint.h>
@@ -712,21 +713,19 @@ static void MX_GPIO_Init(void)
 
 /* USER CODE BEGIN 4 */
 void HAL_GPIO_EXTI_Falling_Callback(uint16_t GPIO_Pin) {
-  // BaseType_t higherPriorityTaskWoken = pdFALSE;
-  // TaskHandle_t taskHandle = reinterpret_cast<TaskHandle_t>(InputManagerTaskHandle);
-  // configASSERT(InputManagerTaskHandle != nullptr);
-  //
-  /* Drop any new inputs until processing finishes */
-  // if (!processingBusy.test_and_set(std::memory_order_relaxed)) {
-  //   xTaskNotifyFromISR(
-  //     taskHandle,
-  //     GPIO_Pin,
-  //     eSetValueWithOverwrite,
-  //     &higherPriorityTaskWoken
-  //   );
-  // }
-  // 
-  // portYIELD_FROM_ISR(higherPriorityTaskWoken);
+  BaseType_t higherPriorityTaskWoken = pdFALSE;
+  TaskHandle_t taskHandle = reinterpret_cast<TaskHandle_t>(InputManagerTaskHandle);
+  configASSERT(InputManagerTaskHandle != nullptr);
+  
+  ButtonId buttonId = pinIdToButton(GPIO_Pin);
+  xTaskNotifyFromISR(
+      taskHandle,
+      1UL << static_cast<uint16_t>(buttonId),
+      eSetBits,
+      &higherPriorityTaskWoken
+  );
+  
+  portYIELD_FROM_ISR(higherPriorityTaskWoken);
 }
 /* USER CODE END 4 */
 

@@ -35,7 +35,7 @@ namespace gui {
 
 /* --------- GUI ---------- */
 
-GUI::GUI() : currentScreen(MainScreen::getInstance()) {
+GUI::GUI() : currentScreen(&DebugScreen::getInstance()) {
     #if !defined(UNIT_TEST)
         if(EPD_DEV_Module_Init() != 0){
             PRINT_DEBUG("E-ink display initialisation failed.");
@@ -48,20 +48,20 @@ GUI::GUI() : currentScreen(MainScreen::getInstance()) {
 
         Paint_NewImage(Canvas, EPD_2IN66_WIDTH, EPD_2IN66_HEIGHT, 90, WHITE);
     #endif
-    currentScreen.init(this);
+    currentScreen->init(this);
 }
 
 void GUI::setScreen(ScreenState* nextScreen) {
-    currentScreen = *nextScreen;
-    currentScreen.init(this);
+    currentScreen = nextScreen;
+    currentScreen->init(this);
 }
 
 void GUI::processScreen() {
-    currentScreen.processScreen(this);
+    currentScreen->processScreen(this);
 }
 
 void GUI::refreshScreen() {
-    currentScreen.refresh(this);
+    currentScreen->refresh(this);
 }
 
 /* ----- DEBUG SCREEN ----- */
@@ -70,7 +70,7 @@ void DebugScreen::processScreen(GUI* gui) {
     ScreenState* nextScreen = &(gui->getCurrentScreen());
 
     /* Decide on the next state */
-    if(button3.getState() == ButtonState::pressed) {
+    if(button2.getState() == ButtonState::pressed) {
         nextScreen = &(MainScreen::getInstance());
     }
 
@@ -80,9 +80,9 @@ void DebugScreen::processScreen(GUI* gui) {
     }
 
     /* Clear button states */
-    button1.goIdle();
-    button2.goIdle();
-    button3.goIdle();
+    if (button1.getState() != ButtonState::debouncing) { button1.goIdle(); }
+    if (button2.getState() != ButtonState::debouncing) { button2.goIdle(); }
+    if (button3.getState() != ButtonState::debouncing) { button3.goIdle(); }
 }
 
 void DebugScreen::init(GUI* gui) {
@@ -110,14 +110,7 @@ void MainScreen::processScreen(GUI* gui) {
     ScreenState* nextScreen = &(gui->getCurrentScreen());
     
     /* Decide on the next state */
-    if(
-        button1.getState() == ButtonState::held &&
-        button2.getState() == ButtonState::held &&
-        button3.getState() == ButtonState::held
-    ) {
-        nextScreen = &(DebugScreen::getInstance());
-    }
-    else if(button2.getState() == ButtonState::pressed) {
+    if(button2.getState() == ButtonState::pressed) {
         nextScreen = &(StatsScreen::getInstance());
     }
 
@@ -127,9 +120,9 @@ void MainScreen::processScreen(GUI* gui) {
     }
 
     /* Clear button states */
-    button1.goIdle();
-    button2.goIdle();
-    button3.goIdle();
+    if (button1.getState() != ButtonState::debouncing) { button1.goIdle(); }
+    if (button2.getState() != ButtonState::debouncing) { button2.goIdle(); }
+    if (button3.getState() != ButtonState::debouncing) { button3.goIdle(); }
 }
 
 void MainScreen::init(GUI* gui) {
@@ -157,15 +150,8 @@ void StatsScreen::processScreen(GUI* gui) {
     ScreenState* nextScreen = &(gui->getCurrentScreen());
     
     /* Decide on the next state */
-    if(
-        button1.getState() == ButtonState::held &&
-        button2.getState() == ButtonState::held &&
-        button3.getState() == ButtonState::held
-    ) {
+    if(button2.getState() == ButtonState::pressed) {
         nextScreen = &(DebugScreen::getInstance());
-    }
-    else if(button2.getState() == ButtonState::pressed) {
-        nextScreen = &(MainScreen::getInstance());
     }
 
     /* Update screen if state has changed */
@@ -174,9 +160,9 @@ void StatsScreen::processScreen(GUI* gui) {
     }
 
     /* Clear button states */
-    button1.goIdle();
-    button2.goIdle();
-    button3.goIdle();
+    if (button1.getState() != ButtonState::debouncing) { button1.goIdle(); }
+    if (button2.getState() != ButtonState::debouncing) { button2.goIdle(); }
+    if (button3.getState() != ButtonState::debouncing) { button3.goIdle(); }
 }
 
 void StatsScreen::init(GUI* gui) {

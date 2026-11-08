@@ -73,12 +73,12 @@ option(ENABLE_UNIT_TESTS "Build and run native unit tests with the firmware" ON)
 
 if(ENABLE_UNIT_TESTS)
     add_custom_target(run_unit_tests
-        COMMAND ${CMAKE_COMMAND}
+        COMMAND cmake
             -S "${CMAKE_SOURCE_DIR}/Tests"
             -B "${TEST_BUILD_DIR}"
             -DCMAKE_BUILD_TYPE=Debug
 
-        COMMAND ${CMAKE_COMMAND}
+        COMMAND cmake
             --build "${TEST_BUILD_DIR}"
             --config Debug
 

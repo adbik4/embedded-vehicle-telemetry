@@ -6,6 +6,7 @@ target_include_directories(telemetry_app_lib PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}/../L76X/Config
     ${CMAKE_CURRENT_SOURCE_DIR}/../L76X/Device
     ${CMAKE_CURRENT_SOURCE_DIR}/../Middlewares/Third_Party/CMSIS/RTOS2/Include
+    ${CMAKE_CURRENT_SOURCE_DIR}/../Middlewares/Third_Party/FreeRTOS/Source/include
 )
 
 target_sources(telemetry_app_lib PRIVATE

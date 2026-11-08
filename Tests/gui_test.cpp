@@ -46,49 +46,22 @@ void assertCurrStateIs(GUI& gui) {
 }
 
 TEST_F(GUITest, InitialState) {
-    assertCurrStateIs<MainScreen>(gui);
+    assertCurrStateIs<DebugScreen>(gui);
 }
 
 TEST_F(GUITest, WrongActionsDontChangeState) {
     button1.setState(ButtonState::pressed);
     button3.setState(ButtonState::pressed);
-    assertCurrStateIs<MainScreen>(gui);
-
-    button1.setState(ButtonState::held);
-    button2.setState(ButtonState::held);
-    button3.setState(ButtonState::held);
-    assertCurrStateIs<DebugScreen>(gui);
-
-    button1.setState(ButtonState::pressed);
-    button2.setState(ButtonState::pressed);
     assertCurrStateIs<DebugScreen>(gui);
 }
 
 TEST_F(GUITest, StateTransitions) {
     button2.setState(ButtonState::pressed);
-    assertCurrStateIs<StatsScreen>(gui);
-
-    button2.setState(ButtonState::pressed);
-    assertCurrStateIs<MainScreen>(gui);
-
-    button2.setState(ButtonState::pressed);
-    assertCurrStateIs<StatsScreen>(gui);
-}
-
-TEST_F(GUITest, DebugScreenIsAccessable) {
-    button1.setState(ButtonState::held);
-    button2.setState(ButtonState::held);
-    button3.setState(ButtonState::held);
-    assertCurrStateIs<DebugScreen>(gui);
-
-    button3.setState(ButtonState::pressed);
     assertCurrStateIs<MainScreen>(gui);
 
     button2.setState(ButtonState::pressed);
     assertCurrStateIs<StatsScreen>(gui);
 
-    button1.setState(ButtonState::held);
-    button2.setState(ButtonState::held);
-    button3.setState(ButtonState::held);
+    button2.setState(ButtonState::pressed);
     assertCurrStateIs<DebugScreen>(gui);
 }

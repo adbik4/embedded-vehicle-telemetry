@@ -37,6 +37,7 @@
 #include "main.h"
 #include "portmacrocommon.h"
 #include "projdefs.h"
+#include "stm32u3xx_hal_def.h"
 #include "stm32u3xx_hal_gpio.h"
 
 #include <string.h>
@@ -340,38 +341,57 @@ void StartDisplayTask(void *argument)
 
   for (;;)
   {
-    gui.refreshScreen();
-    xTaskNotifyWait(
+    if (xTaskNotifyWait(
       0,
       UINT32_MAX,
       NULL,
       pdMS_TO_TICKS(DISPLAY_REFRESH_RATE_MS)
-    );
+    )
+    == pdTRUE)  /* Received button presses */
+  {
+      gui.processScreen();
+      gui.refreshScreen();
+    }
+    else  /* Didn't recieve button pressed BUT screen needs to be refreshed */
+    {
+        gui.refreshScreen();
+    }
   }
 }
 
 void StartInputManagerTask(void *argument)
 {
-  uint32_t notification;
+  uint32_t isr_flags;
+  std::array<Button*, 3> button_list = {&button1, &button2, &button3};
 
   for (;;)
   {
-    /* Wait for trigger */
+    /* Wait for interrupt or after timeout poll the button state anyways */
     xTaskNotifyWait(
-      0,
-      UINT32_MAX,
-      &notification, // TODO: replace with the proper ISR data
-      portMAX_DELAY
+        0,
+        UINT32_MAX,
+        &isr_flags,
+        pdMS_TO_TICKS(5)
     );
 
-    /* Process button interrupt flags*/
+    bool actionDetected = false;
 
-    /* Send a refresh request to the display manager*/
-    xTaskNotify(
-      reinterpret_cast<TaskHandle_t>(DisplayTaskHandle),
-      0,
-      eNoAction
-    );
+    /* Handle the state of each button */
+    for (uint8_t i = 0; i < button_list.size(); i++) {
+      bool isActive = (isr_flags & (1 << i)) >> i;
+      if (isActive) {
+        handleButtonEvent(*button_list.at(i), &actionDetected);
+      }
+    }
+
+    if (actionDetected) {
+      /* Send a refresh request to the display manager*/
+      xTaskNotify(
+        reinterpret_cast<TaskHandle_t>(DisplayTaskHandle),
+        0,
+        eNoAction
+      );
+    }
   }
 }
 /* USER CODE END Application */

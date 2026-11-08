@@ -12,12 +12,12 @@ class ScreenState;
 
 class GUI : public Singleton<GUI> {
 private:
-    ScreenState& currentScreen;
+    ScreenState* currentScreen;
 
 public:
     GUI();
 
-    inline ScreenState& getCurrentScreen() const { return currentScreen; };
+    inline ScreenState& getCurrentScreen() const { return *currentScreen; };
     void processScreen();
     void setScreen(ScreenState* nextScreen);
     void refreshScreen();

@@ -1,7 +1,15 @@
 #include "io.hpp"
 
+#include "settings.h"
+#include "utilities.hpp"
 #include <cassert>
 #include <cstdint>
+
+#if !defined(UNIT_TEST)
+    #include "portmacrocommon.h"
+    #include "FreeRTOS.h"
+    #include "task.h"
+#endif
 
 #if !defined(UNIT_TEST)
     #include "main.h"
@@ -22,6 +30,36 @@ void Button::advanceState() {
 void Button::goIdle() {
     curr_state = ButtonState::idle;
 }
+
+#if !defined(UNIT_TEST)
+void handleButtonEvent(Button& button, bool* actionDetected) {
+    TickType_t elapsed{0};
+
+    switch (button.getState()) {
+        case ButtonState::idle:
+            button._tickRef = xTaskGetTickCount();
+
+            button.advanceState();
+            break;
+            
+        case ButtonState::debouncing:
+            elapsed = xTaskGetTickCount() - button._tickRef;
+            if (elapsed < pdMS_TO_TICKS(DEBOUNCE_MS)) { return; }
+
+            button.advanceState();
+            button._tickRef = xTaskGetTickCount();
+            break;
+
+        case ButtonState::pressed:
+            elapsed = xTaskGetTickCount() - button._tickRef;
+            *actionDetected = true;
+            break;
+
+        default:
+            PRINT_DEBUG("[handleButtonState] Idk how you even got here.");
+    }
+}
+#endif
 
 #ifndef UNIT_TEST
     bool HAL_isButtonPressed(const ButtonId idx) {
