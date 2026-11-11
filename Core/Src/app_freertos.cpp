@@ -65,9 +65,9 @@ extern UART_HandleTypeDef hcom_uart[COMn];
 /* Private variables ---------------------------------------------------------*/
 /* USER CODE BEGIN Variables */
 SystemState& system_state = SystemState::getInstance();
-Button button1;
-Button button2;
-Button button3;
+Button button1(ButtonId::B1);
+Button button2(ButtonId::B2);
+Button button3(ButtonId::B3);
 
 osThreadId_t ComDebugTaskHandle;
 uint32_t ComDebugTaskBuffer[ COM_DEBUG_TASK_STACK_SIZE ];
@@ -379,9 +379,7 @@ void StartInputManagerTask(void *argument)
     /* Handle the state of each button */
     for (uint8_t i = 0; i < button_list.size(); i++) {
       bool isActive = (isr_flags & (1 << i)) >> i;
-      if (isActive) {
-        handleButtonEvent(*button_list.at(i), &actionDetected);
-      }
+      handleButtonEvent(*button_list.at(i), isActive, &actionDetected);
     }
 
     if (actionDetected) {

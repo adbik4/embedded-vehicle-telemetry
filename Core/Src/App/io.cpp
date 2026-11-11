@@ -21,6 +21,10 @@ const ButtonState Button::getState() const {
     return curr_state;
 }
 
+const ButtonId Button::getId() const {
+    return _id;
+}
+
 /* Advances to the next state */
 void Button::advanceState() {
     curr_state = transitions.at((static_cast<size_t>(curr_state) + 1) % transitions.size());
@@ -32,33 +36,36 @@ void Button::goIdle() {
 }
 
 #if !defined(UNIT_TEST)
-void handleButtonEvent(Button& button, bool* actionDetected) {
-    TickType_t elapsed{0};
+    void handleButtonEvent(Button& button, bool isActive, bool* actionDetected) {
+        TickType_t elapsed{0};
+        
+        switch (button.getState()) {
+            case ButtonState::idle:
+                if (isActive) {
+                    button._debounceStart = xTaskGetTickCount();
+                    button.advanceState();
+                }
+                return;
+                
+            case ButtonState::debouncing:
+                elapsed = xTaskGetTickCount() - button._debounceStart;
+                if (elapsed < pdMS_TO_TICKS(DEBOUNCE_MS)) { return; }
 
-    switch (button.getState()) {
-        case ButtonState::idle:
-            button._tickRef = xTaskGetTickCount();
+                if (HAL_isButtonPressed(button.getId())) {
+                    button.advanceState();
+                    *actionDetected = true;
+                } else {
+                    button.goIdle();
+                }
+                return;
 
-            button.advanceState();
-            break;
-            
-        case ButtonState::debouncing:
-            elapsed = xTaskGetTickCount() - button._tickRef;
-            if (elapsed < pdMS_TO_TICKS(DEBOUNCE_MS)) { return; }
+            case ButtonState::pressed:
+                return;
 
-            button.advanceState();
-            button._tickRef = xTaskGetTickCount();
-            break;
-
-        case ButtonState::pressed:
-            elapsed = xTaskGetTickCount() - button._tickRef;
-            *actionDetected = true;
-            break;
-
-        default:
-            PRINT_DEBUG("[handleButtonState] Idk how you even got here.");
+            default:
+                PRINT_DEBUG("[handleButtonState] Idk how you even got here.");
+        }
     }
-}
 #endif
 
 #ifndef UNIT_TEST

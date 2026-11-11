@@ -10,9 +10,9 @@ using ::testing::AtLeast;
 using ::testing::Exactly;
 using ::testing::Return;
 
-ButtonMock button1;
-ButtonMock button2;
-ButtonMock button3;
+ButtonMock button1(ButtonId::B1);
+ButtonMock button2(ButtonId::B2);
+ButtonMock button3(ButtonId::B3);
 
 /* TEST PLAN:
    1) when the GUI starts, it is on the right screen

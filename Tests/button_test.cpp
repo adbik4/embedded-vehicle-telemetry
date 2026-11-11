@@ -4,7 +4,7 @@
 // TODO: rewrite button tests
 
 TEST(ButtonTest, AllButtonTransitions) {
-    Button b;
+    Button b(ButtonId::B1);
 
     ASSERT_EQ(b.getState(), ButtonState::idle);
     b.advanceState();
@@ -14,7 +14,7 @@ TEST(ButtonTest, AllButtonTransitions) {
 }
 
 TEST(ButtonTest, GoesIdle) {
-    Button b;
+    Button b(ButtonId::B1);
     
     b.advanceState();
     b.advanceState();

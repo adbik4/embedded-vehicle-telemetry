@@ -42,7 +42,7 @@ GUI::GUI() : currentScreen(&DebugScreen::getInstance()) {
         }
 
         PRINT_DEBUG("e-Paper Init and Clear...\r\n");
-        EPD_2IN66_Init();
+        EPD_2IN66_Init_Partial();
         EPD_2IN66_Clear();
         DEV_Delay_ms(500);
 
