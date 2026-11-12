@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.22)
 project(gtest_ut LANGUAGES C CXX)
 
 # GoogleTest requires at least C++17
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 set(FETCHCONTENT_BASE_DIR

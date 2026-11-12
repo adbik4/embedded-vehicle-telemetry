@@ -51,17 +51,17 @@ TEST_F(GUITest, InitialState) {
 
 TEST_F(GUITest, WrongActionsDontChangeState) {
     button1.setState(ButtonState::pressed);
-    button3.setState(ButtonState::pressed);
+    button2.setState(ButtonState::pressed);
     assertCurrStateIs<DebugScreen>(gui);
 }
 
 TEST_F(GUITest, StateTransitions) {
-    button2.setState(ButtonState::pressed);
+    button3.setState(ButtonState::pressed);
     assertCurrStateIs<MainScreen>(gui);
 
-    button2.setState(ButtonState::pressed);
+    button3.setState(ButtonState::pressed);
     assertCurrStateIs<StatsScreen>(gui);
 
-    button2.setState(ButtonState::pressed);
+    button3.setState(ButtonState::pressed);
     assertCurrStateIs<DebugScreen>(gui);
 }

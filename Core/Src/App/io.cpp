@@ -32,7 +32,9 @@ void Button::advanceState() {
 
 /* Resets the current state to idle */
 void Button::goIdle() {
-    curr_state = ButtonState::idle;
+    if (curr_state != ButtonState::debouncing) {
+        curr_state = ButtonState::idle;
+    }
 }
 
 #if !defined(UNIT_TEST)

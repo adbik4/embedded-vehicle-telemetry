@@ -22,3 +22,12 @@ TEST(ButtonTest, GoesIdle) {
     b.goIdle();
     ASSERT_EQ(b.getState(), ButtonState::idle);
 }
+
+TEST(ButtonTest, DoesntGoIdleWhenDebouncing) {
+    Button b(ButtonId::B1);
+
+    b.advanceState();
+    ASSERT_EQ(b.getState(), ButtonState::debouncing);
+    b.goIdle();
+    ASSERT_EQ(b.getState(), ButtonState::debouncing);
+}

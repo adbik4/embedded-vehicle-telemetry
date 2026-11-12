@@ -5,6 +5,8 @@
 #include <functional>
 #include <map>
 #include <optional>
+#include <string>
+#include <variant>
 
 namespace gui {
 
@@ -25,7 +27,9 @@ public:
 
 class ScreenState {
 public:
-    virtual ~ScreenState() {}
+    const std::array<const char*, 3> bottom_bar;
+
+    ScreenState(const std::array<const char*, 3> arr) : bottom_bar(arr) {};
 
     /* Draws the Screen on entry */
     virtual void init(GUI* gui) = 0;
@@ -37,13 +41,41 @@ public:
     virtual void processScreen(GUI* gui) = 0;
 };
 
+/* ----- DATA TYPES ----- */
+
+template <typename T>
+struct Line {
+    std::string name;
+    T value;
+};
+
+template <typename T, size_t N>
+struct Paragraph {
+    std::string header;
+    std::array<Line<T>, N> contents;
+};
+
+using ParagraphVariant = std::variant<
+    Paragraph<uint64_t, 4>,
+    Paragraph<float, 4>
+>;
+
+using DispList = std::array<ParagraphVariant, 3>;
+
 /* ----- Concrete Screens ----- */
 
 class DebugScreen : public Singleton<DebugScreen>, public ScreenState {
 private:
-    const std::array<const char*, 3> bottom_bar = {"", "", "Back"};
+    static constexpr std::array<const char*, 3> bottom_bar = {
+        "", "", "Main"
+    };
+
+    std::array<DispList, 2> disp_lists;
+
+    void updateDispLists();
 
 public:
+    DebugScreen() : ScreenState(DebugScreen::bottom_bar) {};
     void init(GUI* gui) override;
     void refresh(GUI* gui) override;
     void processScreen(GUI* gui) override;
@@ -51,9 +83,12 @@ public:
 
 class MainScreen : public Singleton<MainScreen>, public ScreenState {
 private:
-    const std::array<const char*, 3> bottom_bar = {USERNAME_A, USERNAME_B, "Stats"};
+    static constexpr std::array<const char*, 3> bottom_bar = {
+        USERNAME_A, USERNAME_B, "Stats"
+    };
 
 public:
+    MainScreen() : ScreenState(MainScreen::bottom_bar) {};
     void init(GUI* gui) override;
     void refresh(GUI* gui) override;
     void processScreen(GUI* gui) override;
@@ -61,9 +96,12 @@ public:
 
 class StatsScreen : public Singleton<StatsScreen>, public ScreenState {
 private:
-    const std::array<const char*, 3> bottom_bar = {"V", "^", "Main"};
+    static constexpr std::array<const char*, 3> bottom_bar = {
+        "Next", "Prev", "Debug"
+    };
 
 public:
+    StatsScreen() : ScreenState(StatsScreen::bottom_bar) {};
     void init(GUI* gui) override;
     void refresh(GUI* gui) override;
     void processScreen(GUI* gui) override;
