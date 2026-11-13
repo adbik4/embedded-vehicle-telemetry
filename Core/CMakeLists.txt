@@ -9,6 +9,8 @@ target_include_directories(telemetry_app_lib PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}/../Middlewares/Third_Party/FreeRTOS/Source/include
 )
 
+target_link_libraries(telemetry_app_lib PUBLIC etl::etl)
+
 target_sources(telemetry_app_lib PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/Src/App/utilities.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/Src/App/gui.cpp

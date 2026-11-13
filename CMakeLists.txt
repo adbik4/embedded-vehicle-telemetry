@@ -25,6 +25,16 @@ set(CMAKE_PROJECT_NAME embedded-vehicle-telemetry)
 project(${CMAKE_PROJECT_NAME} LANGUAGES C CXX ASM)
 message("Build type: " ${CMAKE_BUILD_TYPE})
 
+# Fetch Content from github
+include(FetchContent)
+FetchContent_Declare(
+  etl
+  GIT_REPOSITORY https://github.com/ETLCPP/etl
+  GIT_TAG        20.49.0
+)
+
+FetchContent_MakeAvailable(etl)
+
 # Create an executable object type
 add_executable(${CMAKE_PROJECT_NAME})
 
@@ -55,11 +65,13 @@ target_compile_definitions(${CMAKE_PROJECT_NAME} PRIVATE
 list(REMOVE_ITEM CMAKE_C_IMPLICIT_LINK_LIBRARIES ob)
 
 # Add linked libraries
-target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE
+target_link_libraries(${CMAKE_PROJECT_NAME}
+PRIVATE
     stm32cubemx
     telemetry_app_lib
     epd_lib
     l76x_lib
+    etl::etl
 )
 
 target_link_options(${PROJECT_NAME} PRIVATE

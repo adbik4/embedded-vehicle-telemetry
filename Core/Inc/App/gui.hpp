@@ -1,12 +1,12 @@
 #pragma once
 
 #include "utilities.hpp"
+#include <etl/string.h>
+#include <etl/tuple.h>
 #include <array>
 #include <functional>
 #include <map>
 #include <optional>
-#include <string>
-#include <variant>
 
 namespace gui {
 
@@ -45,22 +45,22 @@ public:
 
 template <typename T>
 struct Line {
-    std::string name;
+    etl::string<16> name;
     T value;
 };
 
 template <typename T, size_t N>
 struct Paragraph {
-    std::string header;
+    etl::string<32> header;
     std::array<Line<T>, N> contents;
 };
 
-using ParagraphVariant = std::variant<
+using DispList = etl::tuple<
     Paragraph<uint64_t, 4>,
-    Paragraph<float, 4>
+    Paragraph<float, 4>,
+    Paragraph<float, 4>,
+    Paragraph<uint64_t, 4>
 >;
-
-using DispList = std::array<ParagraphVariant, 3>;
 
 /* ----- Concrete Screens ----- */
 

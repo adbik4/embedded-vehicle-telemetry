@@ -1,0 +1,9 @@
+#ifndef ETL_PROFILE_H
+#define ETL_PROFILE_H
+
+#define ETL_TARGET_DEVICE_GENERIC
+#define ETL_TARGET_OS_FREERTOS
+#define ETL_CHECK_PUSH_POP
+#define ETL_LOG_ERRORS
+
+#endif

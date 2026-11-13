@@ -23,6 +23,13 @@ FetchContent_MakeAvailable(googletest)
 set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 FetchContent_MakeAvailable(googletest)
 
+FetchContent_Declare(
+    etl
+    GIT_REPOSITORY https://github.com/ETLCPP/etl
+    GIT_TAG 20.49.0
+)
+FetchContent_MakeAvailable(etl)
+
 enable_testing()
 
 add_executable(gtest_ut)

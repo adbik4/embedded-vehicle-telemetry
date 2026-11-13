@@ -5,10 +5,9 @@
 #include "system_state.hpp"
 #include <cstdio>
 #include <optional>
-#include <string>
-#include <iostream>
-#include <variant>
-#include <type_traits>
+#include <etl/string.h>
+#include <etl/to_string.h>
+#include <etl/tuple.h>
 
 #ifndef UNIT_TEST
     #include "ab_sensor_hub.h"
@@ -81,7 +80,7 @@ void GUI::refreshScreen() {
         Paint_DrawString_EN(230, BAR_HEIGHT, state->bottom_bar[2], &Font16, BLACK, WHITE);
     }
 
-    static void DrawGUIList(const DispList& disp_list) {
+    static void DrawParagraph(const auto& paragraph, uint64_t& y_pos) {
         static constexpr uint64_t CONTENT_TOP_MARGIN = 40;
         static constexpr uint64_t CONTENT_L_MARGIN = 40;
         static constexpr uint64_t HEADER_L_MARGIN = 10;
@@ -89,30 +88,35 @@ void GUI::refreshScreen() {
         static constexpr uint64_t V_STEP = 20;
         static constexpr uint64_t CONTENT_BOTTOM = 130;
 
-        uint64_t y_pos{0};
-        for (const auto& variant : disp_list) {
-            std::visit([&](const auto& paragraph) {
-                if (paragraph.header.empty() || y_pos >= CONTENT_BOTTOM) {
-                    return;
-                }
-
-                Paint_DrawString_EN(HEADER_L_MARGIN, y_pos, paragraph.header.c_str(), &Font20, BLACK, WHITE);
-                y_pos += CONTENT_TOP_MARGIN;
-
-                for(const auto& element : paragraph.contents) {
-                    if (element.name.empty()) { continue; }
-                    if (y_pos >= CONTENT_BOTTOM) { return; }
-
-                    std::string line{};
-                    line = element.name + ": " + std::to_string(element.value) + "\r\n";
-
-                    Paint_DrawString_EN(CONTENT_L_MARGIN, y_pos, line.c_str(), &Font16, BLACK, WHITE);
-                    y_pos += V_STEP;
-                }
-
-                y_pos += CONTENT_TOP_MARGIN;
-            }, variant);
+        if (paragraph.header.empty() || y_pos >= CONTENT_BOTTOM) {
+            return;
         }
+
+        Paint_DrawString_EN(HEADER_L_MARGIN, y_pos, paragraph.header.c_str(), &Font20, BLACK, WHITE);
+        y_pos += CONTENT_TOP_MARGIN;
+
+        for(const auto& element : paragraph.contents) {
+            if (element.name.empty()) { continue; }
+            if (y_pos >= CONTENT_BOTTOM) { return; }
+
+            etl::string<96> line{element.name};
+            line += ": ";
+            etl::to_string(element.value, line, true);
+            line += "\r\n";
+
+            Paint_DrawString_EN(CONTENT_L_MARGIN, y_pos, line.c_str(), &Font16, BLACK, WHITE);
+            y_pos += V_STEP;
+        }
+
+        y_pos += CONTENT_TOP_MARGIN;
+    }
+
+    static void DrawGUIList(const DispList& disp_list) {
+        uint64_t y_pos{0};
+
+        etl::apply([&](const auto&... paragraph) {
+            (DrawParagraph(paragraph, y_pos), ...);
+        }, disp_list);
     }
 #endif
 
@@ -164,50 +168,44 @@ void DebugScreen::updateDispLists() {
 #if !defined(UNIT_TEST)
     const sensor_hub_data_t& imu_data = system_state.getIMUdata();
 
-    disp_lists = {
-        DispList{
-            Paragraph<uint64_t, 4>{
-                "System Time",
-                {{{"timestamp", imu_data.timestamp_us}, {}, {}, {}}},
-                1
-            },
-            Paragraph<float, 4>{
-                "Linear Acceleration",
-                {{{"acc_x", imu_data.mfx_6x.linear_acceleration[0]},
-                  {"acc_y", imu_data.mfx_6x.linear_acceleration[1]},
-                  {"acc_z", imu_data.mfx_6x.linear_acceleration[2]},
-                  {}}},
-                3
-            },
-            Paragraph<float, 4>{
-                "Angular Rate",
-                {{{"gyro_x", imu_data.angular_rate[0]},
-                  {"gyro_y", imu_data.angular_rate[1]},
-                  {"gyro_z", imu_data.angular_rate[2]},
-                  {}}},
-                3
-            }
-        },
-        DispList{
-            Paragraph<float, 4>{
-                "Magnetic Field",
-                {{{"mag_x", imu_data.magnetic_field[0]},
-                  {"mag_y", imu_data.magnetic_field[1]},
-                  {"mag_z", imu_data.magnetic_field[2]},
-                  {}}},
-                3
-            },
-            Paragraph<float, 4>{
-                "Sensor Fusion",
-                {{{"rot_a", imu_data.mfx_6x.quaternion[0]},
-                  {"rot_b", imu_data.mfx_6x.quaternion[1]},
-                  {"rot_c", imu_data.mfx_6x.quaternion[2]},
-                  {"rot_d", imu_data.mfx_6x.quaternion[3]}}},
-                4
-            },
-            Paragraph<uint64_t, 4>{"", {}, 0}
-        }
+    disp_lists[0] = DispList{};
+    etl::get<0>(disp_lists[0]) = Paragraph<uint64_t, 4>{
+        "System Time",
+        {{{"timestamp", imu_data.timestamp_us}, {}, {}, {}}}
     };
+    etl::get<1>(disp_lists[0]) = Paragraph<float, 4>{
+        "Linear Acceleration",
+        {{{"acc_x", imu_data.mfx_6x.linear_acceleration[0]},
+          {"acc_y", imu_data.mfx_6x.linear_acceleration[1]},
+          {"acc_z", imu_data.mfx_6x.linear_acceleration[2]},
+          {}}}
+    };
+    etl::get<2>(disp_lists[0]) = Paragraph<float, 4>{
+        "Angular Rate",
+        {{{"gyro_x", imu_data.angular_rate[0]},
+          {"gyro_y", imu_data.angular_rate[1]},
+          {"gyro_z", imu_data.angular_rate[2]},
+          {}}}
+    };
+    etl::get<3>(disp_lists[0]) = Paragraph<uint64_t, 4>{};
+
+    disp_lists[1] = DispList{};
+    etl::get<0>(disp_lists[1]) = Paragraph<uint64_t, 4>{};
+    etl::get<1>(disp_lists[1]) = Paragraph<float, 4>{
+        "Magnetic Field",
+        {{{"mag_x", imu_data.magnetic_field[0]},
+          {"mag_y", imu_data.magnetic_field[1]},
+          {"mag_z", imu_data.magnetic_field[2]},
+          {}}}
+    };
+    etl::get<2>(disp_lists[1]) = Paragraph<float, 4>{
+        "Sensor Fusion",
+        {{{"rot_a", imu_data.mfx_6x.quaternion[0]},
+          {"rot_b", imu_data.mfx_6x.quaternion[1]},
+          {"rot_c", imu_data.mfx_6x.quaternion[2]},
+          {"rot_d", imu_data.mfx_6x.quaternion[3]}}}
+    };
+    etl::get<3>(disp_lists[1]) = Paragraph<uint64_t, 4>{};
 #endif
 }
 
