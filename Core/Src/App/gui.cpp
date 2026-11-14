@@ -3,6 +3,7 @@
 #include "L76X.h"
 #include "utilities.hpp"
 #include "system_state.hpp"
+#include <cstdint>
 #include <cstdio>
 #include <optional>
 #include <etl/string.h>
@@ -62,8 +63,8 @@ void GUI::setScreen(ScreenState* nextScreen) {
     currentScreen->init(this);
 }
 
-void GUI::processScreen() {
-    currentScreen->processScreen(this);
+void GUI::processInput() {
+    currentScreen->processInput(this);
 }
 
 void GUI::refreshScreen() {
@@ -73,7 +74,7 @@ void GUI::refreshScreen() {
 /* ----- COMMON ----- */
 
 #if !defined(UNIT_TEST)
-    static void DrawGUIFrame(ScreenState* state) {
+    static void GUI_DrawInputOptions(ScreenState* state) {
         static constexpr uint64_t BAR_HEIGHT = 130;
         Paint_DrawString_EN(60, BAR_HEIGHT, state->bottom_bar[0], &Font16, BLACK, WHITE);
         Paint_DrawString_EN(145, BAR_HEIGHT, state->bottom_bar[1], &Font16, BLACK, WHITE);
@@ -81,14 +82,13 @@ void GUI::refreshScreen() {
     }
 
     static void DrawParagraph(const auto& paragraph, uint64_t& y_pos) {
-        static constexpr uint64_t CONTENT_TOP_MARGIN = 40;
-        static constexpr uint64_t CONTENT_L_MARGIN = 40;
+        static constexpr uint64_t CONTENT_TOP_MARGIN = 20;
+        static constexpr uint64_t CONTENT_L_MARGIN = 20;
+        static constexpr uint64_t CONTENT_BOTTOM_MARGIN = 10;
         static constexpr uint64_t HEADER_L_MARGIN = 10;
-        
-        static constexpr uint64_t V_STEP = 20;
-        static constexpr uint64_t CONTENT_BOTTOM = 130;
+        static constexpr uint64_t V_STEP = 15;
 
-        if (paragraph.header.empty() || y_pos >= CONTENT_BOTTOM) {
+        if (paragraph.header.empty() || y_pos >= SCREEN_HEIGHT) {
             return;
         }
 
@@ -97,35 +97,140 @@ void GUI::refreshScreen() {
 
         for(const auto& element : paragraph.contents) {
             if (element.name.empty()) { continue; }
-            if (y_pos >= CONTENT_BOTTOM) { return; }
+            if (y_pos >= SCREEN_HEIGHT) { return; }
 
             etl::string<96> line{element.name};
             line += ": ";
             etl::to_string(element.value, line, true);
-            line += "\r\n";
 
             Paint_DrawString_EN(CONTENT_L_MARGIN, y_pos, line.c_str(), &Font16, BLACK, WHITE);
             y_pos += V_STEP;
         }
 
-        y_pos += CONTENT_TOP_MARGIN;
+        y_pos += CONTENT_BOTTOM_MARGIN;
     }
 
-    static void DrawGUIList(const DispList& disp_list) {
+    template <typename... Paragraphs>
+    static void GUI_DrawList(const etl::tuple<Paragraphs...>& disp_list) {
         uint64_t y_pos{0};
 
-        etl::apply([&](const auto&... paragraph) {
-            (DrawParagraph(paragraph, y_pos), ...);
+        etl::apply([&](const auto&... paragraphs) {
+            (DrawParagraph(paragraphs, y_pos), ...);
         }, disp_list);
     }
 #endif
 
 /* ----- DEBUG SCREEN ----- */
 
-void DebugScreen::processScreen(GUI* gui) {
+void DebugScreen::update_pages() {
+    SystemState& system_state = SystemState::getInstance();
+
+    system_state.acquire();
+    SystemState_t state = system_state.getState();
+
+    etl::get<0>(_debug_page) = DebugPage1{
+        Paragraph<uint64_t, 1> {
+            "System Time",
+            {{{"timestamp", state.timestamp_us}}}
+        },
+        Paragraph<float, 3> {
+            "Linear Acceleration",
+            {{{"acc_x", state.mfx.sensor_fusion.linear_acceleration[0]},
+            {"acc_y", state.mfx.sensor_fusion.linear_acceleration[1]},
+            {"acc_z", state.mfx.sensor_fusion.linear_acceleration[2]}}}
+        },
+    };
+
+    etl::get<1>(_debug_page) = DebugPage2{
+        Paragraph<float, 3> {
+            "Angular Rate",
+            {{{"gyro_x", state.angular_rate[0]},
+            {"gyro_y", state.angular_rate[1]},
+            {"gyro_z", state.angular_rate[2]}}}
+        },
+        Paragraph<float, 3> {
+            "Magnetic Field",
+            {{{"mag_x", state.mag_field[0]},
+            {"mag_y", state.mag_field[1]},
+            {"mag_z", state.mag_field[2]}}}
+        }
+    };
+
+        // Paragraph<float, 4> {
+        //     "Sensor Fusion",
+        //     {{{"rot_a", state.mfx.sensor_fusion.quaternion[0]},
+        //     {"rot_b", state.mfx.sensor_fusion.quaternion[1]},
+        //     {"rot_c", state.mfx.sensor_fusion.quaternion[2]},
+        //     {"rot_d", state.mfx.sensor_fusion.quaternion[3]}}}
+        // }
+
+    system_state.release();
+}
+
+void DebugScreen::increment_page() {
+    if (_curr_page == PAGE_COUNT - 1) { return; }
+    _curr_page++;
+}
+
+void DebugScreen::decrement_page() {
+    if (_curr_page == 0) { return; }
+    _curr_page--;
+}
+
+/* Note: This function is entirely AI generated as a workaround hack
+    as I was unable to come up with a solution for this problem myself */
+void DebugScreen::draw_current_page() {
+#if !defined(UNIT_TEST)
+    const auto draw_page = [this]<size_t PageIndex>(const auto& self) -> void {
+        if constexpr (PageIndex == PAGE_COUNT) {
+            configASSERT(false);
+            return;
+        } else {
+            if (_curr_page == PageIndex) {
+                GUI_DrawList(etl::get<PageIndex>(_debug_page));
+                return;
+            }
+
+            self.template operator()<PageIndex + 1>(self);
+        }
+    };
+
+    draw_page.template operator()<0>(draw_page);
+#endif
+}
+
+void DebugScreen::init(GUI* gui) {
+    (void)gui;  // unused
+    PRINT_DEBUG("Initialising Debug Screen...\r\n");
+
+    DebugScreen::refresh(gui);
+}
+
+void DebugScreen::refresh(GUI* gui) {
+    (void)gui;  // unused
+    PRINT_DEBUG("Refreshing Debug Screen...\r\n");
+
+    Paint_Clear(WHITE);
+
+    GUI_DrawInputOptions(this);
+    update_pages();
+    draw_current_page();
+
+#if !defined(UNIT_TEST)
+    EPD_2IN66_Display(Canvas);
+#endif
+}
+
+void DebugScreen::processInput(GUI* gui) {
     ScreenState* nextScreen = &(gui->getCurrentScreen());
 
     /* Decide on the next state */
+    if(button1.getState() == ButtonState::pressed) {
+        decrement_page();
+    }
+    if(button2.getState() == ButtonState::pressed) {
+        increment_page();
+    }
     if(button3.getState() == ButtonState::pressed) {
         nextScreen = &(MainScreen::getInstance());
     }
@@ -141,77 +246,29 @@ void DebugScreen::processScreen(GUI* gui) {
     button3.goIdle();
 }
 
-void DebugScreen::init(GUI* gui) {
+/* ----- MAIN SCREEN ----- */
+
+void MainScreen::init(GUI* gui) {
     (void)gui;  // unused
-    PRINT_DEBUG("Initialising Debug Screen...\r\n");
+    PRINT_DEBUG("Initialising Main Screen...\r\n");
 
-    #if !defined(UNIT_TEST)
-        updateDispLists();
+    Paint_Clear(WHITE);
 
-        Paint_Clear(WHITE);
-
-        Paint_DrawString_EN(10, 0, "Debug Screen", &Font24, BLACK, WHITE);
-        DrawGUIFrame(this);
-        DrawGUIList(disp_lists[0]);
-        
-        EPD_2IN66_Display(Canvas);
-        DEV_Delay_ms(500);
-    #endif
-}
-
-void DebugScreen::refresh(GUI* gui) {
-    (void)gui;  // unused
-    PRINT_DEBUG("Refreshing Debug Screen...\r\n");
-}
-
-void DebugScreen::updateDispLists() {
+    GUI_DrawInputOptions(this);
+    Paint_DrawString_EN(10, 0, "Main Screen", &Font24, BLACK, WHITE);
+    
 #if !defined(UNIT_TEST)
-    const sensor_hub_data_t& imu_data = system_state.getIMUdata();
-
-    disp_lists[0] = DispList{};
-    etl::get<0>(disp_lists[0]) = Paragraph<uint64_t, 4>{
-        "System Time",
-        {{{"timestamp", imu_data.timestamp_us}, {}, {}, {}}}
-    };
-    etl::get<1>(disp_lists[0]) = Paragraph<float, 4>{
-        "Linear Acceleration",
-        {{{"acc_x", imu_data.mfx_6x.linear_acceleration[0]},
-          {"acc_y", imu_data.mfx_6x.linear_acceleration[1]},
-          {"acc_z", imu_data.mfx_6x.linear_acceleration[2]},
-          {}}}
-    };
-    etl::get<2>(disp_lists[0]) = Paragraph<float, 4>{
-        "Angular Rate",
-        {{{"gyro_x", imu_data.angular_rate[0]},
-          {"gyro_y", imu_data.angular_rate[1]},
-          {"gyro_z", imu_data.angular_rate[2]},
-          {}}}
-    };
-    etl::get<3>(disp_lists[0]) = Paragraph<uint64_t, 4>{};
-
-    disp_lists[1] = DispList{};
-    etl::get<0>(disp_lists[1]) = Paragraph<uint64_t, 4>{};
-    etl::get<1>(disp_lists[1]) = Paragraph<float, 4>{
-        "Magnetic Field",
-        {{{"mag_x", imu_data.magnetic_field[0]},
-          {"mag_y", imu_data.magnetic_field[1]},
-          {"mag_z", imu_data.magnetic_field[2]},
-          {}}}
-    };
-    etl::get<2>(disp_lists[1]) = Paragraph<float, 4>{
-        "Sensor Fusion",
-        {{{"rot_a", imu_data.mfx_6x.quaternion[0]},
-          {"rot_b", imu_data.mfx_6x.quaternion[1]},
-          {"rot_c", imu_data.mfx_6x.quaternion[2]},
-          {"rot_d", imu_data.mfx_6x.quaternion[3]}}}
-    };
-    etl::get<3>(disp_lists[1]) = Paragraph<uint64_t, 4>{};
+    EPD_2IN66_Display(Canvas);
+    DEV_Delay_ms(500);
 #endif
 }
 
-/* ----- MAIN SCREEN ----- */
+void MainScreen::refresh(GUI* gui) {
+    (void)gui;  // unused
+    PRINT_DEBUG("Refreshing Main Screen...\r\n");
+}
 
-void MainScreen::processScreen(GUI* gui) {
+void MainScreen::processInput(GUI* gui) {
     ScreenState* nextScreen = &(gui->getCurrentScreen());
     
     /* Decide on the next state */
@@ -230,29 +287,29 @@ void MainScreen::processScreen(GUI* gui) {
     button3.goIdle();
 }
 
-void MainScreen::init(GUI* gui) {
+/* ----- STATS SCREEN ----- */
+
+void StatsScreen::init(GUI* gui) {
     (void)gui;  // unused
-    PRINT_DEBUG("Initialising Main Screen...\r\n");
+    PRINT_DEBUG("Initialising Stats Screen...\r\n");
 
 #if !defined(UNIT_TEST)
     Paint_Clear(WHITE);
 
-    DrawGUIFrame(this);
-    Paint_DrawString_EN(10, 0, "Main Screen", &Font24, BLACK, WHITE);
+    GUI_DrawInputOptions(this);
+    Paint_DrawString_EN(10, 0, "Stats Screen", &Font24, BLACK, WHITE);
     
     EPD_2IN66_Display(Canvas);
     DEV_Delay_ms(500);
 #endif
 }
 
-void MainScreen::refresh(GUI* gui) {
+void StatsScreen::refresh(GUI* gui) {
     (void)gui;  // unused
-    PRINT_DEBUG("Refreshing Main Screen...\r\n");
+    PRINT_DEBUG("Refreshing Stats Screen...\r\n");
 }
 
-/* ----- STATS SCREEN ----- */
-
-void StatsScreen::processScreen(GUI* gui) {
+void StatsScreen::processInput(GUI* gui) {
     ScreenState* nextScreen = &(gui->getCurrentScreen());
     
     /* Decide on the next state */
@@ -269,26 +326,6 @@ void StatsScreen::processScreen(GUI* gui) {
     button1.goIdle();
     button2.goIdle();
     button3.goIdle();
-}
-
-void StatsScreen::init(GUI* gui) {
-    (void)gui;  // unused
-    PRINT_DEBUG("Initialising Stats Screen...\r\n");
-
-#if !defined(UNIT_TEST)
-    Paint_Clear(WHITE);
-
-    DrawGUIFrame(this);
-    Paint_DrawString_EN(10, 0, "Stats Screen", &Font24, BLACK, WHITE);
-    
-    EPD_2IN66_Display(Canvas);
-    DEV_Delay_ms(500);
-#endif
-}
-
-void StatsScreen::refresh(GUI* gui) {
-    (void)gui;  // unused
-    PRINT_DEBUG("Refreshing Stats Screen...\r\n");
 }
 
 } // namespace gui

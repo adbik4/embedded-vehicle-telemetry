@@ -17,12 +17,6 @@ target_sources(telemetry_app_lib PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/Src/App/io.cpp
 )
 
-if(NOT UNIT_TEST)
-    target_sources(telemetry_app_lib PRIVATE
-        ${CMAKE_CURRENT_SOURCE_DIR}/Src/App/system_state.cpp
-    )
-endif()
-
 if(TARGET stm32cubemx)
     target_link_libraries(telemetry_app_lib PUBLIC stm32cubemx)
 endif()

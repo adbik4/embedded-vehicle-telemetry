@@ -23,6 +23,7 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "App/system_state.hpp"
+#include "FreeRTOS.h"
 #include "custom_algobuild.h"
 #include "App/settings.h"
 #include "App/utilities.hpp"
@@ -64,7 +65,6 @@ extern UART_HandleTypeDef hcom_uart[COMn];
 
 /* Private variables ---------------------------------------------------------*/
 /* USER CODE BEGIN Variables */
-SystemState& system_state = SystemState::getInstance();
 Button button1(ButtonId::B1);
 Button button2(ButtonId::B2);
 Button button3(ButtonId::B3);
@@ -186,6 +186,9 @@ return 0;
   */
 void MX_FREERTOS_Init(void) {
   /* USER CODE BEGIN Init */
+  SystemState& system_state = SystemState::getInstance();
+  (void)system_state; // unused here
+
   /* USER CODE END Init */
 
   /* USER CODE BEGIN RTOS_MUTEX */
@@ -234,11 +237,16 @@ void StartSystemTask(void *argument)
   TickType_t xLastWakeTime = xTaskGetTickCount();
   const TickType_t xPeriod = pdMS_TO_TICKS(1000);
 
+  SystemState& system_state = SystemState::getInstance();
+
   /* Infinite loop */
   for(;;)
   {
+    system_state.acquire();
+    system_state.updateState();
+
     /* Magnetometer management */
-    if (system_state.getIMUdata().mfx_magcal.cal_quality <  MFX_MAGCALOK)
+    if (system_state.getState().mfx.mag_cal.cal_quality <  MFX_MAGCALOK)
     {
       sensor_hub_data.motion_fx_6x_enable = 1;
       sensor_hub_data.motion_fx_9x_enable = 0;
@@ -248,6 +256,7 @@ void StartSystemTask(void *argument)
       sensor_hub_data.motion_fx_9x_enable = 1;
     }
 
+    system_state.release();
     vTaskDelayUntil(&xLastWakeTime, xPeriod);
   }
   /* USER CODE END systemTask */
@@ -278,36 +287,6 @@ void StartSensorHubTask(void *argument)
   {
     Time_Handler();
     AB_Handler();
-
-    switch(system_state.getIMUdata().motion_fx_6x_enable)
-    {
-      case (1):
-        // PRINT_DEBUG(
-        //   "%s t %d, q0 %f, q1 %f, q2 %f, q3 %f\r\n",
-        //   "FUSION_6X",
-        //   (int)system_state.getIMUdata().timestamp_us,
-        //   system_state.getIMUdata().mfx_6x.quaternion[0],
-        //   system_state.getIMUdata().mfx_6x.quaternion[1],
-        //   system_state.getIMUdata().mfx_6x.quaternion[2],
-        //   system_state.getIMUdata().mfx_6x.quaternion[3]
-        // );
-        break;
-      case (0):
-        // PRINT_DEBUG(
-        //   "%s t %d, q0 %f, q1 %f, q2 %f, q3 %f\r\n",
-        //   "FUSION_9X",
-        //   (int)system_state.getIMUdata().timestamp_us,
-        //   system_state.getIMUdata().mfx_9x.quaternion[0],
-        //   system_state.getIMUdata().mfx_9x.quaternion[1],
-        //   system_state.getIMUdata().mfx_9x.quaternion[2],
-        //   system_state.getIMUdata().mfx_9x.quaternion[3]
-        // );
-        break;
-
-      default:
-        break;
-    }
-    
     
     vTaskDelayUntil(&xLastWakeTime, xPeriod);
   }
@@ -315,23 +294,21 @@ void StartSensorHubTask(void *argument)
 
 void StartGNSSTask(void *argument)
 {
-  GPSdata_t& gnss = system_state.getGNSSdata();
+  SystemState& system_state = SystemState::getInstance();
+  SystemState_t new_state{};
 
   for (;;)
   {
-    gnss = L76X_Receive_NMEA(); // Blocking
+    GPSdata_t gnss = L76X_Receive_NMEA(); // Blocking
     Coordinates google_coors = L76X_Google_Coordinates(&gnss);
     DMS_Coordinates dms_coors = Google2DMS(google_coors, gnss.Lat_area, gnss.Lon_area);
 
-    // PRINT_DEBUG(
-    //   "Lat: %d°%d'%f\"%c Lon: %d°%d'%f\"%c Time:%02d:%02d:%02d Status:%s\r\n",
-    //   dms_coors.Lat.Degrees, dms_coors.Lat.Minutes, dms_coors.Lat.Seconds,
-    //   dms_coors.Lat.Area,
-    //   dms_coors.Lon.Degrees, dms_coors.Lon.Minutes, dms_coors.Lon.Seconds,
-    //   dms_coors.Lon.Area,
-    //   gnss.Time_H, gnss.Time_M, gnss.Time_S,
-    //   (gnss.Status == 1) ? "OK" : "INVALID"
-    // );
+    system_state.acquire();
+    new_state = system_state.getState();
+    new_state.gnss = dms_coors;
+
+    system_state.setState(new_state);
+    system_state.release();
   }
 }
 
@@ -349,7 +326,7 @@ void StartDisplayTask(void *argument)
     )
     == pdTRUE)  /* Received button presses */
   {
-      gui.processScreen();
+      gui.processInput();
       gui.refreshScreen();
     }
     else  /* Didn't recieve button pressed BUT screen needs to be refreshed */

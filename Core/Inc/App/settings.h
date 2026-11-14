@@ -1,25 +1,24 @@
 #pragma once
 
-#define USERNAME_A "Adrian"
-#define USERNAME_B "Natalia"
+#define USERNAME_A "User1"
+#define USERNAME_B "User2"
 
 #define DISPLAY_REFRESH_RATE_MS 30000
-#define BUTTON_HOLD_THRESH_MS 500
 #define DEBOUNCE_MS 6
 
 #define SYSTEM_TASK_STACK_SIZE          (1024)  // optimal - ??
 #define COM_DEBUG_TASK_STACK_SIZE       (185)   // optimal - 185
-#define SENSOR_HUB_TASK_STACK_SIZE      (140)   // optimal - 140
-#define GNSS_TASK_STACK_SIZE            (140)   // optimal - 140
-#define DISPLAY_TASK_STACK_SIZE         (2048)  // optimal - ??
-#define INPUT_MANAGER_TASK_STACK_SIZE   (110)   // optimal - 110
+#define SENSOR_HUB_TASK_STACK_SIZE      (1024)   // optimal - 140
+#define GNSS_TASK_STACK_SIZE            (1024)   // optimal - 140
+#define DISPLAY_TASK_STACK_SIZE         (1024)  // optimal - ??
+#define INPUT_MANAGER_TASK_STACK_SIZE   (1024)   // optimal - 110
 
-#define SYSTEM_TASK_PRIO        ((osPriority_t) osPriorityRealtime)
-#define COM_DEBUG_TASK_PRIO     ((osPriority_t) osPriorityHigh)
-#define SENSOR_HUB_TASK_PRIO    ((osPriority_t) osPriorityNormal)
+#define SYSTEM_TASK_PRIO        ((osPriority_t) osPriorityNormal)
+#define COM_DEBUG_TASK_PRIO     ((osPriority_t) osPriorityLow2)
+#define SENSOR_HUB_TASK_PRIO    ((osPriority_t) osPriorityHigh)
 #define GNSS_TASK_PRIO          ((osPriority_t) osPriorityLow)
 #define DISPLAY_TASK_PRIO       ((osPriority_t) osPriorityLow1)
-#define INPUT_MANAGER_TASK_PRIO ((osPriority_t) osPriorityHigh1)
+#define INPUT_MANAGER_TASK_PRIO ((osPriority_t) osPriorityHigh2)
 
 #define DEBUG_QUEUE_LENGTH      (16)
-#define DEBUG_MSG_SIZE          (256)
+#define DEBUG_MSG_SIZE          (100)

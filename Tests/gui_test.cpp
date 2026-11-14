@@ -21,15 +21,7 @@ ButtonMock button3(ButtonId::B3);
     - MainScreen <-> StatsScreen
     - MainScreen || StatsScreen -> DebugScreen
     - no other transitions occur
-    4) The inits are called and are called in the right order
 */
-
-// class MockState : public StateIf {
-// public:
-//     MOCK_METHOD((const sensor_hub_data_t&), getIMUdata, (), (const, override));
-//     MOCK_METHOD((GPSdata_t&), getGNSSdata, (), (override));
-//     MOCK_METHOD((const GPSdata_t&), getGNSSdata, (), (const, override));
-// };
 
 class GUITest: public ::testing::Test {
 protected:
@@ -38,7 +30,7 @@ protected:
 
 template <class T>
 void assertCurrStateIs(GUI& gui) {
-    gui.processScreen();
+    gui.processInput();
     ScreenState& screen = gui.getCurrentScreen();
     ScreenState& target = T::getInstance();
 

@@ -176,7 +176,19 @@ See http://www.FreeRTOS.org/RTOS-Cortex-M3-M4.html. */
 /* Normal assert() semantics without relying on the provision of an assert.h
 header file. */
 /* USER CODE BEGIN 1 */
-#define configASSERT( x ) if ((x) == 0) {taskDISABLE_INTERRUPTS(); for( ;; );}
+#ifndef NDEBUG
+#include "cmsis_gcc.h"
+   #define configASSERT(x)                                      \
+      do {                                                     \
+         if (!(x)) {                                          \
+               taskDISABLE_INTERRUPTS();                        \
+               __BKPT(0);                                       \
+               for (;;) {}                                      \
+         }                                                    \
+      } while (0)
+#else 
+   #define configASSERT(x) ()
+#endif
 /* USER CODE END 1 */
 
 #define SysTick_Handler xPortSysTickHandler

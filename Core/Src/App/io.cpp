@@ -2,7 +2,6 @@
 
 #include "settings.h"
 #include "utilities.hpp"
-#include <cassert>
 #include <cstdint>
 
 #if !defined(UNIT_TEST)
@@ -72,7 +71,7 @@ void Button::goIdle() {
 
 #ifndef UNIT_TEST
     bool HAL_isButtonPressed(const ButtonId idx) {
-        assert(idx == ButtonId::B1 || idx == ButtonId::B2 || idx == ButtonId::B3);
+        configASSERT(idx == ButtonId::B1 || idx == ButtonId::B2 || idx == ButtonId::B3);
 
         #if defined(UNIT_TEST)
             (void)idx;
@@ -86,7 +85,7 @@ void Button::goIdle() {
                 case ButtonId::B3:
                     return HAL_GPIO_ReadPin(BUTTON3_GPIO_Port, BUTTON3_Pin) == GPIO_PIN_RESET;
                 default:
-                    assert(false && "[HAL_isButtonPressed] Invalid button pin ID");
+                    configASSERT(false && "[HAL_isButtonPressed] Invalid button pin ID");
                     return false;
             }
         #endif
@@ -98,7 +97,7 @@ void Button::goIdle() {
             case BUTTON2_Pin: return ButtonId::B2;
             case BUTTON3_Pin: return ButtonId::B3;
             default:
-                assert(false && "[PinIdToButton] Invalid button pin ID");
+                configASSERT(false && "[PinIdToButton] Invalid button pin ID");
                 return ButtonId::B1;
         }
     }

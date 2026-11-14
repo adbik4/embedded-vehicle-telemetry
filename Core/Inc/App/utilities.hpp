@@ -41,4 +41,3 @@ protected:
 };
 
 /* FUNCTIONS */
-void Quaternion2Euler(const float *q, float *out);
