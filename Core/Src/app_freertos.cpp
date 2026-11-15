@@ -243,16 +243,11 @@ void StartSystemTask(void *argument)
   TickType_t xLastWakeTime = xTaskGetTickCount();
   const TickType_t xPeriod = pdMS_TO_TICKS(1000);
 
-  SystemState& system_state = SystemState::getInstance();
-
   /* Infinite loop */
   for(;;)
   {
-    system_state.acquire();
-    system_state.updateState();
-
     /* Magnetometer management */
-    if (system_state.getState().mfx.mag_cal.cal_quality <  MFX_MAGCALOK)
+    if (sensor_hub_data.mfx_magcal.cal_quality <  MFX_MAGCALOK)
     {
       sensor_hub_data.motion_fx_6x_enable = 1;
       sensor_hub_data.motion_fx_9x_enable = 0;
@@ -262,7 +257,6 @@ void StartSystemTask(void *argument)
       sensor_hub_data.motion_fx_9x_enable = 1;
     }
 
-    system_state.release();
     vTaskDelayUntil(&xLastWakeTime, xPeriod);
   }
   /* USER CODE END systemTask */
@@ -289,11 +283,17 @@ void StartSensorHubTask(void *argument)
   TickType_t xLastWakeTime = xTaskGetTickCount();
   const TickType_t xPeriod = pdMS_TO_TICKS(10);
 
+  SystemState& system_state = SystemState::getInstance();
+
   for (;;)
   {
     Update100Hz = 1U;
     Time_Handler();
     AB_Handler();
+    
+    system_state.acquire();
+    system_state.updateState();
+    system_state.release();
     
     vTaskDelayUntil(&xLastWakeTime, xPeriod);
   }

@@ -8,6 +8,7 @@
 
 #include "etl/string.h"
 #include "settings.h"
+#include "motion_fx.h"
 #include <cstdio>
 
 extern osMessageQueueId_t ComDebugQueueHandle;
@@ -49,3 +50,19 @@ struct is_etl_string : std::false_type {};
 
 template <size_t N>
 struct is_etl_string<etl::string<N>> : std::true_type {};
+
+template <size_t N>
+etl::string<N> magcal_to_string(const MFX_MagCal_quality_t& cal) {
+    switch (cal) {
+        case MFX_MAGCALUNKNOWN:
+            return "UNKNOWN";
+        case MFX_MAGCALPOOR:
+            return "POOR";
+        case MFX_MAGCALOK:
+            return "OK";
+        case MFX_MAGCALGOOD:
+            return "GOOD";
+        default:
+            return "";
+    }
+}

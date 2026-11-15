@@ -244,7 +244,8 @@ void L76X_Extract_RMC(GPSdata_t* result) {
 }
 
 void L76X_Extract_VTG(GPSdata_t* result) {
-    // to implement
+    // TODO: implement
+    result->speed = 67.0;
 }
 
 GPSdata_t L76X_Receive_NMEA()

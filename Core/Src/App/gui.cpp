@@ -138,35 +138,52 @@ void DebugScreen::update_pages() {
     system_state.acquire();
     SystemState_t state = system_state.getState();
 
+    etl::string<MAX_FONT12_CAPACITY> timestamp{}, g_time{};
+    etl::format_to(timestamp, "{}", state.timestamp_us);
+    etl::format_to(g_time, R"({} : {} : {} : {})",
+        state.gnss.time.h,
+        state.gnss.time.m,
+        state.gnss.time.s,
+        state.gnss.time.ms
+    );
+
+    etl::string<MAX_FONT12_CAPACITY> yaw{}, pitch{}, roll{};
+    etl::format_to(yaw, "{:.3f}", state.mfx.sensor_fusion.rotation[0]);
+    etl::format_to(pitch, "{:.3f}", state.mfx.sensor_fusion.rotation[1]);
+    etl::format_to(roll, "{:.3f}", state.mfx.sensor_fusion.rotation[2]);
+
     etl::get<0>(_debug_page) = DebugPage1{
-        Paragraph<uint64_t, 1> {
+        Paragraph<etl::string<MAX_FONT12_CAPACITY>, 2> {
             "System Time",
-            {{{"timestamp", state.timestamp_us}}}
+            {{{"timestamp", timestamp},
+            {"global time", g_time}}}
         },
-        Paragraph<float, 3> {
+        Paragraph<etl::string<MAX_FONT12_CAPACITY>, 5> {
+            "Sensor Fusion",
+            {{{"yaw", yaw},
+            {"pitch", pitch},
+            {"roll", roll},
+            {"MFX", (state.mfx.enable_6x == 1) ? "6X" : "9X"},
+            {"mag_cal", magcal_to_string<MAX_FONT12_CAPACITY>(state.mfx.mag_cal.cal_quality)}}}
+        },
+    };
+
+    etl::get<1>(_debug_page) = DebugPage2{
+        Paragraph<float_t, 3> {
             "Linear Acceleration",
             {{{"acc_x", state.mfx.sensor_fusion.linear_acceleration[0]},
             {"acc_y", state.mfx.sensor_fusion.linear_acceleration[1]},
             {"acc_z", state.mfx.sensor_fusion.linear_acceleration[2]}}}
         },
-    };
-
-    etl::get<1>(_debug_page) = DebugPage2{
-        Paragraph<float, 3> {
+        Paragraph<float_t, 3> {
             "Angular Rate",
             {{{"gyro_x", state.angular_rate[0]},
             {"gyro_y", state.angular_rate[1]},
             {"gyro_z", state.angular_rate[2]}}}
-        },
-        Paragraph<float, 3> {
-            "Magnetic Field",
-            {{{"mag_x", state.mag_field[0]},
-            {"mag_y", state.mag_field[1]},
-            {"mag_z", state.mag_field[2]}}}
         }
     };
 
-    etl::string<MAX_FONT16_CAPACITY> lat{}, lon{};
+    etl::string<MAX_FONT12_CAPACITY> lat{}, lon{}, speed{};
     etl::format_to(lat, R"({}* {}' {:.3f}" {})",
         state.gnss.coors.Lat.Degrees,
         state.gnss.coors.Lat.Minutes, 
@@ -179,21 +196,20 @@ void DebugScreen::update_pages() {
         state.gnss.coors.Lon.Seconds, 
         state.gnss.coors.Lon.Area
     );
-
-    PRINT_DEBUG("lat: %s\r\nlon: %s\r\n", lat.c_str(), lon.c_str());
+    etl::format_to(speed, "{:.3f}", state.gnss.speed);
 
     etl::get<2>(_debug_page) = DebugPage3{
-        Paragraph<float, 4> {
-            "Sensor Fusion",
-            {{{"rot_a", state.mfx.sensor_fusion.quaternion[0]},
-            {"rot_b", state.mfx.sensor_fusion.quaternion[1]},
-            {"rot_c", state.mfx.sensor_fusion.quaternion[2]},
-            {"rot_d", state.mfx.sensor_fusion.quaternion[3]}}}
+        Paragraph<float_t, 3> {
+            "Magnetic Field",
+            {{{"mag_x", state.mag_field[0]},
+            {"mag_y", state.mag_field[1]},
+            {"mag_z", state.mag_field[2]}}}
         },
-        Paragraph<etl::string<MAX_FONT16_CAPACITY>, 2> {
+        Paragraph<etl::string<MAX_FONT12_CAPACITY>, 3> {
             "GNSS Coordinates",
             {{{"lat", lat},
-            {"lon", lon}}}
+            {"lon", lon},
+            {"speed", speed}}}
         }
     };
 

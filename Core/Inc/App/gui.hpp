@@ -12,6 +12,7 @@
 #include <optional>
 
 static constexpr size_t MAX_FONT16_CAPACITY = SCREEN_WIDTH / 11.0;
+static constexpr size_t MAX_FONT12_CAPACITY = SCREEN_WIDTH / 7.0;
 
 namespace gui {
 
@@ -57,8 +58,7 @@ struct Line {
 
 template <typename T, size_t N>
 struct Paragraph {
-    static constexpr size_t MAX_HEADER_SIZE = 32;
-    etl::string<MAX_HEADER_SIZE> header;
+    etl::string<MAX_FONT16_CAPACITY> header;
     std::array<Line<T>, N> contents;
 };
 
@@ -66,8 +66,8 @@ struct Paragraph {
 /* ----- DEBUG SCREEN ----- */
 
 using DebugPage1 = etl::tuple<
-    Paragraph<uint64_t, 1>,
-    Paragraph<float_t, 3>
+    Paragraph<etl::string<MAX_FONT12_CAPACITY>, 2>,
+    Paragraph<etl::string<MAX_FONT12_CAPACITY>, 5>
 >;
 
 using DebugPage2 = etl::tuple<
@@ -76,8 +76,8 @@ using DebugPage2 = etl::tuple<
 >;
 
 using DebugPage3 = etl::tuple<
-    Paragraph<float_t, 4>,
-    Paragraph<etl::string<MAX_FONT16_CAPACITY>, 2>
+    Paragraph<float_t, 3>,
+    Paragraph<etl::string<MAX_FONT12_CAPACITY>, 3>
 >;
 
 class DebugScreen : public Singleton<DebugScreen>, public ScreenState {
