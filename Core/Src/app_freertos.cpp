@@ -302,20 +302,32 @@ void StartSensorHubTask(void *argument)
 void StartGNSSTask(void *argument)
 {
   SystemState& system_state = SystemState::getInstance();
-  SystemState_t new_state{};
 
   for (;;)
   {
-    GPSdata_t gnss = L76X_Receive_NMEA(); // Blocking
-    Coordinates google_coors = L76X_Google_Coordinates(&gnss);
-    DMS_Coordinates dms_coors = Google2DMS(google_coors, gnss.Lat_area, gnss.Lon_area);
+    GPSdata_t gps = L76X_Receive_NMEA(); // Blocking
+    Coordinates google_coors = L76X_Google_Coordinates(&gps);
+    DMS_Coordinates dms_coors = Google2DMS(google_coors, gps.Lat_area, gps.Lon_area);
 
-    system_state.acquire();
-    new_state = system_state.getState();
-    new_state.gnss = dms_coors;
+    if (gps.Status == GPS_Status::OK) {
+      system_state.acquire();
+      SystemState_t new_state = system_state.getState();
 
-    system_state.setState(new_state);
-    system_state.release();
+      GNSS_State_t gnss {};
+      gnss.coors = dms_coors;
+      gnss.time = {
+        .h = gps.Time_H,
+        .m = gps.Time_M,
+        .s = gps.Time_S,
+        .ms = gps.Time_MS
+      };
+      gnss.speed = gps.speed;
+
+      new_state.gnss = gnss;
+
+      system_state.setState(new_state);
+      system_state.release();
+    }
   }
 }
 
@@ -338,7 +350,7 @@ void StartDisplayTask(void *argument)
     }
     else  /* Didn't recieve button pressed BUT screen needs to be refreshed */
     {
-        gui.refreshScreen();
+      gui.refreshScreen();
     }
   }
 }

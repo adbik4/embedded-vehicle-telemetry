@@ -68,6 +68,7 @@ sed -i -E \
 sed -i \
     -e 's/#define MotionFX_6X  0/#define MotionFX_6X  1/' \
     -e 's/#define MotionFX_9X  0/#define MotionFX_9X  1/' \
+    -e '/#define MotionFX_9X/a #define MotionFX     1' \
     "$ROOT/Library/App/ab_libraries.h"
 
 # Remove unnecessary files

@@ -94,6 +94,11 @@ typedef struct {
     DMS_t Lon;
 }DMS_Coordinates;
 
+typedef enum {
+    FAIL = 0,
+    OK
+}GPS_Status;
+
 #ifdef __cplusplus
 extern "C" {
 #endif

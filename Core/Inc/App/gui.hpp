@@ -1,13 +1,17 @@
 #pragma once
 
+#include "EPD_2in66.h"
 #include "settings.h"
 #include "utilities.hpp"
+#include "fonts.h"
 #include <etl/string.h>
 #include <etl/tuple.h>
 #include <array>
 #include <functional>
 #include <map>
 #include <optional>
+
+static constexpr size_t MAX_FONT16_CAPACITY = SCREEN_WIDTH / 11.0;
 
 namespace gui {
 
@@ -73,7 +77,7 @@ using DebugPage2 = etl::tuple<
 
 using DebugPage3 = etl::tuple<
     Paragraph<float_t, 4>,
-    Paragraph<etl::string<DEBUG_MSG_SIZE>, 1>
+    Paragraph<etl::string<MAX_FONT16_CAPACITY>, 2>
 >;
 
 class DebugScreen : public Singleton<DebugScreen>, public ScreenState {
@@ -82,9 +86,9 @@ private:
         "Prev", "Next", "Main"
     };
 
-    static constexpr size_t PAGE_COUNT = 2;
+    static constexpr size_t PAGE_COUNT = 3;
     uint8_t _curr_page;
-    etl::tuple<DebugPage1, DebugPage2> _debug_page;
+    etl::tuple<DebugPage1, DebugPage2, DebugPage3> _debug_page;
 
 
     void update_pages();

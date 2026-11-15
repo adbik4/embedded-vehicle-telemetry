@@ -5,6 +5,8 @@
 #else
     #include "cmsis_os2.h"
 #endif
+
+#include "etl/string.h"
 #include "settings.h"
 #include <cstdio>
 
@@ -41,3 +43,9 @@ protected:
 };
 
 /* FUNCTIONS */
+
+template <typename T>
+struct is_etl_string : std::false_type {};
+
+template <size_t N>
+struct is_etl_string<etl::string<N>> : std::true_type {};

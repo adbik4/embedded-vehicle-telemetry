@@ -21,12 +21,24 @@ typedef struct {
 } MFX_State_t;
 
 typedef struct {
+    UBYTE h;
+    UBYTE m;
+    UBYTE s;
+    UBYTE ms;
+} Global_Time_t;
+
+typedef struct {
+    DMS_Coordinates coors; // DMS Coordinates
+    Global_Time_t time;
+    double speed;   // SOG: Speed Over Ground
+} GNSS_State_t;
+
+typedef struct {
     uint32_t timestamp_us;
     float_t angular_rate[3];
     float_t mag_field[3];
     MFX_State_t mfx;
-    DMS_Coordinates gnss;
-    
+    GNSS_State_t gnss;
 } SystemState_t;
 
 

@@ -8,6 +8,7 @@
 #include <optional>
 #include <etl/string.h>
 #include <etl/to_string.h>
+#include <etl/format.h>
 #include <etl/tuple.h>
 
 #ifndef UNIT_TEST
@@ -82,9 +83,9 @@ void GUI::refreshScreen() {
     }
 
     static void DrawParagraph(const auto& paragraph, uint64_t& y_pos) {
-        static constexpr uint64_t CONTENT_TOP_MARGIN = 20;
+        static constexpr uint64_t CONTENT_TOP_MARGIN = 18;
         static constexpr uint64_t CONTENT_L_MARGIN = 20;
-        static constexpr uint64_t CONTENT_BOTTOM_MARGIN = 10;
+        static constexpr uint64_t CONTENT_BOTTOM_MARGIN = 2;
         static constexpr uint64_t HEADER_L_MARGIN = 10;
         static constexpr uint64_t V_STEP = 15;
 
@@ -92,18 +93,27 @@ void GUI::refreshScreen() {
             return;
         }
 
-        Paint_DrawString_EN(HEADER_L_MARGIN, y_pos, paragraph.header.c_str(), &Font20, BLACK, WHITE);
+        Paint_DrawString_EN(HEADER_L_MARGIN, y_pos, paragraph.header.c_str(), &Font16, BLACK, WHITE);
         y_pos += CONTENT_TOP_MARGIN;
 
         for(const auto& element : paragraph.contents) {
             if (element.name.empty()) { continue; }
             if (y_pos >= SCREEN_HEIGHT) { return; }
 
-            etl::string<96> line{element.name};
+            etl::string<128> line{element.name};
             line += ": ";
-            etl::to_string(element.value, line, true);
+            if constexpr (is_etl_string<std::remove_cvref_t<decltype(element.value)>>::value) {
+                line += element.value;
+            } else {
+                etl::to_string(
+                    element.value,
+                    line,
+                    etl::format_spec().precision(3),
+                    true
+                );
+            }
 
-            Paint_DrawString_EN(CONTENT_L_MARGIN, y_pos, line.c_str(), &Font16, BLACK, WHITE);
+            Paint_DrawString_EN(CONTENT_L_MARGIN, y_pos, line.c_str(), &Font12, BLACK, WHITE);
             y_pos += V_STEP;
         }
 
@@ -156,13 +166,36 @@ void DebugScreen::update_pages() {
         }
     };
 
-        // Paragraph<float, 4> {
-        //     "Sensor Fusion",
-        //     {{{"rot_a", state.mfx.sensor_fusion.quaternion[0]},
-        //     {"rot_b", state.mfx.sensor_fusion.quaternion[1]},
-        //     {"rot_c", state.mfx.sensor_fusion.quaternion[2]},
-        //     {"rot_d", state.mfx.sensor_fusion.quaternion[3]}}}
-        // }
+    etl::string<MAX_FONT16_CAPACITY> lat{}, lon{};
+    etl::format_to(lat, R"({}* {}' {:.3f}" {})",
+        state.gnss.coors.Lat.Degrees,
+        state.gnss.coors.Lat.Minutes, 
+        state.gnss.coors.Lat.Seconds, 
+        state.gnss.coors.Lat.Area
+    );
+    etl::format_to(lon, R"({}* {}' {:.3f}" {})",
+        state.gnss.coors.Lon.Degrees,
+        state.gnss.coors.Lon.Minutes, 
+        state.gnss.coors.Lon.Seconds, 
+        state.gnss.coors.Lon.Area
+    );
+
+    PRINT_DEBUG("lat: %s\r\nlon: %s\r\n", lat.c_str(), lon.c_str());
+
+    etl::get<2>(_debug_page) = DebugPage3{
+        Paragraph<float, 4> {
+            "Sensor Fusion",
+            {{{"rot_a", state.mfx.sensor_fusion.quaternion[0]},
+            {"rot_b", state.mfx.sensor_fusion.quaternion[1]},
+            {"rot_c", state.mfx.sensor_fusion.quaternion[2]},
+            {"rot_d", state.mfx.sensor_fusion.quaternion[3]}}}
+        },
+        Paragraph<etl::string<MAX_FONT16_CAPACITY>, 2> {
+            "GNSS Coordinates",
+            {{{"lat", lat},
+            {"lon", lon}}}
+        }
+    };
 
     system_state.release();
 }
@@ -259,7 +292,6 @@ void MainScreen::init(GUI* gui) {
     
 #if !defined(UNIT_TEST)
     EPD_2IN66_Display(Canvas);
-    DEV_Delay_ms(500);
 #endif
 }
 
@@ -300,7 +332,6 @@ void StatsScreen::init(GUI* gui) {
     Paint_DrawString_EN(10, 0, "Stats Screen", &Font24, BLACK, WHITE);
     
     EPD_2IN66_Display(Canvas);
-    DEV_Delay_ms(500);
 #endif
 }
 
