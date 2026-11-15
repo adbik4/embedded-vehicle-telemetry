@@ -34,7 +34,7 @@
 EXTI_HandleTypeDef hexti3 = {.Line = EXTI_LINE_3};
 
 /* Global variables ----------------------------------------------------------*/
-extern volatile uint8_t SensorReadRequest;
+extern volatile uint32_t SensorReadRequest;
 
 /* Private function prototypes -----------------------------------------------*/
 static void mems_int_pin_a_hardware_event_isr(void);

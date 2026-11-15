@@ -16,7 +16,6 @@ extern "C" {
 
 extern uint64_t StartTime;
 extern sensor_hub_data_t sensor_hub_data;
-extern uint32_t SensorReadRequest;
 
 /**
   * @brief  Initializes DWT_Clock_Cycle_Count for DWT_GetTickUS function
@@ -70,15 +69,9 @@ void AlgoBuilder_Init(void)
   BSP_SENSOR_GYR_Enable();
   BSP_SENSOR_MAG_Enable();
 
-  /* Blink with LED */
-  BSP_LED_On(LED_RED);
-  HAL_Delay(500);
-  BSP_LED_Off(LED_RED);
-
   AB_Init();
-
-  /* Check if UCF loading changed ODR or FS */
-  FSM_MLC_Check_ODR_FS_Change();
+  MotionFX_6X_Init();
+  MotionFX_9X_Init();
 }
 
 /**

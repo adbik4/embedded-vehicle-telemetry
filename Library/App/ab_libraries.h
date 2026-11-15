@@ -30,6 +30,7 @@ extern "C" {
 #define MotionGC     0
 #define MotionFX_6X  1
 #define MotionFX_9X  1
+#define MotionFX     1
 #define MotionID     0
 #define MotionMC     0
 #define MotionPM     0

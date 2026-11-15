@@ -178,10 +178,12 @@ header file. */
 /* USER CODE BEGIN 1 */
 #ifndef NDEBUG
 #include "cmsis_gcc.h"
+#include "stm32u3xx_nucleo.h"
    #define configASSERT(x)                                      \
       do {                                                     \
          if (!(x)) {                                          \
                taskDISABLE_INTERRUPTS();                        \
+               BSP_LED_On(LED_RED);                             \
                __BKPT(0);                                       \
                for (;;) {}                                      \
          }                                                    \

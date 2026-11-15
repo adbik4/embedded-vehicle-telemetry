@@ -56,6 +56,7 @@ typedef StaticQueue_t osStaticMessageQDef_t;
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
 extern UART_HandleTypeDef hcom_uart[COMn];
+extern uint32_t Update100Hz;
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -209,7 +210,6 @@ void MX_FREERTOS_Init(void) {
   /* USER CODE END RTOS_QUEUES */
   /* creation of systemTask */
   systemTaskHandle = osThreadNew(StartSystemTask, NULL, &systemTask_attributes);
-
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
   ComDebugTaskHandle = osThreadNew(StartComDebugTask, NULL, &ComDebugTask_attributes);
@@ -217,6 +217,12 @@ void MX_FREERTOS_Init(void) {
   GNSSTaskHandle = osThreadNew(StartGNSSTask, NULL, &GNSSTask_attributes);
   DisplayTaskHandle = osThreadNew(StartDisplayTask, NULL, &DisplayTask_attributes);
   InputManagerTaskHandle = osThreadNew(StartInputManagerTask, NULL, &InputManagerTask_attributes);
+
+  configASSERT(ComDebugTaskHandle != NULL);
+  configASSERT(SensorHubTaskHandle != NULL);
+  configASSERT(GNSSTaskHandle != NULL);
+  configASSERT(DisplayTaskHandle != NULL);
+  configASSERT(InputManagerTaskHandle != NULL);
   /* USER CODE END RTOS_THREADS */
 
   /* USER CODE BEGIN RTOS_EVENTS */
@@ -285,6 +291,7 @@ void StartSensorHubTask(void *argument)
 
   for (;;)
   {
+    Update100Hz = 1U;
     Time_Handler();
     AB_Handler();
     
