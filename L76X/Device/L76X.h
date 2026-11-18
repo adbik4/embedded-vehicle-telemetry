@@ -1,6 +1,8 @@
 #ifndef _L76X_H_
 #define _L76X_H_
 
+#include <stdbool.h>
+
 #ifndef UNIT_TEST
     #include "L76X_DEV_Config.h"
 #else
@@ -112,6 +114,13 @@ extern "C" {
 
 #ifdef UNIT_TEST
 extern char buff_t[BUFFSIZE];
+
+uint8_t NMEAChecksum(const char* start, const UWORD len);
+bool validateChecksum(const char* payload);
+bool parseAsHex(const char* str, const UWORD len, uint8_t* result);
+bool parseAsInteger(const char* str, const UWORD len, uint64_t* result);
+bool parseAsDouble(const char* str, const UWORD len, double* result);
+double convert2Kmph(const double sog);
 #endif
 
 int findMessageId(const char* id);
@@ -119,7 +128,7 @@ void L76X_Send_Command(char *data);
 Coordinates L76X_Baidu_Coordinates(const GPSdata_t* data);
 Coordinates L76X_Google_Coordinates(const GPSdata_t* data);
 DMS_Coordinates Google2DMS(Coordinates coors, char lat_area, char lon_area);
-GPSdata_t L76X_Receive_NMEA(void);
+void L76X_Receive_NMEA(GPSdata_t* GPS);
 void L76X_Extract_RMC(GPSdata_t* result);
 void L76X_Exit_BackupMode(void);
 

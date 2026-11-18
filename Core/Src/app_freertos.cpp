@@ -301,11 +301,12 @@ void StartSensorHubTask(void *argument)
 
 void StartGNSSTask(void *argument)
 {
+  GPSdata_t gps{};
   SystemState& system_state = SystemState::getInstance();
 
   for (;;)
   {
-    GPSdata_t gps = L76X_Receive_NMEA(); // Blocking
+    L76X_Receive_NMEA(&gps); // Blocking
     Coordinates google_coors = L76X_Google_Coordinates(&gps);
     DMS_Coordinates dms_coors = Google2DMS(google_coors, gps.Lat_area, gps.Lon_area);
 

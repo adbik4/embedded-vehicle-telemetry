@@ -1,3 +1,4 @@
+#include <stdint.h>
 #ifndef UNIT_TEST
 #include "L76X_DEV_Config.h"
 #endif
@@ -6,6 +7,8 @@
 #include <math.h>
 #include <stdlib.h>
 #include <string.h>
+#include <float.h>
+#include <stdbool.h>
 
 char const Temp[16]={'0','1','2','3','4','5','6','7','8','9','A','B','C','D','E','F'};
 
@@ -153,17 +156,187 @@ void L76X_Exit_BackupMode()
 
 /******************************************************************************
 function:
-    Remove '.' and parse as integer
+    Calculates the checksum of a NMEA payload.
+    Input: only the part between $ and *
 ******************************************************************************/
-static uint64_t parseAsInteger(const char* str, const UWORD len) {
-    uint64_t result = 0;
+#ifndef UNIT_TEST
+static uint8_t NMEAChecksum(const char* start, const UWORD len) {
+#else
+uint8_t NMEAChecksum(const char* start, const UWORD len) {
+#endif
+    uint8_t sum = 0;
+    for (UWORD i = 0; i < len; ++i) {
+        sum ^= start[i];
+    }
+    return sum;
+}
+
+/******************************************************************************
+function:
+    Parses a hexadecimal value.
+******************************************************************************/
+#ifndef UNIT_TEST
+static bool parseAsHex(const char* str, const UWORD len, uint8_t* result) {
+#else
+bool parseAsHex(const char* str, const UWORD len, uint8_t* result) {
+#endif
+    if (len == 0 || len > 2 || str == NULL || result == NULL) {
+        return false;
+    }
+
+    uint8_t value = 0;
+    for (UWORD i = 0; i < len; ++i) {
+        unsigned char c = (unsigned char)str[i];
+        uint8_t digit;
+
+        if (c >= '0' && c <= '9') {
+            digit = (uint8_t)(c - '0');
+        } else if (c >= 'A' && c <= 'F') {
+            digit = (uint8_t)(c - 'A' + 10);
+        } else if (c >= 'a' && c <= 'f') {
+            digit = (uint8_t)(c - 'a' + 10);
+        } else {
+            return false;
+        }
+
+        value = (uint8_t)((value << 4) | digit);
+    }
+
+    *result = value;
+    return true;
+}
+
+/******************************************************************************
+function:
+    Verifies the checksum of one NMEA phrase.
+    Input: A pointer to the first character of the entire message
+******************************************************************************/
+#ifndef UNIT_TEST
+static bool validateChecksum(const char* payload) {
+#else
+bool validateChecksum(const char* payload) {
+#endif
+    UWORD star = 0;
+    UWORD length = 0;
+    uint8_t check = 0;
+    while (length < BUFFSIZE && payload[length] != '\0') {
+        ++length;
+    }
+
+    for (UWORD i = 0; i < length; ++i) {
+        if (payload[i] == '*') {
+            star = i;
+            break;
+        }
+    }
+
+    if (star == 0 || star + 2 >= length) {
+        return false;
+    }
+
+    if (!parseAsHex(payload + star + 1, 2, &check)) {
+        return false;
+    }
+
+    return check == NMEAChecksum(payload + 1, star - 1);
+}
+
+/******************************************************************************
+function:
+    Remove '.' and parse as integer. Returns UINT64_MAX if invalid
+******************************************************************************/
+#ifndef UNIT_TEST
+static bool parseAsInteger(const char* str, const UWORD len, uint64_t* result) {
+#else
+bool parseAsInteger(const char* str, const UWORD len, uint64_t* result) {
+#endif
+    uint64_t sum = 0;
     for (UWORD k = 0; k < len; ++k) {
         char c = str[k];
-        if (c == '.' ) continue;
-        if (c < '0' || c > '9') break;
-        result = result * 10 + (c - '0');
+        if (c == '.' ) { continue; }
+        if (c < '0' || c > '9') { return false; };
+        sum = sum * 10 + (c - '0');
     }
-    return result;
+
+    *result = sum;
+    return true;
+}
+
+/******************************************************************************
+function:
+    Detect '.' and parse as double. Returns DBL_MAX if invalid
+******************************************************************************/
+#ifndef UNIT_TEST
+static bool parseAsDouble(const char* str, const UWORD len, double* result) {
+#else
+bool parseAsDouble(const char* str, const UWORD len, double* result) {
+#endif
+    double sum = 0;
+    int decimal_pos = 0;
+    uint8_t is_negative = 0;
+    for (UWORD k = 0; k < len; ++k) {
+        char c = str[k];
+        if (c == '-' && k == 0) { is_negative = 1; continue; }
+        if (c == '.' ) { decimal_pos = len - k - 1; continue; }
+        if (c < '0' || c > '9') { return false; }
+        sum = sum * 10 + (c - '0');
+    }
+
+    if (is_negative) {
+        *result = -1.0 * sum / pow(10, decimal_pos);
+    } else {
+        *result = sum / pow(10, decimal_pos);
+    }
+    return true;
+}
+
+/******************************************************************************
+function:
+    Convert from knots to kilometers per hour
+******************************************************************************/
+#ifndef UNIT_TEST
+static double convert2Kmph(const double sog) {
+#else
+double convert2Kmph(const double sog) {
+#endif
+    return sog * 1.852;
+}
+
+static bool verifyTime(const double value, UTC_Time_t* time) {
+    if (value < 0) {
+        return false;
+    }
+
+    int64_t int_val = floor(value);
+    UBYTE hour = (UBYTE)(int_val / 10000.0);
+    UBYTE minute = (UWORD)(int_val / 100.0) % 100;
+    UBYTE second = int_val % 100;
+
+    if (hour > 23 || minute > 59 || second > 59) {
+        return false;
+    }
+
+    time->h = hour;
+    time->m = minute;
+    time->s = second;
+    time->ms = (value - int_val) * 1000;
+    return true;
+}
+
+static bool verifyLat(const double value) {
+    int degrees = (int)(value / 100.0);
+    double minutes = value - degrees * 100.0;
+
+    return value >= 0 && degrees <= 90 && minutes < 60 &&
+        (degrees < 90 || minutes == 0);
+}
+
+static bool verifyLon(const double value) {
+    int degrees = (int)(value / 100.0);
+    double minutes = value - degrees * 100.0;
+
+    return value >= 0 && degrees <= 180 && minutes < 60 &&
+        (degrees < 180 || minutes == 0);
 }
 
 /******************************************************************************
@@ -171,7 +344,6 @@ function:
 	Analyze GNRMC data in L76x, latitude and longitude, time
 ******************************************************************************/
 void L76X_Extract_RMC(GPSdata_t* result) {
-    // TODO: Add Checksum verification
     UWORD i = 0;
     memset(result, 0, sizeof(GPSdata_t));
 
@@ -179,10 +351,13 @@ void L76X_Extract_RMC(GPSdata_t* result) {
     if (start < 0) {
         return; /* no GNRMC sentence found */
     }
+    if (!validateChecksum(buff_t + start)) {
+        return;
+    }
 
     /* Parse fields separated by commas. We only need up to field index 9. */
     int field = 0;
-    for (i = (UWORD)(start + 6); field <= 9 && buff_t[i] != '\0' && i < BUFFSIZE; ++i) {
+    for (i = (UWORD)(start + 6); ((field <= 9) && (i < BUFFSIZE) && (buff_t[i] != '\0')); ++i) {
         if (buff_t[i] == ',') {
             ++field;
             const char *f = &buff_t[i+1];
@@ -199,11 +374,13 @@ void L76X_Extract_RMC(GPSdata_t* result) {
                 mm: Minutes (00–59)
                 ss: Seconds (00–59)
                 sss: Decimal fraction of seconds */
-                uint64_t t = parseAsInteger(f, len);
-                result->Time.h = (UBYTE)(t / 1000000);
-                result->Time.m = (UBYTE)((t / 10000) % 100);
-                result->Time.s = (UBYTE)((t / 100) % 100);
-                result->Time.ms = (UBYTE)(t % 100);
+                double dbl_val = 0;
+                if (!parseAsDouble(f, len, &dbl_val)) {
+                    continue;
+                }
+                if (!verifyTime(dbl_val, &result->Time)) {
+                    continue;
+                }
 
             } else if (field == 2 && len > 0) {
                 /* Status: A = ACTIVE (valid), V = VOID (invalid) */
@@ -214,8 +391,14 @@ void L76X_Extract_RMC(GPSdata_t* result) {
                 dd: Degrees (00–90)
                 mm: Minutes (00–59)
                 mmmmmm: Decimal fraction of minutes */
-                uint64_t v = parseAsInteger(f, len);
-                result->Lat = (double)v / 10000000.0;
+                double dbl_val = 0;
+                if (!parseAsDouble(f, len, &dbl_val)) {
+                    continue;
+                }
+                if (!verifyLat(dbl_val)) {
+                    continue;
+                }
+                result->Lat = dbl_val;
 
             } else if (field == 4 && len > 0) {
                 /* LATITUDE DIRECTION: N = North, S = South */
@@ -226,8 +409,14 @@ void L76X_Extract_RMC(GPSdata_t* result) {
                 ddd: Degrees (000–180)
                 mm: Minutes (00–59)
                 mmmmmm: Decimal fraction of minutes */
-                uint64_t v = parseAsInteger(f, len);
-                result->Lon = (double)v / 10000000.0;
+                double dbl_val = 0;
+                if (!parseAsDouble(f, len, &dbl_val)) {
+                    continue;
+                }
+                if (!verifyLon(dbl_val)) {
+                    continue;
+                }
+                result->Lon = dbl_val;
 
             } else if (field == 6 && len > 0) {
                 /* LONGITUDE DIRECTION: W = West, E = East */
@@ -235,34 +424,44 @@ void L76X_Extract_RMC(GPSdata_t* result) {
             
             } else if (field == 7 && len > 0) {
                 /* SPEED OVER GROUND: (knots)*/
-                uint64_t s = parseAsInteger(f, len);
-                result->Speed = (double)s / 1000.0; 
+                double dbl_val = 0;
+                if (!parseAsDouble(f, len, &dbl_val)) {
+                    continue;
+                }
+                result->Speed = convert2Kmph(dbl_val);
 
             } else if (field == 9 && len > 0) {
                 /* DATE: (ddmmyy)
-                dd: Day (00-31)
+                dd: Day (01-31)
                 mm: Month (01-12)
                 yy: Year (00-99) */
-                uint64_t d = parseAsInteger(f, len);
-                result->Date.d = (UBYTE)(d / 10000.0);
-                result->Date.m = (UBYTE)((int)(d / 100.0) % 100);
-                result->Date.y = (UWORD)(d % 100 + 2000);
+                uint64_t int_val = 0;
+                if (!parseAsInteger(f, len, &int_val)) {
+                    continue;
+                }
+
+                UBYTE day = (UBYTE)(int_val / 10000.0);
+                UBYTE month = (UWORD)(int_val / 100.0) % 100;
+                UWORD year = (UWORD)(int_val % 100 + 2000);
+
+                if(day < 1 || day > 31 || month < 1 || month > 12 || year < 2000 || year > 2099) {
+                    continue;
+                }
+                result->Date.d = day;
+                result->Date.m = month;
+                result->Date.y = year;
             }
         }
     }
 }
 
-GPSdata_t L76X_Receive_NMEA()
+void L76X_Receive_NMEA(GPSdata_t* GPS)
 {
-    GPSdata_t GPS;
-
     #ifndef UNIT_TEST
     DEV_Uart_ReceiveString(buff_t, BUFFSIZE);
     #endif
 
-    L76X_Extract_RMC(&GPS);
-
-    return GPS;
+    L76X_Extract_RMC(GPS);
 }
 
 /******************************************************************************
