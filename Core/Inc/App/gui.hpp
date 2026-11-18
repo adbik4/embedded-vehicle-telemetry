@@ -1,9 +1,12 @@
 #pragma once
 
+#ifndef UNIT_TEST
 #include "EPD_2in66.h"
+#include "fonts.h"
+#endif
+
 #include "settings.h"
 #include "utilities.hpp"
-#include "fonts.h"
 #include <etl/string.h>
 #include <etl/tuple.h>
 #include <array>
@@ -67,7 +70,7 @@ struct Paragraph {
 
 using DebugPage1 = etl::tuple<
     Paragraph<etl::string<MAX_FONT12_CAPACITY>, 2>,
-    Paragraph<etl::string<MAX_FONT12_CAPACITY>, 5>
+    Paragraph<etl::string<MAX_FONT12_CAPACITY>, 4>
 >;
 
 using DebugPage2 = etl::tuple<
@@ -101,7 +104,9 @@ public:
     DebugScreen() : ScreenState(DebugScreen::bottom_bar), _curr_page(0) {
         static_assert(_debug_page.size() == PAGE_COUNT);
         static_assert(PAGE_COUNT > 0);
+#if !defined(UNIT_TEST)
         update_pages();
+#endif
     };
 
     void init(GUI* gui) override;

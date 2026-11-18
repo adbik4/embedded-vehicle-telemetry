@@ -37,6 +37,18 @@ add_executable(gtest_ut)
 set(UNIT_TEST ON)
 add_subdirectory(../Core Core)
 
+add_library(l76x_test_lib STATIC
+    ../L76X/Device/L76X.c
+)
+
+target_include_directories(l76x_test_lib PUBLIC
+    ../L76X/Device
+)
+
+target_compile_definitions(l76x_test_lib PRIVATE
+    UNIT_TEST
+)
+
 target_compile_definitions(telemetry_app_lib PRIVATE
     UNIT_TEST
 )
@@ -53,12 +65,14 @@ target_sources(gtest_ut PRIVATE
     singleton_test.cpp
     gui_test.cpp
     button_test.cpp
+    nmea_test.cpp
 )
 
 target_link_libraries(gtest_ut PRIVATE
     GTest::gtest_main
     GTest::gmock
     telemetry_app_lib
+    l76x_test_lib
 )
 
 include(GoogleTest)

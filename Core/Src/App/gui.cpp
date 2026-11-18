@@ -22,6 +22,10 @@
     extern osMessageQueueId_t ComDebugQueueHandle;
 #endif
 
+#ifdef UNIT_TEST
+using SystemState = MockSystemState;
+#endif
+
 extern SystemState system_state;
 
 #ifndef UNIT_TEST
@@ -158,12 +162,11 @@ void DebugScreen::update_pages() {
             {{{"timestamp", timestamp},
             {"global time", g_time}}}
         },
-        Paragraph<etl::string<MAX_FONT12_CAPACITY>, 5> {
+        Paragraph<etl::string<MAX_FONT12_CAPACITY>, 4> {
             "Sensor Fusion",
             {{{"yaw", yaw},
             {"pitch", pitch},
             {"roll", roll},
-            {"MFX", (state.mfx.enable_6x == 1) ? "6X" : "9X"},
             {"mag_cal", magcal_to_string<MAX_FONT12_CAPACITY>(state.mfx.mag_cal.cal_quality)}}}
         },
     };
@@ -259,11 +262,15 @@ void DebugScreen::refresh(GUI* gui) {
     (void)gui;  // unused
     PRINT_DEBUG("Refreshing Debug Screen...\r\n");
 
+#if !defined(UNIT_TEST)
     Paint_Clear(WHITE);
 
     GUI_DrawInputOptions(this);
+#endif
+#if !defined(UNIT_TEST)
     update_pages();
     draw_current_page();
+#endif
 
 #if !defined(UNIT_TEST)
     EPD_2IN66_Display(Canvas);
@@ -301,10 +308,12 @@ void MainScreen::init(GUI* gui) {
     (void)gui;  // unused
     PRINT_DEBUG("Initialising Main Screen...\r\n");
 
+#if !defined(UNIT_TEST)
     Paint_Clear(WHITE);
 
     GUI_DrawInputOptions(this);
     Paint_DrawString_EN(10, 0, "Main Screen", &Font24, BLACK, WHITE);
+#endif
     
 #if !defined(UNIT_TEST)
     EPD_2IN66_Display(Canvas);

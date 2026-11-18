@@ -6,9 +6,9 @@
     #include "cmsis_os2.h"
 #endif
 
+#include "motion_fx.h"
 #include "etl/string.h"
 #include "settings.h"
-#include "motion_fx.h"
 #include <cstdio>
 
 extern osMessageQueueId_t ComDebugQueueHandle;

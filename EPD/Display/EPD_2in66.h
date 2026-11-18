@@ -39,8 +39,7 @@ extern "C" {
 // Display resolution
 #define EPD_2IN66_WIDTH       152
 #define EPD_2IN66_HEIGHT      296
-#define SCREEN_WIDTH    EPD_2IN66_HEIGHT
-#define SCREEN_HEIGHT    EPD_2IN66_WIDTH
+
 
 
 void EPD_2IN66_Init(void);

@@ -315,13 +315,9 @@ void StartGNSSTask(void *argument)
 
       GNSS_State_t gnss {};
       gnss.coors = dms_coors;
-      gnss.time = {
-        .h = gps.Time_H,
-        .m = gps.Time_M,
-        .s = gps.Time_S,
-        .ms = gps.Time_MS
-      };
-      gnss.speed = gps.speed;
+      gnss.time = gps.Time;
+      gnss.speed = gps.Speed;
+      gnss.date = gps.Date;
 
       new_state.gnss = gnss;
 

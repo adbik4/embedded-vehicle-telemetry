@@ -1,7 +1,10 @@
 #pragma once
 
+#ifndef UNIT_TEST
 #include "FreeRTOS.h"
 #include "semphr.h"
+#endif
+
 #include "io.hpp"
 #include "utilities.hpp"
 #include "L76X.h"
@@ -21,15 +24,9 @@ typedef struct {
 } MFX_State_t;
 
 typedef struct {
-    UBYTE h;
-    UBYTE m;
-    UBYTE s;
-    UBYTE ms;
-} Global_Time_t;
-
-typedef struct {
-    DMS_Coordinates coors; // DMS Coordinates
-    Global_Time_t time;
+    Date_t date;
+    UTC_Time_t time;
+    DMS_Coordinates coors; // DMS: Degrees Minutes Seconds
     double speed;   // SOG: Speed Over Ground
 } GNSS_State_t;
 
@@ -42,6 +39,7 @@ typedef struct {
 } SystemState_t;
 
 
+#ifndef UNIT_TEST
 static StaticSemaphore_t SystemStateMutexBuffer;
 
 class SystemState : public Singleton<SystemState> {
@@ -58,17 +56,19 @@ private:
     friend class Singleton<SystemState>;
 
 public:
-
+    /* Acquires the System State mutex */
     void acquire() {
         configASSERT(_mutex != nullptr);
         configASSERT(xSemaphoreTake(_mutex, portMAX_DELAY) == pdTRUE);
     }
 
+    /* Releases the System State mutex */
     void release() {
         assertAcquired();
         configASSERT(xSemaphoreGive(_mutex) == pdTRUE);
     }
 
+    /* Copies the relevant variables from other parts of the system into the SystemState */
     void updateState() {
         assertAcquired();
         _state.timestamp_us = sensor_hub_data.timestamp_us;
@@ -84,14 +84,28 @@ public:
         }
     };
     
+    /* Overwrites the SystemState with a new_state */
     void setState(const SystemState_t& new_state) {
         assertAcquired();
         _state = new_state;
     }
     
+    /* Returns a copy of the System State*/
     SystemState_t getState() {
         assertAcquired();
         return _state;
     }
-
 };
+
+#else
+
+class MockSystemState : public Singleton<MockSystemState> {
+public:
+    void acquire() {};
+    void release() {};
+    void updateState() {};
+    void setState(const SystemState_t& new_state) {};
+    SystemState_t getState() {return {};};
+};
+
+#endif

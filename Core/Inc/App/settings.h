@@ -3,8 +3,8 @@
 #define USERNAME_A "User1"
 #define USERNAME_B "User2"
 
-#define DISPLAY_REFRESH_RATE_MS 100
-#define DEBOUNCE_MS 6
+#define DISPLAY_REFRESH_RATE_MS (100)
+#define DEBOUNCE_MS (6)
 
 #define SYSTEM_TASK_STACK_SIZE          (1024)  // optimal - ??
 #define COM_DEBUG_TASK_STACK_SIZE       (1024)   // optimal - 185
@@ -22,3 +22,6 @@
 
 #define DEBUG_QUEUE_LENGTH      (16)
 #define DEBUG_MSG_SIZE          (100)
+
+#define SCREEN_WIDTH    (296)
+#define SCREEN_HEIGHT   (152)

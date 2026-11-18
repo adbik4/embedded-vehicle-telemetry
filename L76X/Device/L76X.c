@@ -139,11 +139,6 @@ void L76X_Send_Command(char *data)
     DEV_Uart_SendByte('\n');
 }
 
-//explain the function of the code below
-//The code below is used to exit the backup mode of the L76X GPS module. It first sets the GPIO mode of the DEV_FORCE pin to output, then it writes a high level to the DEV_FORCE pin for 1 second, and finally it writes a low level to the DEV_FORCE pin. After that, it sets the GPIO mode of the DEV_FORCE pin back to input. This sequence of operations is necessary to wake up the L76X GPS module from its backup mode.
-//The backup mode is a low power state that the GPS module can enter to save energy when it is not in use. By toggling the DEV_FORCE pin, we can signal the GPS module to exit this low power state and become active again, allowing it to receive satellite signals and provide location data.
-//This function is typically called during the initialization process of the GPS module to ensure that it is ready to operate and provide accurate location information.
-// In summary, the L76X_Exit_BackupMode function is essential for waking up the GPS module from its low power backup mode, enabling it to function properly and provide location data when needed.
 void L76X_Exit_BackupMode()
 {
     DEV_Set_GPIOMode(L76X_RST_GPIO, 0);
@@ -176,18 +171,18 @@ function:
 	Analyze GNRMC data in L76x, latitude and longitude, time
 ******************************************************************************/
 void L76X_Extract_RMC(GPSdata_t* result) {
+    // TODO: Add Checksum verification
     UWORD i = 0;
-    result->Status = 0;
-    result->Time_H = result->Time_M = result->Time_S = 0;
+    memset(result, 0, sizeof(GPSdata_t));
 
     int start = findMessageId("RMC");
     if (start < 0) {
         return; /* no GNRMC sentence found */
     }
 
-    /* Parse fields separated by commas. We only need up to field index 6. */
+    /* Parse fields separated by commas. We only need up to field index 9. */
     int field = 0;
-    for (i = (UWORD)(start + 6); field <= 6 && buff_t[i] != '\0' && i < BUFFSIZE; ++i) {
+    for (i = (UWORD)(start + 6); field <= 9 && buff_t[i] != '\0' && i < BUFFSIZE; ++i) {
         if (buff_t[i] == ',') {
             ++field;
             const char *f = &buff_t[i+1];
@@ -205,14 +200,13 @@ void L76X_Extract_RMC(GPSdata_t* result) {
                 ss: Seconds (00–59)
                 sss: Decimal fraction of seconds */
                 uint64_t t = parseAsInteger(f, len);
-                result->Time_H = (UBYTE)(t / 10000000 + 2); // GMT +2 (Warsaw)
-                result->Time_M = (UBYTE)((t / 100000) % 100);
-                result->Time_S = (UBYTE)((t / 1000) % 100);
-                result->Time_MS = (UBYTE)(t % 100);
-                if (result->Time_H >= 24) result->Time_H -= 24;
+                result->Time.h = (UBYTE)(t / 1000000);
+                result->Time.m = (UBYTE)((t / 10000) % 100);
+                result->Time.s = (UBYTE)((t / 100) % 100);
+                result->Time.ms = (UBYTE)(t % 100);
 
             } else if (field == 2 && len > 0) {
-                /* Status: A = valid, V = invalid */
+                /* Status: A = ACTIVE (valid), V = VOID (invalid) */
                 result->Status = (f[0] == 'A') ? 1 : 0;
 
             } else if (field == 3 && len > 0) {
@@ -221,7 +215,7 @@ void L76X_Extract_RMC(GPSdata_t* result) {
                 mm: Minutes (00–59)
                 mmmmmm: Decimal fraction of minutes */
                 uint64_t v = parseAsInteger(f, len);
-                result->Lat = (double)v / 1000000.0;
+                result->Lat = (double)v / 10000000.0;
 
             } else if (field == 4 && len > 0) {
                 /* LATITUDE DIRECTION: N = North, S = South */
@@ -233,19 +227,29 @@ void L76X_Extract_RMC(GPSdata_t* result) {
                 mm: Minutes (00–59)
                 mmmmmm: Decimal fraction of minutes */
                 uint64_t v = parseAsInteger(f, len);
-                result->Lon = (double)v / 1000000.0;
+                result->Lon = (double)v / 10000000.0;
 
             } else if (field == 6 && len > 0) {
                 /* LONGITUDE DIRECTION: W = West, E = East */
                 result->Lon_area = f[0];
+            
+            } else if (field == 7 && len > 0) {
+                /* SPEED OVER GROUND: (knots)*/
+                uint64_t s = parseAsInteger(f, len);
+                result->Speed = (double)s / 1000.0; 
+
+            } else if (field == 9 && len > 0) {
+                /* DATE: (ddmmyy)
+                dd: Day (00-31)
+                mm: Month (01-12)
+                yy: Year (00-99) */
+                uint64_t d = parseAsInteger(f, len);
+                result->Date.d = (UBYTE)(d / 10000.0);
+                result->Date.m = (UBYTE)((int)(d / 100.0) % 100);
+                result->Date.y = (UWORD)(d % 100 + 2000);
             }
         }
     }
-}
-
-void L76X_Extract_VTG(GPSdata_t* result) {
-    // TODO: implement
-    result->speed = 67.0;
 }
 
 GPSdata_t L76X_Receive_NMEA()
@@ -257,7 +261,6 @@ GPSdata_t L76X_Receive_NMEA()
     #endif
 
     L76X_Extract_RMC(&GPS);
-    L76X_Extract_VTG(&GPS);
 
     return GPS;
 }

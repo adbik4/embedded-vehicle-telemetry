@@ -176,7 +176,7 @@ See http://www.FreeRTOS.org/RTOS-Cortex-M3-M4.html. */
 /* Normal assert() semantics without relying on the provision of an assert.h
 header file. */
 /* USER CODE BEGIN 1 */
-#ifndef NDEBUG
+#if !defined(NDEBUG) && !defined(UNIT_TEST)
 #include "cmsis_gcc.h"
 #include "stm32u3xx_nucleo.h"
    #define configASSERT(x)                                      \
