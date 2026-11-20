@@ -26,6 +26,7 @@
 #include "L76X.h"
 #include "custom_algobuild.h"
 #include "io.hpp"
+#include "settings.h"
 
 #include <atomic>
 #include <stdint.h>
@@ -33,7 +34,9 @@
 
 /* Private typedef -----------------------------------------------------------*/
 /* USER CODE BEGIN PTD */
+extern UART_HandleTypeDef hcom_uart[COMn];
 extern osThreadId_t InputManagerTaskHandle;
+extern osThreadId_t ComExportTaskHandle;
 /* USER CODE END PTD */
 
 /* Private define ------------------------------------------------------------*/
@@ -63,6 +66,7 @@ TIM_HandleTypeDef htim4;
 UART_HandleTypeDef huart4;
 
 /* USER CODE BEGIN PV */
+char rxbuf[MAGIC_WORD_SIZE];
 
 /* USER CODE END PV */
 
@@ -142,6 +146,14 @@ int main(void)
   {
     Error_Handler();
   }
+
+  /* STM32_PATCH_VCP_RX */
+  /* Enable interrupts for the VIRTUAL COM port */
+  HAL_NVIC_SetPriority(USART1_IRQn, 5, 0);
+  HAL_NVIC_EnableIRQ(USART1_IRQn);
+
+  /* Start listening for UART messages */
+  HAL_UARTEx_ReceiveToIdle_IT(&hcom_uart[COM1], (uint8_t*)&rxbuf, 16);
 
   /* Start scheduler */
   osKernelStart();
@@ -726,6 +738,29 @@ void HAL_GPIO_EXTI_Falling_Callback(uint16_t GPIO_Pin) {
   );
   
   portYIELD_FROM_ISR(higherPriorityTaskWoken);
+}
+
+void HAL_UARTEx_RxEventCallback(UART_HandleTypeDef *huart, uint16_t Size) {
+  BaseType_t higherPriorityTaskWoken = pdFALSE;
+  TaskHandle_t taskHandle = reinterpret_cast<TaskHandle_t>(ComExportTaskHandle);
+  configASSERT(ComExportTaskHandle != nullptr);
+
+  if (huart == &hcom_uart[COM1]) {
+    // Detect the magic word
+    if (!memcmp(rxbuf, MAGIC_WORD, sizeof(rxbuf))) {
+      xTaskNotifyFromISR(
+        taskHandle,
+        0,
+        eNoAction,
+        &higherPriorityTaskWoken
+      );
+    }
+    
+    /* Listen for the next message */
+    HAL_UARTEx_ReceiveToIdle_IT(&hcom_uart[COM1], (uint8_t*)&rxbuf, 16);
+
+    portYIELD_FROM_ISR(higherPriorityTaskWoken);
+  }
 }
 /* USER CODE END 4 */
 

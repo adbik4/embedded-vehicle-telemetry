@@ -20,6 +20,7 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "stm32u3xx_nucleo.h"
+#include <sys/types.h>
 #include "stm32u3xx_it.h"
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
@@ -42,7 +43,6 @@
 
 /* Private variables ---------------------------------------------------------*/
 /* USER CODE BEGIN PV */
-
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -61,7 +61,7 @@ extern TIM_HandleTypeDef htim4;
 extern TIM_HandleTypeDef htim2;
 
 /* USER CODE BEGIN EV */
-
+extern UART_HandleTypeDef hcom_uart[];
 /* USER CODE END EV */
 
 /******************************************************************************/
@@ -277,5 +277,8 @@ void TIM4_IRQHandler(void)
 }
 
 /* USER CODE BEGIN 1 */
-
+void USART1_IRQHandler(void)
+{
+  HAL_UART_IRQHandler(&hcom_uart[COM1]);
+}
 /* USER CODE END 1 */

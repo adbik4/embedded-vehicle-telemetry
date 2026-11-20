@@ -70,6 +70,18 @@ Button button1(ButtonId::B1);
 Button button2(ButtonId::B2);
 Button button3(ButtonId::B3);
 
+osThreadId_t ComExportTaskHandle;
+uint32_t ComExportTaskBuffer[ COM_EXPORT_TASK_STACK_SIZE ];
+osStaticThreadDef_t ComExportTaskControlBloc;
+const osThreadAttr_t ComExportTask_attributes = {
+  .name = "ComExportTask",
+  .cb_mem = &ComExportTaskControlBloc,
+  .cb_size = sizeof(ComExportTaskControlBloc),
+  .stack_mem = &ComExportTaskBuffer[0],
+  .stack_size = sizeof(ComExportTaskBuffer),
+  .priority = COM_EXPORT_TASK_PRIO
+};
+
 osThreadId_t ComDebugTaskHandle;
 uint32_t ComDebugTaskBuffer[ COM_DEBUG_TASK_STACK_SIZE ];
 osStaticThreadDef_t ComDebugTaskControlBloc;
@@ -159,6 +171,7 @@ const osThreadAttr_t systemTask_attributes = {
 /* Private function prototypes -----------------------------------------------*/
 /* USER CODE BEGIN FunctionPrototypes */
 
+void StartComExportTask(void *argument);
 void StartComDebugTask(void *argument);
 void StartSensorHubTask(void *argument);
 void StartGNSSTask(void *argument);
@@ -212,6 +225,7 @@ void MX_FREERTOS_Init(void) {
   systemTaskHandle = osThreadNew(StartSystemTask, NULL, &systemTask_attributes);
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
+  ComExportTaskHandle = osThreadNew(StartComExportTask, NULL, &ComExportTask_attributes);
   ComDebugTaskHandle = osThreadNew(StartComDebugTask, NULL, &ComDebugTask_attributes);
   SensorHubTaskHandle = osThreadNew(StartSensorHubTask, NULL, &SensorHubTask_attributes);
   GNSSTaskHandle = osThreadNew(StartGNSSTask, NULL, &GNSSTask_attributes);
@@ -383,6 +397,26 @@ void StartInputManagerTask(void *argument)
         eNoAction
       );
     }
+  }
+}
+
+void StartComExportTask(void *argument)
+{
+  SystemState& system_state = SystemState::getInstance();
+
+  // magic word: EXPORT_TLM
+  etl::string<TELEMETRY_MSG_SIZE> msg = "(Received something on UART)\r\n";
+
+  for (;;)
+  {
+    xTaskNotifyWait(
+      0,
+      UINT32_MAX,
+      NULL,
+      HAL_MAX_DELAY
+    );
+    
+    HAL_UART_Transmit(&hcom_uart[COM1], (uint8_t *)msg.c_str(), strlen(msg.c_str()), HAL_MAX_DELAY);
   }
 }
 /* USER CODE END Application */
